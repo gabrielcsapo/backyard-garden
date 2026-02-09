@@ -1,8 +1,189 @@
 'use client'
 
+import React from 'react'
 import { useFormStatus } from 'react-dom'
+import { useToast } from '../components/toast.client'
 
-export function SubmitButton() {
+type ZipZoneEntry = { zone: string; lastFrost: string; firstFrost: string }
+type ZipZoneData = Record<string, ZipZoneEntry>
+
+type CurrentSettings = {
+  zipCode: string | null
+  zone: string | null
+  lastFrostDate: string | null
+  firstFrostDate: string | null
+} | null
+
+export function SettingsForm({
+  currentSettings,
+  zipZoneData,
+  zones,
+  saveAction,
+}: {
+  currentSettings: CurrentSettings
+  zipZoneData: ZipZoneData
+  zones: string[]
+  saveAction: (formData: FormData) => Promise<{ success: boolean; error?: string }>
+}) {
+  const [zip, setZip] = React.useState(currentSettings?.zipCode ?? '')
+  const [zone, setZone] = React.useState(currentSettings?.zone ?? '')
+  const [lastFrost, setLastFrost] = React.useState(currentSettings?.lastFrostDate ?? '')
+  const [firstFrost, setFirstFrost] = React.useState(currentSettings?.firstFrostDate ?? '')
+  const [autoDetected, setAutoDetected] = React.useState(false)
+  const [error, setError] = React.useState<string | null>(null)
+  const { addToast } = useToast()
+
+  React.useEffect(() => {
+    if (zip.length === 5) {
+      const prefix = zip.slice(0, 3)
+      const lookup = zipZoneData[prefix]
+      if (lookup) {
+        setZone(lookup.zone)
+        const year = new Date().getFullYear()
+        setLastFrost(`${year}-${lookup.lastFrost}`)
+        setFirstFrost(`${year}-${lookup.firstFrost}`)
+        setAutoDetected(true)
+        setError(null)
+      }
+    } else {
+      setAutoDetected(false)
+    }
+  }, [zip, zipZoneData])
+
+  async function handleSubmit(formData: FormData) {
+    setError(null)
+    const result = await saveAction(formData)
+    if (result.success) {
+      addToast('Settings saved successfully!', 'success')
+    } else {
+      setError(result.error ?? 'Failed to save settings.')
+      addToast(result.error ?? 'Failed to save settings.', 'error')
+    }
+  }
+
+  return (
+    <form className="px-6 py-6 space-y-5" action={handleSubmit}>
+      <input type="hidden" name="zipCode" value={zip} />
+      <input type="hidden" name="zone" value={zone} />
+      <input type="hidden" name="lastFrostDate" value={lastFrost} />
+      <input type="hidden" name="firstFrostDate" value={firstFrost} />
+
+      {error && (
+        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
+      <div>
+        <label
+          className="block text-sm font-medium text-gray-700 mb-1.5"
+          htmlFor="zipInput"
+        >
+          Zip Code
+        </label>
+        <input
+          className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition placeholder:text-gray-400"
+          id="zipInput"
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]{5}"
+          maxLength={5}
+          placeholder="Enter 5-digit zip code"
+          value={zip}
+          onChange={(e) => setZip(e.target.value.replace(/\D/g, '').slice(0, 5))}
+        />
+        <p className="text-xs text-gray-400 mt-1">
+          Enter your zip code to auto-detect zone and frost dates.
+        </p>
+      </div>
+
+      <div>
+        <label
+          className="block text-sm font-medium text-gray-700 mb-1.5"
+          htmlFor="zoneSelect"
+        >
+          USDA Hardiness Zone
+          {autoDetected && (
+            <span className="ml-2 inline-flex items-center rounded-md bg-garden-50 px-1.5 py-0.5 text-[10px] font-medium text-garden-700 ring-1 ring-inset ring-garden-600/20">
+              Auto-detected
+            </span>
+          )}
+        </label>
+        <select
+          className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+          id="zoneSelect"
+          value={zone}
+          onChange={(e) => {
+            setZone(e.target.value)
+            setAutoDetected(false)
+          }}
+        >
+          <option value="">Select a zone</option>
+          {zones.map((z) => (
+            <option key={z} value={z}>
+              Zone {z}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label
+            className="block text-sm font-medium text-gray-700 mb-1.5"
+            htmlFor="lastFrostInput"
+          >
+            Last Frost Date (Spring)
+            {autoDetected && (
+              <span className="ml-2 inline-flex items-center rounded-md bg-garden-50 px-1.5 py-0.5 text-[10px] font-medium text-garden-700 ring-1 ring-inset ring-garden-600/20">
+                Auto-detected
+              </span>
+            )}
+          </label>
+          <input
+            className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+            id="lastFrostInput"
+            type="date"
+            value={lastFrost}
+            onChange={(e) => {
+              setLastFrost(e.target.value)
+              setAutoDetected(false)
+            }}
+          />
+        </div>
+        <div>
+          <label
+            className="block text-sm font-medium text-gray-700 mb-1.5"
+            htmlFor="firstFrostInput"
+          >
+            First Frost Date (Fall)
+            {autoDetected && (
+              <span className="ml-2 inline-flex items-center rounded-md bg-garden-50 px-1.5 py-0.5 text-[10px] font-medium text-garden-700 ring-1 ring-inset ring-garden-600/20">
+                Auto-detected
+              </span>
+            )}
+          </label>
+          <input
+            className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+            id="firstFrostInput"
+            type="date"
+            value={firstFrost}
+            onChange={(e) => {
+              setFirstFrost(e.target.value)
+              setAutoDetected(false)
+            }}
+          />
+        </div>
+      </div>
+
+      <div className="pt-2">
+        <SubmitButton />
+      </div>
+    </form>
+  )
+}
+
+function SubmitButton() {
   const status = useFormStatus()
   return (
     <button

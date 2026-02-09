@@ -13,6 +13,7 @@ export async function addPlanting(formData: FormData) {
   const plantedDate = (formData.get('plantedDate') as string) || null
   const expectedHarvestDate =
     (formData.get('expectedHarvestDate') as string) || null
+  const season = new Date().getFullYear().toString()
 
   if (!plantId || !yardElementId) {
     throw new Error('Plant and bed are required')
@@ -26,6 +27,7 @@ export async function addPlanting(formData: FormData) {
     status,
     plantedDate,
     expectedHarvestDate,
+    season,
   })
 }
 

@@ -86,3 +86,26 @@ export async function deleteYardElement(formData: FormData) {
   const id = Number(formData.get('id'))
   await db.delete(yardElements).where(eq(yardElements.id, id))
 }
+
+export async function duplicateYardElement(formData: FormData) {
+  const id = Number(formData.get('id'))
+  const yardId = Number(formData.get('yardId'))
+  const original = await db
+    .select()
+    .from(yardElements)
+    .where(eq(yardElements.id, id))
+    .limit(1)
+  if (!original[0]) return
+  const el = original[0]
+  await db.insert(yardElements).values({
+    yardId,
+    shapeType: el.shapeType,
+    x: el.x + 1,
+    y: el.y + 1,
+    width: el.width,
+    height: el.height,
+    label: el.label ? `${el.label} (copy)` : null,
+    sunExposure: el.sunExposure,
+    rotation: el.rotation,
+  })
+}

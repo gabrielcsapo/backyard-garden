@@ -7,6 +7,7 @@ import {
   addYardElement,
   updateYardElement,
   deleteYardElement,
+  duplicateYardElement,
 } from './yard.actions.ts'
 import {
   addPlanting,
@@ -14,6 +15,10 @@ import {
   deletePlanting,
 } from './beds.$id.actions.ts'
 import { getShapeArea } from '../lib/shapes.ts'
+import { rankBedsForPlant, getGlowColor } from '../lib/companion-scoring.ts'
+import type { BedScore } from '../lib/companion-scoring.ts'
+import { useToast } from '../components/toast.client'
+import { checkCompanionConflicts } from '../lib/companions.ts'
 
 type Yard = { id: number; name: string; widthFt: number; heightFt: number }
 type Element = {
@@ -253,7 +258,118 @@ export function YardEditor({
   } | null>(null)
   const [dragPos, setDragPos] = React.useState<{ id: number; x: number; y: number } | null>(null)
 
+  // Undo/redo
+  const historyRef = React.useRef<Element[][]>([initialElements])
+  const historyIndexRef = React.useRef(0)
+
+  function pushHistory(newElements: Element[]) {
+    const idx = historyIndexRef.current
+    historyRef.current = [...historyRef.current.slice(0, idx + 1), newElements]
+    historyIndexRef.current = idx + 1
+  }
+
+  function undo() {
+    if (historyIndexRef.current <= 0) return
+    historyIndexRef.current--
+    const prev = historyRef.current[historyIndexRef.current]
+    setElements(prev)
+  }
+
+  function redo() {
+    if (historyIndexRef.current >= historyRef.current.length - 1) return
+    historyIndexRef.current++
+    const next = historyRef.current[historyIndexRef.current]
+    setElements(next)
+  }
+
+  // Wrap setElements to push history
+  function setElementsWithHistory(updater: (prev: Element[]) => Element[]) {
+    setElements((prev) => {
+      const next = updater(prev)
+      pushHistory(next)
+      return next
+    })
+  }
+
+  // Smart placement state
+  const [smartPlaceMode, setSmartPlaceMode] = React.useState(false)
+  const [smartPlacePlant, setSmartPlacePlant] = React.useState<PlantInfo | null>(null)
+  const [bedScores, setBedScores] = React.useState<BedScore[]>([])
+  const [smartSearch, setSmartSearch] = React.useState('')
+
+  const { addToast } = useToast()
+
   const selected = elements.find((e) => e.id === selectedId) ?? null
+
+  // Compute companion glow when smart placing
+  React.useEffect(() => {
+    if (smartPlacePlant) {
+      const scores = rankBedsForPlant(
+        smartPlacePlant,
+        elements.map((el) => ({ ...el, label: el.label })),
+        bedPlantings,
+        allPlants,
+      )
+      setBedScores(scores)
+    } else {
+      setBedScores([])
+    }
+  }, [smartPlacePlant, elements, bedPlantings, allPlants])
+
+  // Keyboard shortcuts
+  React.useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      // Don't interfere with input fields
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) return
+
+      if (e.key === 'Delete' || e.key === 'Backspace') {
+        if (selectedId) {
+          e.preventDefault()
+          handleDelete(selectedId)
+        }
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault()
+        undo()
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'z' && e.shiftKey) {
+        e.preventDefault()
+        redo()
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'd') {
+        e.preventDefault()
+        if (selectedId) handleDuplicate(selectedId)
+      }
+      if (selectedId && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        e.preventDefault()
+        const dx = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0
+        const dy = e.key === 'ArrowDown' ? 1 : e.key === 'ArrowUp' ? -1 : 0
+        handleUpdateElement(selectedId, { x: String(Math.max(0, (elements.find(el => el.id === selectedId)?.x ?? 0) + dx)), y: String(Math.max(0, (elements.find(el => el.id === selectedId)?.y ?? 0) + dy)) })
+      }
+      if (e.key === 'Escape') {
+        setSelectedId(null)
+        setActiveTool(null)
+        setSmartPlaceMode(false)
+        setSmartPlacePlant(null)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [selectedId, elements])
+
+  async function handleDuplicate(id: number) {
+    const el = elements.find((e) => e.id === id)
+    if (!el) return
+    const formData = new FormData()
+    formData.set('id', String(id))
+    formData.set('yardId', String(yard.id))
+    await duplicateYardElement(formData)
+    const tempId = Date.now()
+    const newEl = { ...el, id: tempId, x: Math.min(el.x + 1, yard.widthFt - el.width), y: Math.min(el.y + 1, yard.heightFt - el.height) }
+    setElementsWithHistory((prev) => [...prev, newEl])
+    setSelectedId(tempId)
+    addToast('Element duplicated', 'success')
+  }
 
   const gridWidth = yard.widthFt * CELL_SIZE
   const gridHeight = yard.heightFt * CELL_SIZE
@@ -408,8 +524,9 @@ export function YardEditor({
     const formData = new FormData()
     formData.set('id', String(id))
     await deleteYardElement(formData)
-    setElements((prev) => prev.filter((e) => e.id !== id))
+    setElementsWithHistory((prev) => prev.filter((e) => e.id !== id))
     setSelectedId(null)
+    addToast('Element deleted', 'info')
   }
 
   async function handleUpdateElement(id: number, updates: Record<string, string>) {
@@ -471,6 +588,12 @@ export function YardEditor({
               }
             }}
           >
+            <defs>
+              <filter id="glow-green" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
             <rect width={gridWidth} height={gridHeight} fill="#f9fafb" />
 
             {Array.from({ length: yard.widthFt + 1 }, (_, i) => (
@@ -522,6 +645,8 @@ export function YardEditor({
             {elements.map((el) => {
               const pos = dragPos?.id === el.id ? dragPos : null
               const displayEl = pos ? { ...el, x: pos.x, y: pos.y } : el
+              const bedScore = bedScores.find((s) => s.bedId === el.id)
+              const glowColor = bedScore ? getGlowColor(bedScore) : null
               return (
                 <ShapeElement
                   key={el.id}
@@ -529,6 +654,7 @@ export function YardEditor({
                   isSelected={el.id === selectedId}
                   isDragging={pos !== null}
                   onMouseDown={(e) => handleElementMouseDown(e, el.id)}
+                  glowColor={glowColor}
                 />
               )
             })}
@@ -638,6 +764,100 @@ export function YardEditor({
         )}
       </div>
 
+      {/* Smart Placement panel — bottom right */}
+      <div className="absolute bottom-3 right-3 z-10">
+        {smartPlaceMode ? (
+          <div className="bg-white/95 backdrop-blur-sm rounded-xl border border-earth-200 shadow-lg w-72 p-4 space-y-3 max-h-[calc(100vh-240px)] overflow-y-auto">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                Smart Place
+              </h3>
+              <button
+                type="button"
+                className="p-0.5 text-gray-400 hover:text-gray-600 cursor-pointer"
+                onClick={() => { setSmartPlaceMode(false); setSmartPlacePlant(null); setSmartSearch('') }}
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+            <input
+              type="text"
+              value={smartSearch}
+              onChange={(e) => setSmartSearch(e.target.value)}
+              placeholder="Search for a plant..."
+              className="w-full px-2.5 py-1.5 text-xs border border-earth-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-garden-500"
+              autoFocus
+            />
+            {smartSearch && !smartPlacePlant && (
+              <div className="max-h-32 overflow-y-auto space-y-0.5">
+                {allPlants
+                  .filter((p) => p.name.toLowerCase().includes(smartSearch.toLowerCase()))
+                  .slice(0, 10)
+                  .map((p) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      className="w-full text-left px-2 py-1.5 rounded-lg hover:bg-garden-50 text-xs font-medium text-gray-900 cursor-pointer"
+                      onClick={() => { setSmartPlacePlant(p); setSmartSearch(p.name) }}
+                    >
+                      {p.name}{p.variety ? ` (${p.variety})` : ''}
+                    </button>
+                  ))}
+              </div>
+            )}
+            {smartPlacePlant && bedScores.length > 0 && (
+              <div className="space-y-1.5">
+                <p className="text-[10px] text-gray-400">Best beds for {smartPlacePlant.name}:</p>
+                {bedScores.filter((s) => s.capacityRemaining > 0).slice(0, 5).map((score) => (
+                  <div
+                    key={score.bedId}
+                    className="flex items-center justify-between px-2 py-1.5 rounded-lg bg-earth-50 text-xs cursor-pointer hover:bg-earth-100"
+                    onClick={() => {
+                      setSelectedId(score.bedId)
+                      setSmartPlaceMode(false)
+                      setSmartPlacePlant(null)
+                      setSmartSearch('')
+                    }}
+                  >
+                    <div>
+                      <span className="font-medium text-gray-900">
+                        {score.bedLabel || `Bed #${score.bedId}`}
+                      </span>
+                      <div className="flex items-center gap-1 mt-0.5">
+                        {score.companionCount > 0 && (
+                          <span className="text-[10px] text-green-600">{score.companionCount} companions</span>
+                        )}
+                        {score.conflictCount > 0 && (
+                          <span className="text-[10px] text-red-600">{score.conflictCount} conflicts</span>
+                        )}
+                        {score.sunMatch && <span className="text-[10px] text-gray-400">sun ok</span>}
+                      </div>
+                    </div>
+                    <span className={`text-xs font-semibold ${score.score >= 3 ? 'text-green-600' : score.score >= 0 ? 'text-amber-600' : 'text-red-600'}`}>
+                      {score.score >= 0 ? '+' : ''}{score.score}
+                    </span>
+                  </div>
+                ))}
+                {bedScores.filter((s) => s.capacityRemaining > 0).length === 0 && (
+                  <p className="text-[10px] text-gray-400 text-center py-2">All beds are full</p>
+                )}
+              </div>
+            )}
+          </div>
+        ) : (
+          !selected && (
+            <button
+              type="button"
+              className="flex items-center gap-2 rounded-lg border border-garden-200 bg-garden-50/90 backdrop-blur-sm shadow-sm px-3 py-2 text-sm font-medium text-garden-700 hover:bg-garden-100 transition cursor-pointer"
+              onClick={() => setSmartPlaceMode(true)}
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+              Smart Place
+            </button>
+          )
+        )}
+      </div>
+
       {/* Properties overlay — right side */}
       {selected && (
         <div className="absolute top-3 right-3 bottom-3 z-10 w-72 pointer-events-none">
@@ -709,11 +929,13 @@ function ShapeElement({
   isSelected,
   isDragging,
   onMouseDown,
+  glowColor,
 }: {
   element: Element
   isSelected: boolean
   isDragging: boolean
   onMouseDown: (e: React.MouseEvent) => void
+  glowColor?: string | null
 }) {
   const config = SHAPE_CONFIG[element.shapeType as ShapeType] ?? SHAPE_CONFIG.rectangle
   const x = element.x * CELL_SIZE
@@ -816,6 +1038,22 @@ function ShapeElement({
         >
           {element.label}
         </text>
+      )}
+
+      {/* Companion glow */}
+      {glowColor && (
+        <rect
+          x={x - 3}
+          y={y - 3}
+          width={w + 6}
+          height={h + 6}
+          fill="none"
+          stroke={glowColor}
+          strokeWidth={3}
+          opacity={0.6}
+          rx={6}
+          filter="url(#glow-green)"
+        />
       )}
 
       {/* Selection indicator */}
@@ -1068,6 +1306,7 @@ function BedPlantingsPanel({
   const [search, setSearch] = React.useState('')
   const [adding, setAdding] = React.useState(false)
   const [editingPlanting, setEditingPlanting] = React.useState<Planting | null>(null)
+  const { addToast } = useToast()
 
   const bedArea = getShapeArea(element.shapeType, element.width, element.height)
   const bedAreaSqIn = bedArea * 144
@@ -1208,6 +1447,20 @@ function BedPlantingsPanel({
                     type="button"
                     className="w-full text-left px-2 py-1.5 rounded-lg hover:bg-garden-50 transition-colors flex items-center justify-between gap-1"
                     onClick={async () => {
+                      // Check for companion conflicts
+                      const existingPlantNames = plantings
+                        .map((p) => plants.find((pl) => pl.id === p.plantId)?.name)
+                        .filter(Boolean) as string[]
+                      const conflicts = checkCompanionConflicts(
+                        { name: plant.name, companions: plant.companions as string[] | null, incompatible: plant.incompatible as string[] | null },
+                        existingPlantNames.map((n) => {
+                          const pl = plants.find((p) => p.name === n)
+                          return { name: n, companions: (pl?.companions ?? null) as string[] | null, incompatible: (pl?.incompatible ?? null) as string[] | null }
+                        }),
+                      )
+                      if (conflicts.conflicts.length > 0) {
+                        addToast(`Warning: ${plant.name} conflicts with ${conflicts.conflicts.join(', ')}`, 'warning')
+                      }
                       await onAddPlanting(plant.id, suggested)
                       setSearch('')
                       setAdding(false)

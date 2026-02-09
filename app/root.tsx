@@ -1,6 +1,7 @@
 import './styles.css'
 import { Link, Outlet } from 'react-router'
 import { DumpError, GlobalNavigationLoadingBar } from './routes/root.client'
+import { ToastProvider } from './components/toast.client'
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -57,10 +58,22 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 Yard
               </Link>
               <Link
+                to="/calendar"
+                className="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-garden-700 hover:bg-garden-50 rounded-lg transition-colors no-underline"
+              >
+                Calendar
+              </Link>
+              <Link
                 to="/plants"
                 className="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-garden-700 hover:bg-garden-50 rounded-lg transition-colors no-underline"
               >
                 Plants
+              </Link>
+              <Link
+                to="/log"
+                className="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-garden-700 hover:bg-garden-50 rounded-lg transition-colors no-underline"
+              >
+                Log
               </Link>
               <Link
                 to="/settings"
@@ -72,7 +85,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
         <GlobalNavigationLoadingBar />
-        {children}
+        <ToastProvider>
+          {children}
+        </ToastProvider>
       </body>
     </html>
   )

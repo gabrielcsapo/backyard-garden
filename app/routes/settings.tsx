@@ -3,11 +3,12 @@ import { db } from '../db/index.ts'
 import { settings } from '../db/schema.ts'
 import { USDA_ZONES } from '../lib/zones.ts'
 import { saveSettings } from './settings.actions.ts'
-import { SubmitButton } from './settings.client.tsx'
+import { SettingsForm } from './settings.client.tsx'
+import zipZoneData from '../data/zip-zones.json'
 
 const Component = async () => {
   const current = await db.select().from(settings).limit(1)
-  const currentSettings = current[0]
+  const currentSettings = current[0] ?? null
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-8">
@@ -30,66 +31,12 @@ const Component = async () => {
           </p>
         </div>
 
-        <form className="px-6 py-6 space-y-5" action={saveSettings}>
-          <div>
-            <label
-              className="block text-sm font-medium text-gray-700 mb-1.5"
-              htmlFor="zone"
-            >
-              USDA Hardiness Zone
-            </label>
-            <select
-              className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
-              id="zone"
-              name="zone"
-              defaultValue={currentSettings?.zone ?? ''}
-            >
-              <option value="">Select a zone</option>
-              {USDA_ZONES.map((zone) => (
-                <option key={zone} value={zone}>
-                  Zone {zone}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label
-                className="block text-sm font-medium text-gray-700 mb-1.5"
-                htmlFor="lastFrostDate"
-              >
-                Last Frost Date (Spring)
-              </label>
-              <input
-                className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
-                id="lastFrostDate"
-                type="date"
-                name="lastFrostDate"
-                defaultValue={currentSettings?.lastFrostDate ?? ''}
-              />
-            </div>
-            <div>
-              <label
-                className="block text-sm font-medium text-gray-700 mb-1.5"
-                htmlFor="firstFrostDate"
-              >
-                First Frost Date (Fall)
-              </label>
-              <input
-                className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
-                id="firstFrostDate"
-                type="date"
-                name="firstFrostDate"
-                defaultValue={currentSettings?.firstFrostDate ?? ''}
-              />
-            </div>
-          </div>
-
-          <div className="pt-2">
-            <SubmitButton />
-          </div>
-        </form>
+        <SettingsForm
+          currentSettings={currentSettings}
+          zipZoneData={zipZoneData as Record<string, { zone: string; lastFrost: string; firstFrost: string }>}
+          zones={USDA_ZONES}
+          saveAction={saveSettings}
+        />
       </div>
     </main>
   )

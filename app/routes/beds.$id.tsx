@@ -1,19 +1,24 @@
 import { Link } from 'react-router'
 import { db } from '../db/index.ts'
-import { yardElements, plantings, plants, settings } from '../db/schema.ts'
-import { eq } from 'drizzle-orm'
+import { yardElements, plantings, plants, settings, logEntries } from '../db/schema.ts'
+import { eq, and, desc } from 'drizzle-orm'
 import { SHAPE_CONFIG } from '../lib/shapes.ts'
 import { getShapeArea } from '../lib/shapes.ts'
 import { checkCompanionConflicts, getCompanionSuggestions } from '../lib/companions.ts'
+import { getPlantFamily, PLANT_FAMILIES, checkRotationConflict } from '../lib/plant-families.ts'
+import { shouldSowAgain } from '../lib/succession.ts'
 import {
   addPlanting,
   updatePlantingStatus,
   deletePlanting,
 } from './beds.$id.actions.ts'
+import { createLogEntry } from './log.actions.ts'
 import {
   PlantingsList,
   AddPlantingForm,
   CompanionSuggestions,
+  QuickLogModal,
+  RotationHistory,
 } from './beds.$id.client.tsx'
 
 const SUN_LABELS: Record<string, string> = {
@@ -78,11 +83,14 @@ const Component = async ({ params }: { params: Promise<{ id: string }> }) => {
       expectedHarvestDate: plantings.expectedHarvestDate,
       quantity: plantings.quantity,
       notes: plantings.notes,
+      season: plantings.season,
       plantName: plants.name,
       plantVariety: plants.variety,
       plantCategory: plants.category,
+      plantFamily: plants.family,
       spacingInches: plants.spacingInches,
       daysToHarvest: plants.daysToHarvest,
+      successionIntervalWeeks: plants.successionIntervalWeeks,
       companions: plants.companions,
       incompatible: plants.incompatible,
     })
@@ -92,6 +100,44 @@ const Component = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   const allPlants = await db.select().from(plants)
   const userSettings = (await db.select().from(settings).limit(1))[0]
+
+  // Build rotation history for this bed (all plantings with season info)
+  const allBedPlantings = await db
+    .select({
+      id: plantings.id,
+      season: plantings.season,
+      plantName: plants.name,
+      plantFamily: plants.family,
+      status: plantings.status,
+    })
+    .from(plantings)
+    .innerJoin(plants, eq(plantings.plantId, plants.id))
+    .where(eq(plantings.yardElementId, bedId))
+
+  // Group by season for rotation display
+  const rotationHistory = allBedPlantings
+    .filter((p) => p.season)
+    .map((p) => ({
+      season: p.season!,
+      plantName: p.plantName,
+      family: p.plantFamily,
+      familyLabel: p.plantFamily ? PLANT_FAMILIES[p.plantFamily]?.label ?? p.plantFamily : null,
+      familyColor: p.plantFamily ? PLANT_FAMILIES[p.plantFamily]?.color ?? '' : '',
+    }))
+
+  // Succession planting nudges
+  const successionNudges = bedPlantings
+    .filter(
+      (p) =>
+        p.successionIntervalWeeks &&
+        p.status !== 'done' &&
+        shouldSowAgain(p.successionIntervalWeeks, p.plantedDate),
+    )
+    .map((p) => ({
+      plantingId: p.id,
+      plantName: p.plantName,
+      intervalWeeks: p.successionIntervalWeeks!,
+    }))
 
   const existingPlantNames = bedPlantings.map((p) => ({
     name: p.plantName,
@@ -230,18 +276,39 @@ const Component = async ({ params }: { params: Promise<{ id: string }> }) => {
                 plantName: p.plantName,
                 plantVariety: p.plantVariety,
                 plantCategory: p.plantCategory,
+                plantFamily: p.plantFamily,
                 status: p.status ?? 'planned',
                 plantedDate: p.plantedDate,
                 expectedHarvestDate: p.expectedHarvestDate,
                 quantity: p.quantity ?? 1,
                 notes: p.notes,
                 daysToHarvest: p.daysToHarvest,
+                successionIntervalWeeks: p.successionIntervalWeeks,
               }))}
               statusLabels={STATUS_LABELS}
               updateStatusAction={updatePlantingStatus}
               deleteAction={deletePlanting}
+              logAction={createLogEntry}
+              bedId={bedId}
+              successionNudges={successionNudges}
             />
           </div>
+
+          {/* Rotation History */}
+          {rotationHistory.length > 0 && (
+            <div className="bg-white rounded-xl border border-earth-200 shadow-sm p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                Crop Rotation History
+              </h2>
+              <RotationHistory
+                history={rotationHistory}
+                currentPlantings={bedPlantings.map((p) => ({
+                  plantName: p.plantName,
+                  family: p.plantFamily,
+                }))}
+              />
+            </div>
+          )}
         </div>
 
         {/* Right column - Add planting + Suggestions */}
