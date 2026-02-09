@@ -1,0 +1,39 @@
+{
+  "name": "@vitejs/plugin-rsc-examples-react-router",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "cf-dev": "vite -c ./cf/vite.config.ts",
+    "cf-build": "vite -c ./cf/vite.config.ts build",
+    "cf-preview": "vite -c ./cf/vite.config.ts preview",
+    "cf-release": "wrangler deploy -c dist/rsc/wrangler.json && wrangler deploy",
+    "db:push": "drizzle-kit push",
+    "db:seed": "node --import tsx/esm app/db/seed.ts"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.6.2",
+    "drizzle-orm": "^0.45.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-router": "7.13.0"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.22.1",
+    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/vite": "^4.1.18",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/react": "^19.2.10",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "latest",
+    "@vitejs/plugin-rsc": "latest",
+    "drizzle-kit": "^0.31.8",
+    "tailwindcss": "^4.1.18",
+    "tsx": "^4.21.0",
+    "vite": "^7.3.1",
+    "wrangler": "^4.61.1"
+  }
+}

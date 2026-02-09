@@ -1,0 +1,60 @@
+@import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  --color-garden-50: #f0fdf4;
+  --color-garden-100: #dcfce7;
+  --color-garden-200: #bbf7d0;
+  --color-garden-300: #86efac;
+  --color-garden-400: #4ade80;
+  --color-garden-500: #22c55e;
+  --color-garden-600: #16a34a;
+  --color-garden-700: #15803d;
+  --color-garden-800: #166534;
+  --color-garden-900: #14532d;
+
+  --color-earth-50: #faf8f5;
+  --color-earth-100: #f3efe8;
+  --color-earth-200: #e8e0d4;
+  --color-earth-300: #d4c5ae;
+  --color-earth-400: #bfa786;
+  --color-earth-500: #a38b64;
+  --color-earth-600: #8a7350;
+  --color-earth-700: #6d5b40;
+  --color-earth-800: #4f4230;
+  --color-earth-900: #362d20;
+
+  --animate-progress: progress 1s infinite linear;
+
+  @keyframes progress {
+    0% {
+      transform: translateX(0) scaleX(0);
+    }
+    40% {
+      transform: translateX(0) scaleX(0.4);
+    }
+    100% {
+      transform: translateX(100%) scaleX(0.5);
+    }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-earth-50 text-gray-900 antialiased;
+  }
+}
+
+@utility vt-name {
+  view-transition-name: var(--vt-name);
+}
+
+@utility no-vt {
+  view-transition-name: none;
+}
+
+@view-transition {
+  navigation: auto;
+}
