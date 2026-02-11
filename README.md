@@ -1,34 +1,37 @@
-# rsc react-router
+# Backyard Garden
 
-https://vite-rsc-react-router.hiro18181.workers.dev
+A personal garden planning app for tracking your yard layout, plantings, and growing schedule. Built with React Server Components, Vite, and SQLite.
 
-> [!NOTE]
-> React Router now provides [official RSC support](https://reactrouter.com/how-to/react-server-components) for Vite. The example might not be kept up to date with the latest version. Please refer to React Router's official documentation for the latest integrations.
+## Features
 
-Vite RSC example based on demo made by React router team with Parcel:
+- **Yard Planner** — SVG grid editor with 10 bed shapes (rectangle, circle, keyhole, spiral, hugelkultur, mandala, container, path, structure, water). Drag-and-drop placement, rotation, and companion planting intelligence.
+- **Plant Library** — 78 plants with zone-relative planting windows, spacing, days to harvest, companion/incompatible relationships, crop families, and succession intervals.
+- **Planting Calendar** — Gantt-style timeline showing indoor start, direct sow, transplant, and harvest windows based on your frost dates. Weekly task list with checkboxes.
+- **Garden Log** — Timeline of observations, watering, fertilizing, pest sightings, harvests, and more. Quick-log from the yard editor. Harvest totals per plant.
+- **Crop Rotation** — Tracks plant families per bed across seasons. Warns when the same family is planted within 3 years.
+- **Succession Planting** — Nudges to re-sow eligible crops (lettuce, radish, beans, etc.) at the right interval.
+- **Dashboard** — This week's tasks, recent activity, yard preview, and at-a-glance stats.
 
-- https://github.com/jacob-ebey/parcel-plugin-react-router/
-- https://github.com/jacob-ebey/experimental-parcel-react-router-starter
-- https://github.com/remix-run/react-router/tree/rsc/playground/rsc-vite
+## Tech Stack
 
-See also [`rsc-movies`](https://github.com/hi-ogawa/rsc-movies/).
+- React 19 + React Server Components
+- Vite 7.3 + React Router 7.13
+- Tailwind CSS v4
+- Drizzle ORM + better-sqlite3
+- No auth — single-user, local-first
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/vitejs/vite-plugin-react/tree/main/packages/plugin-rsc/examples/react-router?file=src%2Froutes%2Froot.tsx)
-
-Or try it locally by:
+## Getting Started
 
 ```sh
-npx giget gh:vitejs/vite-plugin-react/packages/plugin-rsc/examples/react-router my-app
-cd my-app
-npm i
+npm install
 npm run dev
+```
+
+On first run the database is created at `./data/garden.db` and seeded with the plant library. Open the app and configure your zone + frost dates in Settings.
+
+## Build
+
+```sh
 npm run build
 npm run preview
-
-# run on @cloudflare/vite-plugin and deploy.
-# a separate configuration is found in ./cf/vite.config.ts
-npm run cf-dev
-npm run cf-build
-npm run cf-preview
-npm run cf-release
 ```

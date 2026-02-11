@@ -10,7 +10,7 @@ const Component = async () => {
 
   if (!userSettings?.lastFrostDate) {
     return (
-      <main className="mx-auto max-w-5xl px-6 py-8">
+      <main className="mx-auto max-w-6xl px-6 py-8">
         <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
           <Link to="/" className="hover:text-garden-700 transition-colors">
             Home
@@ -61,7 +61,7 @@ const Component = async () => {
     .where(sql`${plantings.status} != 'done'`)
 
   return (
-    <main className="mx-auto max-w-7xl px-6 py-8">
+    <main className="mx-auto max-w-6xl px-6 py-8">
       <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
         <Link to="/" className="hover:text-garden-700 transition-colors">
           Home

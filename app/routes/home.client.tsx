@@ -3,6 +3,7 @@
 import React from 'react'
 import { SHAPE_CONFIG } from '../lib/shapes.ts'
 import type { ShapeType } from '../lib/shapes.ts'
+import { useToast } from '../components/toast.client'
 
 type PreviewElement = {
   id: number
@@ -142,5 +143,63 @@ export function YardPreview({
         })}
       </svg>
     </div>
+  )
+}
+
+const ACTION_TYPE_MAP: Record<string, string> = {
+  indoor_start: 'stage_change',
+  direct_sow: 'stage_change',
+  transplant: 'stage_change',
+  harvest: 'harvest',
+}
+
+export function TaskCheckbox({
+  plantingId,
+  actionType,
+  logAction,
+}: {
+  plantingId: number
+  actionType: string
+  logAction: (formData: FormData) => Promise<{ success: boolean; error?: string }>
+}) {
+  const [done, setDone] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
+  const { addToast } = useToast()
+
+  const handleToggle = async () => {
+    if (done || loading) return
+    setLoading(true)
+    const formData = new FormData()
+    formData.set('plantingId', String(plantingId))
+    formData.set('type', ACTION_TYPE_MAP[actionType] ?? 'observation')
+    formData.set('date', new Date().toISOString().split('T')[0])
+    formData.set('content', `Completed: ${actionType.replace('_', ' ')}`)
+    const result = await logAction(formData)
+    setLoading(false)
+    if (result.success) {
+      setDone(true)
+      addToast('Task logged!', 'success')
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleToggle}
+      disabled={done || loading}
+      className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors cursor-pointer ${
+        done
+          ? 'bg-garden-500 border-garden-500 text-white'
+          : loading
+            ? 'border-garden-300 bg-garden-50'
+            : 'border-gray-300 hover:border-garden-400'
+      }`}
+    >
+      {done && (
+        <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M20 6L9 17l-5-5" />
+        </svg>
+      )}
+    </button>
   )
 }

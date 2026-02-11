@@ -18,6 +18,7 @@ import { getShapeArea } from '../lib/shapes.ts'
 import { rankBedsForPlant, getGlowColor } from '../lib/companion-scoring.ts'
 import type { BedScore } from '../lib/companion-scoring.ts'
 import { useToast } from '../components/toast.client'
+import { useConfirm } from '../components/confirm-dialog.client'
 import { checkCompanionConflicts } from '../lib/companions.ts'
 
 type Yard = { id: number; name: string; widthFt: number; heightFt: number }
@@ -298,6 +299,7 @@ export function YardEditor({
   const [smartSearch, setSmartSearch] = React.useState('')
 
   const { addToast } = useToast()
+  const confirm = useConfirm()
 
   const selected = elements.find((e) => e.id === selectedId) ?? null
 
@@ -521,6 +523,14 @@ export function YardEditor({
   }
 
   async function handleDelete(id: number) {
+    const el = elements.find((e) => e.id === id)
+    const elPlantings = bedPlantings.filter((p) => p.yardElementId === id)
+    const label = el?.label || SHAPE_CONFIG[el?.shapeType as ShapeType]?.label || 'element'
+    const msg = elPlantings.length > 0
+      ? `"${label}" has ${elPlantings.length} planting${elPlantings.length > 1 ? 's' : ''}. All plantings will be removed.`
+      : `Remove "${label}" from your yard?`
+    const ok = await confirm({ title: 'Delete bed?', message: msg, destructive: true })
+    if (!ok) return
     const formData = new FormData()
     formData.set('id', String(id))
     await deleteYardElement(formData)
@@ -908,6 +918,8 @@ export function YardEditor({
                   )
                 }}
                 onDeletePlanting={async (plantingId) => {
+                  const ok = await confirm({ title: 'Remove planting?', message: 'This cannot be undone.', destructive: true })
+                  if (!ok) return
                   const formData = new FormData()
                   formData.set('id', String(plantingId))
                   await deletePlanting(formData)
