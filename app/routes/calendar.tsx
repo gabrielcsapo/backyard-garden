@@ -1,12 +1,12 @@
-import { Link } from 'react-router'
-import { eq, sql } from 'drizzle-orm'
-import { db } from '../db/index.ts'
-import { settings, plantings, plants, yardElements } from '../db/schema.ts'
-import { markCalendarTaskDone } from './calendar.actions.ts'
-import { GanttCalendar } from './calendar.client.tsx'
+import { Link } from "react-router";
+import { eq, sql } from "drizzle-orm";
+import { db } from "../db/index.ts";
+import { settings, plantings, plants, yardElements } from "../db/schema.ts";
+import { markCalendarTaskDone } from "./calendar.actions.ts";
+import { GanttCalendar } from "./calendar.client.tsx";
 
 const Component = async () => {
-  const userSettings = (await db.select().from(settings).limit(1))[0]
+  const userSettings = (await db.select().from(settings).limit(1))[0];
 
   if (!userSettings?.lastFrostDate) {
     return (
@@ -19,12 +19,9 @@ const Component = async () => {
           <span className="text-gray-900">Calendar</span>
         </nav>
         <div className="bg-white rounded-xl border border-earth-200 shadow-sm p-10 text-center">
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">
-            Frost Dates Required
-          </h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">Frost Dates Required</h2>
           <p className="text-sm text-gray-500 mb-4">
-            Configure your frost dates in settings to see your planting
-            calendar.
+            Configure your frost dates in settings to see your planting calendar.
           </p>
           <Link
             to="/settings"
@@ -34,7 +31,7 @@ const Component = async () => {
           </Link>
         </div>
       </main>
-    )
+    );
   }
 
   const activePlantings = await db
@@ -58,7 +55,7 @@ const Component = async () => {
     .from(plantings)
     .innerJoin(plants, eq(plantings.plantId, plants.id))
     .innerJoin(yardElements, eq(plantings.yardElementId, yardElements.id))
-    .where(sql`${plantings.status} != 'done'`)
+    .where(sql`${plantings.status} != 'done'`);
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-8">
@@ -72,9 +69,7 @@ const Component = async () => {
 
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">
-            Planting Calendar
-          </h1>
+          <h1 className="text-xl font-semibold text-gray-900">Planting Calendar</h1>
           <p className="text-sm text-gray-500 mt-1">
             Your personalized planting schedule based on frost dates.
           </p>
@@ -88,7 +83,7 @@ const Component = async () => {
         markDoneAction={markCalendarTaskDone}
       />
     </main>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;

@@ -1,14 +1,9 @@
-import { Link } from 'react-router'
-import { eq, desc } from 'drizzle-orm'
-import { db } from '../db/index.ts'
-import {
-  logEntries,
-  plantings,
-  plants,
-  yardElements,
-} from '../db/schema.ts'
-import { createLogEntry, deleteLogEntry } from './log.actions.ts'
-import { LogTimeline, QuickLogForm } from './log.client.tsx'
+import { Link } from "react-router";
+import { eq, desc } from "drizzle-orm";
+import { db } from "../db/index.ts";
+import { logEntries, plantings, plants, yardElements } from "../db/schema.ts";
+import { createLogEntry, deleteLogEntry } from "./log.actions.ts";
+import { LogTimeline, QuickLogForm } from "./log.client.tsx";
 
 const Component = async () => {
   const entries = await db
@@ -31,7 +26,7 @@ const Component = async () => {
     .leftJoin(plantings, eq(logEntries.plantingId, plantings.id))
     .leftJoin(plants, eq(plantings.plantId, plants.id))
     .leftJoin(yardElements, eq(logEntries.yardElementId, yardElements.id))
-    .orderBy(desc(logEntries.date), desc(logEntries.id))
+    .orderBy(desc(logEntries.date), desc(logEntries.id));
 
   const allPlantings = await db
     .select({
@@ -43,25 +38,22 @@ const Component = async () => {
     })
     .from(plantings)
     .innerJoin(plants, eq(plantings.plantId, plants.id))
-    .innerJoin(yardElements, eq(plantings.yardElementId, yardElements.id))
+    .innerJoin(yardElements, eq(plantings.yardElementId, yardElements.id));
 
   // Compute harvest totals for current year
-  const currentYear = new Date().getFullYear()
+  const currentYear = new Date().getFullYear();
   const harvestEntries = entries.filter(
-    (e) =>
-      e.type === 'harvest' &&
-      e.yieldAmount != null &&
-      e.date.startsWith(String(currentYear)),
-  )
-  const harvestTotals: Record<string, { amount: number; unit: string }> = {}
+    (e) => e.type === "harvest" && e.yieldAmount != null && e.date.startsWith(String(currentYear)),
+  );
+  const harvestTotals: Record<string, { amount: number; unit: string }> = {};
   for (const e of harvestEntries) {
-    const key = e.plantName ?? 'Unknown'
-    const unit = e.yieldUnit ?? 'units'
-    const tk = `${key}|${unit}`
+    const key = e.plantName ?? "Unknown";
+    const unit = e.yieldUnit ?? "units";
+    const tk = `${key}|${unit}`;
     if (!harvestTotals[tk]) {
-      harvestTotals[tk] = { amount: 0, unit }
+      harvestTotals[tk] = { amount: 0, unit };
     }
-    harvestTotals[tk].amount += e.yieldAmount!
+    harvestTotals[tk].amount += e.yieldAmount!;
   }
 
   return (
@@ -85,20 +77,12 @@ const Component = async () => {
 
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <LogTimeline
-            entries={entries}
-            deleteAction={deleteLogEntry}
-          />
+          <LogTimeline entries={entries} deleteAction={deleteLogEntry} />
         </div>
         <div className="space-y-6">
           <div className="bg-white rounded-xl border border-earth-200 shadow-sm p-5">
-            <h2 className="text-sm font-semibold text-gray-900 mb-4">
-              Quick Log
-            </h2>
-            <QuickLogForm
-              plantings={allPlantings}
-              createAction={createLogEntry}
-            />
+            <h2 className="text-sm font-semibold text-gray-900 mb-4">Quick Log</h2>
+            <QuickLogForm plantings={allPlantings} createAction={createLogEntry} />
           </div>
 
           {Object.keys(harvestTotals).length > 0 && (
@@ -108,18 +92,15 @@ const Component = async () => {
               </h2>
               <div className="space-y-2">
                 {Object.entries(harvestTotals).map(([key, val]) => {
-                  const plantName = key.split('|')[0]
+                  const plantName = key.split("|")[0];
                   return (
-                    <div
-                      key={key}
-                      className="flex items-center justify-between text-sm"
-                    >
+                    <div key={key} className="flex items-center justify-between text-sm">
                       <span className="text-gray-700">{plantName}</span>
                       <span className="font-medium text-garden-700">
                         {val.amount.toFixed(1)} {val.unit}
                       </span>
                     </div>
-                  )
+                  );
                 })}
               </div>
             </div>
@@ -127,7 +108,7 @@ const Component = async () => {
         </div>
       </div>
     </main>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;

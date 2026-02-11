@@ -1,54 +1,51 @@
-import { db } from '../db/index.ts'
-import { yards, yardElements, plants, plantings } from '../db/schema.ts'
-import { eq, inArray } from 'drizzle-orm'
-import { createYard } from './yard.actions.ts'
-import { YardEditor, CreateYardForm } from './yard.client.tsx'
+import { db } from "../db/index.ts";
+import { yards, yardElements, plants, plantings } from "../db/schema.ts";
+import { eq, inArray } from "drizzle-orm";
+import { createYard } from "./yard.actions.ts";
+import { YardEditor, CreateYardForm } from "./yard.client.tsx";
 
 const Component = async () => {
-  const allYards = await db.select().from(yards)
-  const firstYard = allYards[0]
+  const allYards = await db.select().from(yards);
+  const firstYard = allYards[0];
 
   let elements: {
-    id: number
-    yardId: number
-    shapeType: string
-    x: number
-    y: number
-    width: number
-    height: number
-    label: string | null
-    sunExposure: string | null
-    rotation: number | null
-    metadata: unknown
-  }[] = []
+    id: number;
+    yardId: number;
+    shapeType: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    label: string | null;
+    sunExposure: string | null;
+    rotation: number | null;
+    metadata: unknown;
+  }[] = [];
 
   let allPlants: {
-    id: number
-    name: string
-    variety: string | null
-    category: string | null
-    spacingInches: number | null
-    daysToHarvest: number | null
-    sunRequirement: string | null
-    companions: unknown
-    incompatible: unknown
-  }[] = []
+    id: number;
+    name: string;
+    variety: string | null;
+    category: string | null;
+    spacingInches: number | null;
+    daysToHarvest: number | null;
+    sunRequirement: string | null;
+    companions: unknown;
+    incompatible: unknown;
+  }[] = [];
 
   let allPlantings: {
-    id: number
-    plantId: number
-    yardElementId: number
-    status: string | null
-    quantity: number | null
-    notes: string | null
-    plantedDate: string | null
-  }[] = []
+    id: number;
+    plantId: number;
+    yardElementId: number;
+    status: string | null;
+    quantity: number | null;
+    notes: string | null;
+    plantedDate: string | null;
+  }[] = [];
 
   if (firstYard) {
-    elements = await db
-      .select()
-      .from(yardElements)
-      .where(eq(yardElements.yardId, firstYard.id))
+    elements = await db.select().from(yardElements).where(eq(yardElements.yardId, firstYard.id));
 
     allPlants = await db
       .select({
@@ -62,9 +59,9 @@ const Component = async () => {
         companions: plants.companions,
         incompatible: plants.incompatible,
       })
-      .from(plants)
+      .from(plants);
 
-    const elementIds = elements.map((e) => e.id)
+    const elementIds = elements.map((e) => e.id);
     if (elementIds.length > 0) {
       allPlantings = await db
         .select({
@@ -77,7 +74,7 @@ const Component = async () => {
           plantedDate: plantings.plantedDate,
         })
         .from(plantings)
-        .where(inArray(plantings.yardElementId, elementIds))
+        .where(inArray(plantings.yardElementId, elementIds));
     }
   }
 
@@ -101,9 +98,7 @@ const Component = async () => {
                 <path d="M9 3v18" />
               </svg>
             </div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">
-              Create Your Yard
-            </h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">Create Your Yard</h2>
             <p className="text-sm text-gray-500 mb-6">
               Define your yard dimensions to start planning your garden layout.
             </p>
@@ -119,7 +114,7 @@ const Component = async () => {
         />
       )}
     </main>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;

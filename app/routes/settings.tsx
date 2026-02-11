@@ -1,14 +1,14 @@
-import { Link } from 'react-router'
-import { db } from '../db/index.ts'
-import { settings } from '../db/schema.ts'
-import { USDA_ZONES } from '../lib/zones.ts'
-import { saveSettings } from './settings.actions.ts'
-import { SettingsForm } from './settings.client.tsx'
-import zipZoneData from '../data/zip-zones.json'
+import { Link } from "react-router";
+import { db } from "../db/index.ts";
+import { settings } from "../db/schema.ts";
+import { USDA_ZONES } from "../lib/zones.ts";
+import { saveSettings } from "./settings.actions.ts";
+import { SettingsForm } from "./settings.client.tsx";
+import zipZoneData from "../db/zip-zones.json";
 
 const Component = async () => {
-  const current = await db.select().from(settings).limit(1)
-  const currentSettings = current[0] ?? null
+  const current = await db.select().from(settings).limit(1);
+  const currentSettings = current[0] ?? null;
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-8">
@@ -22,24 +22,24 @@ const Component = async () => {
 
       <div className="bg-white rounded-xl border border-earth-200 shadow-sm">
         <div className="px-6 py-5 border-b border-earth-100">
-          <h1 className="text-xl font-semibold text-gray-900">
-            Garden Settings
-          </h1>
+          <h1 className="text-xl font-semibold text-gray-900">Garden Settings</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Configure your growing zone and frost dates to get personalized
-            planting recommendations.
+            Configure your growing zone and frost dates to get personalized planting
+            recommendations.
           </p>
         </div>
 
         <SettingsForm
           currentSettings={currentSettings}
-          zipZoneData={zipZoneData as Record<string, { zone: string; lastFrost: string; firstFrost: string }>}
+          zipZoneData={
+            zipZoneData as Record<string, { zone: string; lastFrost: string; firstFrost: string }>
+          }
           zones={USDA_ZONES}
           saveAction={saveSettings}
         />
       </div>
     </main>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;

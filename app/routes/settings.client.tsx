@@ -1,18 +1,18 @@
-'use client'
+"use client";
 
-import React from 'react'
-import { useFormStatus } from 'react-dom'
-import { useToast } from '../components/toast.client'
+import React from "react";
+import { useFormStatus } from "react-dom";
+import { useToast } from "../components/toast.client";
 
-type ZipZoneEntry = { zone: string; lastFrost: string; firstFrost: string }
-type ZipZoneData = Record<string, ZipZoneEntry>
+type ZipZoneEntry = { zone: string; lastFrost: string; firstFrost: string };
+type ZipZoneData = Record<string, ZipZoneEntry>;
 
 type CurrentSettings = {
-  zipCode: string | null
-  zone: string | null
-  lastFrostDate: string | null
-  firstFrostDate: string | null
-} | null
+  zipCode: string | null;
+  zone: string | null;
+  lastFrostDate: string | null;
+  firstFrostDate: string | null;
+} | null;
 
 export function SettingsForm({
   currentSettings,
@@ -20,44 +20,44 @@ export function SettingsForm({
   zones,
   saveAction,
 }: {
-  currentSettings: CurrentSettings
-  zipZoneData: ZipZoneData
-  zones: string[]
-  saveAction: (formData: FormData) => Promise<{ success: boolean; error?: string }>
+  currentSettings: CurrentSettings;
+  zipZoneData: ZipZoneData;
+  zones: string[];
+  saveAction: (formData: FormData) => Promise<{ success: boolean; error?: string }>;
 }) {
-  const [zip, setZip] = React.useState(currentSettings?.zipCode ?? '')
-  const [zone, setZone] = React.useState(currentSettings?.zone ?? '')
-  const [lastFrost, setLastFrost] = React.useState(currentSettings?.lastFrostDate ?? '')
-  const [firstFrost, setFirstFrost] = React.useState(currentSettings?.firstFrostDate ?? '')
-  const [autoDetected, setAutoDetected] = React.useState(false)
-  const [error, setError] = React.useState<string | null>(null)
-  const { addToast } = useToast()
+  const [zip, setZip] = React.useState(currentSettings?.zipCode ?? "");
+  const [zone, setZone] = React.useState(currentSettings?.zone ?? "");
+  const [lastFrost, setLastFrost] = React.useState(currentSettings?.lastFrostDate ?? "");
+  const [firstFrost, setFirstFrost] = React.useState(currentSettings?.firstFrostDate ?? "");
+  const [autoDetected, setAutoDetected] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+  const { addToast } = useToast();
 
   React.useEffect(() => {
     if (zip.length === 5) {
-      const prefix = zip.slice(0, 3)
-      const lookup = zipZoneData[prefix]
+      const prefix = zip.slice(0, 3);
+      const lookup = zipZoneData[prefix];
       if (lookup) {
-        setZone(lookup.zone)
-        const year = new Date().getFullYear()
-        setLastFrost(`${year}-${lookup.lastFrost}`)
-        setFirstFrost(`${year}-${lookup.firstFrost}`)
-        setAutoDetected(true)
-        setError(null)
+        setZone(lookup.zone);
+        const year = new Date().getFullYear();
+        setLastFrost(`${year}-${lookup.lastFrost}`);
+        setFirstFrost(`${year}-${lookup.firstFrost}`);
+        setAutoDetected(true);
+        setError(null);
       }
     } else {
-      setAutoDetected(false)
+      setAutoDetected(false);
     }
-  }, [zip, zipZoneData])
+  }, [zip, zipZoneData]);
 
   async function handleSubmit(formData: FormData) {
-    setError(null)
-    const result = await saveAction(formData)
+    setError(null);
+    const result = await saveAction(formData);
     if (result.success) {
-      addToast('Settings saved successfully!', 'success')
+      addToast("Settings saved successfully!", "success");
     } else {
-      setError(result.error ?? 'Failed to save settings.')
-      addToast(result.error ?? 'Failed to save settings.', 'error')
+      setError(result.error ?? "Failed to save settings.");
+      addToast(result.error ?? "Failed to save settings.", "error");
     }
   }
 
@@ -75,10 +75,7 @@ export function SettingsForm({
       )}
 
       <div>
-        <label
-          className="block text-sm font-medium text-gray-700 mb-1.5"
-          htmlFor="zipInput"
-        >
+        <label className="block text-sm font-medium text-gray-700 mb-1.5" htmlFor="zipInput">
           Zip Code
         </label>
         <input
@@ -90,7 +87,7 @@ export function SettingsForm({
           maxLength={5}
           placeholder="Enter 5-digit zip code"
           value={zip}
-          onChange={(e) => setZip(e.target.value.replace(/\D/g, '').slice(0, 5))}
+          onChange={(e) => setZip(e.target.value.replace(/\D/g, "").slice(0, 5))}
         />
         <p className="text-xs text-gray-400 mt-1">
           Enter your zip code to auto-detect zone and frost dates.
@@ -98,10 +95,7 @@ export function SettingsForm({
       </div>
 
       <div>
-        <label
-          className="block text-sm font-medium text-gray-700 mb-1.5"
-          htmlFor="zoneSelect"
-        >
+        <label className="block text-sm font-medium text-gray-700 mb-1.5" htmlFor="zoneSelect">
           USDA Hardiness Zone
           {autoDetected && (
             <span className="ml-2 inline-flex items-center rounded-md bg-garden-50 px-1.5 py-0.5 text-[10px] font-medium text-garden-700 ring-1 ring-inset ring-garden-600/20">
@@ -114,8 +108,8 @@ export function SettingsForm({
           id="zoneSelect"
           value={zone}
           onChange={(e) => {
-            setZone(e.target.value)
-            setAutoDetected(false)
+            setZone(e.target.value);
+            setAutoDetected(false);
           }}
         >
           <option value="">Select a zone</option>
@@ -146,8 +140,8 @@ export function SettingsForm({
             type="date"
             value={lastFrost}
             onChange={(e) => {
-              setLastFrost(e.target.value)
-              setAutoDetected(false)
+              setLastFrost(e.target.value);
+              setAutoDetected(false);
             }}
           />
         </div>
@@ -169,8 +163,8 @@ export function SettingsForm({
             type="date"
             value={firstFrost}
             onChange={(e) => {
-              setFirstFrost(e.target.value)
-              setAutoDetected(false)
+              setFirstFrost(e.target.value);
+              setAutoDetected(false);
             }}
           />
         </div>
@@ -180,11 +174,11 @@ export function SettingsForm({
         <SubmitButton />
       </div>
     </form>
-  )
+  );
 }
 
 function SubmitButton() {
-  const status = useFormStatus()
+  const status = useFormStatus();
   return (
     <button
       className="inline-flex items-center gap-2 rounded-lg bg-garden-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-garden-700 focus:outline-none focus:ring-2 focus:ring-garden-500/20 disabled:opacity-50 transition-colors cursor-pointer"
@@ -193,11 +187,7 @@ function SubmitButton() {
     >
       {status.pending ? (
         <>
-          <svg
-            className="animate-spin h-4 w-4"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
+          <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
             <circle
               className="opacity-25"
               cx="12"
@@ -215,8 +205,8 @@ function SubmitButton() {
           Saving...
         </>
       ) : (
-        'Save Settings'
+        "Save Settings"
       )}
     </button>
-  )
+  );
 }
