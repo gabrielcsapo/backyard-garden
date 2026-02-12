@@ -47,13 +47,13 @@ export function ConfirmDialogProvider({ children }: { children: React.ReactNode 
             className="absolute inset-0 bg-black/30 animate-[fadeIn_0.15s_ease-out]"
             onClick={handleCancel}
           />
-          <div className="relative bg-white rounded-xl shadow-xl border border-earth-200 w-96 max-w-[90vw] p-6 animate-[scaleIn_0.15s_ease-out]">
-            <h3 className="text-base font-semibold text-gray-900 mb-2">{dialog.title}</h3>
-            <p className="text-sm text-gray-500 mb-6">{dialog.message}</p>
+          <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-earth-200 dark:border-gray-700 w-96 max-w-[90vw] p-6 animate-[scaleIn_0.15s_ease-out]">
+            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2">{dialog.title}</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">{dialog.message}</p>
             <div className="flex items-center gap-2 justify-end">
               <button
                 type="button"
-                className="rounded-lg border border-earth-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition cursor-pointer"
+                className="rounded-lg border border-earth-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition cursor-pointer"
                 onClick={handleCancel}
               >
                 Cancel

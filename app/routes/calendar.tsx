@@ -11,16 +11,16 @@ const Component = async () => {
   if (!userSettings?.lastFrostDate) {
     return (
       <main className="mx-auto max-w-6xl px-6 py-8">
-        <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
-          <Link to="/" className="hover:text-garden-700 transition-colors">
+        <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
+          <Link to="/" className="hover:text-garden-700 dark:hover:text-garden-400 transition-colors">
             Home
           </Link>
           <span>/</span>
-          <span className="text-gray-900">Calendar</span>
+          <span className="text-gray-900 dark:text-gray-100">Calendar</span>
         </nav>
-        <div className="bg-white rounded-xl border border-earth-200 shadow-sm p-10 text-center">
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">Frost Dates Required</h2>
-          <p className="text-sm text-gray-500 mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-10 text-center">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Frost Dates Required</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
             Configure your frost dates in settings to see your planting calendar.
           </p>
           <Link
@@ -59,18 +59,18 @@ const Component = async () => {
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-8">
-      <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
-        <Link to="/" className="hover:text-garden-700 transition-colors">
+      <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
+        <Link to="/" className="hover:text-garden-700 dark:hover:text-garden-400 transition-colors">
           Home
         </Link>
         <span>/</span>
-        <span className="text-gray-900">Calendar</span>
+        <span className="text-gray-900 dark:text-gray-100">Calendar</span>
       </nav>
 
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">Planting Calendar</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Planting Calendar</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Your personalized planting schedule based on frost dates.
           </p>
         </div>

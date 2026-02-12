@@ -58,18 +58,18 @@ const Component = async () => {
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-8">
-      <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
-        <Link to="/" className="hover:text-garden-700 transition-colors">
+      <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
+        <Link to="/" className="hover:text-garden-700 dark:hover:text-garden-400 transition-colors">
           Home
         </Link>
         <span>/</span>
-        <span className="text-gray-900">Garden Log</span>
+        <span className="text-gray-900 dark:text-gray-100">Garden Log</span>
       </nav>
 
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">Garden Log</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Garden Log</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Track activities, observations, and harvests in your garden.
           </p>
         </div>
@@ -80,14 +80,14 @@ const Component = async () => {
           <LogTimeline entries={entries} deleteAction={deleteLogEntry} />
         </div>
         <div className="space-y-6">
-          <div className="bg-white rounded-xl border border-earth-200 shadow-sm p-5">
-            <h2 className="text-sm font-semibold text-gray-900 mb-4">Quick Log</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-5">
+            <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">Quick Log</h2>
             <QuickLogForm plantings={allPlantings} createAction={createLogEntry} />
           </div>
 
           {Object.keys(harvestTotals).length > 0 && (
-            <div className="bg-white rounded-xl border border-earth-200 shadow-sm p-5">
-              <h2 className="text-sm font-semibold text-gray-900 mb-3">
+            <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-5">
+              <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                 {currentYear} Harvest Totals
               </h2>
               <div className="space-y-2">
@@ -95,8 +95,8 @@ const Component = async () => {
                   const plantName = key.split("|")[0];
                   return (
                     <div key={key} className="flex items-center justify-between text-sm">
-                      <span className="text-gray-700">{plantName}</span>
-                      <span className="font-medium text-garden-700">
+                      <span className="text-gray-700 dark:text-gray-300">{plantName}</span>
+                      <span className="font-medium text-garden-700 dark:text-garden-400">
                         {val.amount.toFixed(1)} {val.unit}
                       </span>
                     </div>

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useToast } from "../components/toast.client";
+import { PlantIcon } from "../lib/plant-icons";
 
 type LogEntry = {
   id: number;
@@ -30,47 +31,47 @@ type PlantingOption = {
 const LOG_TYPES: Record<string, { label: string; color: string; icon: string }> = {
   observation: {
     label: "Observation",
-    color: "bg-blue-50 text-blue-700 ring-blue-600/20",
+    color: "bg-blue-50 text-blue-700 ring-blue-600/20 dark:bg-blue-900/30 dark:text-blue-400 dark:ring-blue-500/30",
     icon: "M15 12a3 3 0 11-6 0 3 3 0 016 0z M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z",
   },
   watering: {
     label: "Watering",
-    color: "bg-cyan-50 text-cyan-700 ring-cyan-600/20",
+    color: "bg-cyan-50 text-cyan-700 ring-cyan-600/20 dark:bg-cyan-900/30 dark:text-cyan-400 dark:ring-cyan-500/30",
     icon: "M12 2L4 14h16L12 2z",
   },
   fertilizing: {
     label: "Fertilizing",
-    color: "bg-amber-50 text-amber-700 ring-amber-600/20",
+    color: "bg-amber-50 text-amber-700 ring-amber-600/20 dark:bg-amber-900/30 dark:text-amber-400 dark:ring-amber-500/30",
     icon: "M12 3v18m-6-6l6 6 6-6",
   },
   pest: {
     label: "Pest",
-    color: "bg-red-50 text-red-700 ring-red-600/20",
+    color: "bg-red-50 text-red-700 ring-red-600/20 dark:bg-red-900/30 dark:text-red-400 dark:ring-red-500/30",
     icon: "M12 9v2m0 4h.01M12 2a10 10 0 100 20 10 10 0 000-20z",
   },
   disease: {
     label: "Disease",
-    color: "bg-rose-50 text-rose-700 ring-rose-600/20",
+    color: "bg-rose-50 text-rose-700 ring-rose-600/20 dark:bg-rose-900/30 dark:text-rose-400 dark:ring-rose-500/30",
     icon: "M12 9v2m0 4h.01M12 2a10 10 0 100 20 10 10 0 000-20z",
   },
   harvest: {
     label: "Harvest",
-    color: "bg-orange-50 text-orange-700 ring-orange-600/20",
+    color: "bg-orange-50 text-orange-700 ring-orange-600/20 dark:bg-orange-900/30 dark:text-orange-400 dark:ring-orange-500/30",
     icon: "M4 7h16M4 12h16M4 17h8",
   },
   pruning: {
     label: "Pruning",
-    color: "bg-green-50 text-green-700 ring-green-600/20",
+    color: "bg-green-50 text-green-700 ring-green-600/20 dark:bg-green-900/30 dark:text-green-400 dark:ring-green-500/30",
     icon: "M6 3v18M18 3v18M6 12h12",
   },
   stage_change: {
     label: "Stage Change",
-    color: "bg-garden-50 text-garden-700 ring-garden-600/20",
+    color: "bg-garden-50 text-garden-700 ring-garden-600/20 dark:bg-garden-900/30 dark:text-garden-400 dark:ring-garden-500/30",
     icon: "M13 7l5 5-5 5M6 7l5 5-5 5",
   },
   weather: {
     label: "Weather",
-    color: "bg-gray-50 text-gray-700 ring-gray-600/20",
+    color: "bg-gray-50 text-gray-700 ring-gray-600/20 dark:bg-gray-700 dark:text-gray-300 dark:ring-gray-500/30",
     icon: "M3 15a4 4 0 004 4h9a5 5 0 10-2-9.8A7 7 0 103 15z",
   },
 };
@@ -105,8 +106,8 @@ export function LogTimeline({
 
   if (entries.length === 0) {
     return (
-      <div className="bg-white rounded-xl border border-earth-200 shadow-sm p-10 text-center">
-        <p className="text-gray-400 text-sm">
+      <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-10 text-center">
+        <p className="text-gray-400 dark:text-gray-500 text-sm">
           No log entries yet. Use the Quick Log form to add your first entry.
         </p>
       </div>
@@ -130,7 +131,7 @@ export function LogTimeline({
               return (
                 <div
                   key={entry.id}
-                  className="bg-white rounded-lg border border-earth-200 shadow-sm p-4 flex items-start gap-3"
+                  className="bg-white dark:bg-gray-800 rounded-lg border border-earth-200 dark:border-gray-700 shadow-sm p-4 flex items-start gap-3"
                 >
                   <span
                     className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset whitespace-nowrap shrink-0 ${typeConfig.color}`}
@@ -140,11 +141,11 @@ export function LogTimeline({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 text-sm">
                       {entry.plantName && (
-                        <span className="font-medium text-gray-900">
+                        <span className="inline-flex items-center gap-1.5 font-medium text-gray-900 dark:text-gray-100">
+                          <PlantIcon name={entry.plantName} size={16} className="text-garden-600 dark:text-garden-400 shrink-0" />
                           {entry.plantName}
                           {entry.plantVariety && (
-                            <span className="text-gray-500 font-normal">
-                              {" "}
+                            <span className="text-gray-500 dark:text-gray-400 font-normal">
                               ({entry.plantVariety})
                             </span>
                           )}
@@ -154,18 +155,18 @@ export function LogTimeline({
                         <span className="text-xs text-gray-400">in {entry.bedLabel}</span>
                       )}
                     </div>
-                    {entry.content && <p className="text-sm text-gray-600 mt-1">{entry.content}</p>}
+                    {entry.content && <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{entry.content}</p>}
                     {entry.type === "harvest" && entry.yieldAmount != null && (
-                      <p className="text-sm font-medium text-orange-700 mt-1">
+                      <p className="text-sm font-medium text-orange-700 dark:text-orange-400 mt-1">
                         Harvested: {entry.yieldAmount} {entry.yieldUnit ?? "units"}
                       </p>
                     )}
                     {entry.type === "stage_change" && entry.stage && (
-                      <p className="text-sm text-garden-700 mt-1">Stage: {entry.stage}</p>
+                      <p className="text-sm text-garden-700 dark:text-garden-400 mt-1">Stage: {entry.stage}</p>
                     )}
                   </div>
                   <button
-                    className="text-gray-300 hover:text-red-500 transition-colors shrink-0"
+                    className="text-gray-300 dark:text-gray-600 hover:text-red-500 dark:hover:text-red-400 transition-colors shrink-0"
                     onClick={() => handleDelete(entry.id)}
                     title="Delete entry"
                   >
@@ -247,9 +248,9 @@ export function QuickLogForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Event Type</label>
+        <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Event Type</label>
         <select
-          className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+          className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
           value={type}
           onChange={(e) => setType(e.target.value)}
         >
@@ -263,9 +264,9 @@ export function QuickLogForm({
 
       {!defaultPlantingId && plantings.length > 0 && (
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Plant (optional)</label>
+          <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Plant (optional)</label>
           <select
-            className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+            className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
             value={plantingId}
             onChange={(e) => setPlantingId(e.target.value)}
           >
@@ -284,9 +285,9 @@ export function QuickLogForm({
       {type === "harvest" && (
         <div className="grid grid-cols-2 gap-2">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Amount</label>
+            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Amount</label>
             <input
-              className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+              className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
               type="number"
               step="0.1"
               min="0"
@@ -296,9 +297,9 @@ export function QuickLogForm({
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Unit</label>
+            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Unit</label>
             <select
-              className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+              className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
               value={yieldUnit}
               onChange={(e) => setYieldUnit(e.target.value)}
             >
@@ -314,9 +315,9 @@ export function QuickLogForm({
 
       {type === "stage_change" && (
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">New Stage</label>
+          <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">New Stage</label>
           <select
-            className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+            className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
             value={stage}
             onChange={(e) => setStage(e.target.value)}
           >
@@ -331,9 +332,9 @@ export function QuickLogForm({
       )}
 
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Notes (optional)</label>
+        <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Notes (optional)</label>
         <textarea
-          className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition resize-none"
+          className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition resize-none dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
           rows={2}
           placeholder="Any observations..."
           value={content}

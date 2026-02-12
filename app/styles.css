@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
 
@@ -74,7 +76,7 @@
 
 @layer base {
   body {
-    @apply bg-earth-50 text-gray-900 antialiased;
+    @apply bg-earth-50 text-gray-900 antialiased dark:bg-gray-900 dark:text-gray-100;
   }
 }
 

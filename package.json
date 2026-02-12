@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "NODE_ENV=development vite preview",
+    "preview": "vite preview",
     "cf-dev": "vite -c ./cf/vite.config.ts",
     "cf-build": "vite -c ./cf/vite.config.ts build",
     "cf-preview": "vite -c ./cf/vite.config.ts preview",

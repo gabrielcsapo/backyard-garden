@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useToast } from "../components/toast.client";
+import { PlantIcon } from "../lib/plant-icons";
 
 type CalendarPlanting = {
   id: number;
@@ -252,20 +253,20 @@ export function GanttCalendar({
   }
 
   const STATUS_COLORS: Record<string, string> = {
-    planned: "bg-gray-100 text-gray-600",
-    seeded: "bg-blue-100 text-blue-700",
-    sprouted: "bg-emerald-100 text-emerald-700",
-    transplanted: "bg-orange-100 text-orange-700",
-    growing: "bg-garden-100 text-garden-700",
-    harvesting: "bg-amber-100 text-amber-700",
+    planned: "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400",
+    seeded: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+    sprouted: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+    transplanted: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
+    growing: "bg-garden-100 text-garden-700 dark:bg-garden-900/30 dark:text-garden-400",
+    harvesting: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
   };
 
   return (
     <div className="space-y-6">
       {/* This Week Tasks */}
       {thisWeekTasks.length > 0 && (
-        <div className="bg-white rounded-xl border border-garden-200 shadow-sm p-5">
-          <h2 className="text-sm font-semibold text-garden-800 mb-3">This Week</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-garden-200 dark:border-garden-800 shadow-sm p-5">
+          <h2 className="text-sm font-semibold text-garden-800 dark:text-garden-400 mb-3">This Week</h2>
           <div className="space-y-2">
             {thisWeekTasks.map((task, i) => (
               <div
@@ -273,11 +274,12 @@ export function GanttCalendar({
                 className="flex items-center gap-3"
               >
                 <button
-                  className="w-5 h-5 rounded border-2 border-garden-300 hover:border-garden-500 hover:bg-garden-50 transition-colors shrink-0 cursor-pointer"
+                  className="w-5 h-5 rounded border-2 border-garden-300 hover:border-garden-500 hover:bg-garden-50 dark:hover:bg-garden-900/30 transition-colors shrink-0 cursor-pointer"
                   onClick={() => handleMarkDone(task)}
                   title="Mark as done"
                 />
-                <span className="text-sm text-gray-700">{task.taskLabel}</span>
+                <PlantIcon name={task.plantName} size={18} className="text-garden-600 dark:text-garden-400 shrink-0" />
+                <span className="text-sm text-gray-700 dark:text-gray-300">{task.taskLabel}</span>
               </div>
             ))}
           </div>
@@ -285,10 +287,10 @@ export function GanttCalendar({
       )}
 
       {/* Filters */}
-      <div className="bg-white rounded-xl border border-earth-200 shadow-sm p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-4">
         <div className="flex flex-wrap gap-3 items-center">
           <select
-            className="rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+            className="rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
           >
@@ -307,16 +309,16 @@ export function GanttCalendar({
 
       {/* Gantt Chart */}
       {filtered.length === 0 ? (
-        <div className="bg-white rounded-xl border border-earth-200 shadow-sm p-10 text-center">
-          <p className="text-gray-400 text-sm">
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-10 text-center">
+          <p className="text-gray-400 dark:text-gray-500 text-sm">
             No active plantings. Add plants to your beds in the Yard planner to see them here.
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-earth-200 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm overflow-hidden">
           {/* Month headers */}
-          <div className="flex border-b border-earth-100">
-            <div className="w-48 shrink-0 px-4 py-2 text-xs font-medium text-gray-500 border-r border-earth-100">
+          <div className="flex border-b border-earth-100 dark:border-gray-700">
+            <div className="w-48 shrink-0 px-4 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 border-r border-earth-100 dark:border-gray-700">
               Plant
             </div>
             <div className="flex-1 relative">
@@ -324,7 +326,7 @@ export function GanttCalendar({
                 {MONTHS.map((m) => (
                   <div
                     key={m}
-                    className="flex-1 text-center text-[10px] text-gray-400 py-2 border-r border-earth-50"
+                    className="flex-1 text-center text-[10px] text-gray-400 py-2 border-r border-earth-50 dark:border-gray-700"
                   >
                     {m}
                   </div>
@@ -340,10 +342,13 @@ export function GanttCalendar({
             return (
               <div
                 key={p.id}
-                className="flex border-b border-earth-50 hover:bg-earth-50/50 transition-colors"
+                className="flex border-b border-earth-50 dark:border-gray-700 hover:bg-earth-50/50 dark:hover:bg-gray-700/50 transition-colors"
               >
-                <div className="w-48 shrink-0 px-4 py-2.5 border-r border-earth-100">
-                  <p className="text-sm font-medium text-gray-900 truncate">{p.plantName}</p>
+                <div className="w-48 shrink-0 px-4 py-2.5 border-r border-earth-100 dark:border-gray-700">
+                  <div className="flex items-center gap-1.5">
+                    <PlantIcon name={p.plantName} size={18} className="text-garden-600 dark:text-garden-400 shrink-0" />
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{p.plantName}</p>
+                  </div>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     {p.bedLabel && (
                       <span className="text-[10px] text-gray-400 truncate">{p.bedLabel}</span>
@@ -360,7 +365,7 @@ export function GanttCalendar({
                   {MONTHS.map((_, i) => (
                     <div
                       key={i}
-                      className="absolute top-0 bottom-0 border-r border-earth-50"
+                      className="absolute top-0 bottom-0 border-r border-earth-50 dark:border-gray-700"
                       style={{ left: `${(i / 12) * 100}%` }}
                     />
                   ))}
@@ -403,29 +408,29 @@ export function GanttCalendar({
           })}
 
           {/* Legend */}
-          <div className="px-4 py-3 bg-earth-50/50 border-t border-earth-100">
+          <div className="px-4 py-3 bg-earth-50/50 dark:bg-gray-700/50 border-t border-earth-100 dark:border-gray-700">
             <div className="flex flex-wrap gap-x-4 gap-y-1">
-              <span className="flex items-center gap-1 text-[10px] text-gray-500">
+              <span className="flex items-center gap-1 text-[10px] text-gray-500 dark:text-gray-400">
                 <span className="inline-block w-2 h-2 rounded-sm bg-blue-400" />
                 Indoor Start
               </span>
-              <span className="flex items-center gap-1 text-[10px] text-gray-500">
+              <span className="flex items-center gap-1 text-[10px] text-gray-500 dark:text-gray-400">
                 <span className="inline-block w-2 h-2 rounded-sm bg-emerald-500" />
                 Direct Sow
               </span>
-              <span className="flex items-center gap-1 text-[10px] text-gray-500">
+              <span className="flex items-center gap-1 text-[10px] text-gray-500 dark:text-gray-400">
                 <span className="inline-block w-2 h-2 rounded-sm bg-orange-400" />
                 Transplant
               </span>
-              <span className="flex items-center gap-1 text-[10px] text-gray-500">
+              <span className="flex items-center gap-1 text-[10px] text-gray-500 dark:text-gray-400">
                 <span className="inline-block w-2 h-2 rounded-sm bg-amber-500" />
                 Harvest
               </span>
-              <span className="flex items-center gap-1 text-[10px] text-gray-500">
+              <span className="flex items-center gap-1 text-[10px] text-gray-500 dark:text-gray-400">
                 <span className="inline-block w-0.5 h-3 border-l-2 border-red-400" />
                 Today
               </span>
-              <span className="flex items-center gap-1 text-[10px] text-gray-500">
+              <span className="flex items-center gap-1 text-[10px] text-gray-500 dark:text-gray-400">
                 <span className="inline-block w-0.5 h-3 border-l border-dashed border-blue-300" />
                 Frost dates
               </span>

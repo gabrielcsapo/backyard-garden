@@ -12,9 +12,14 @@ export const routes: unstable_RSCRouteConfigEntry[] = [
         lazy: () => import("./routes/home"),
       },
       {
-        id: "yard",
+        id: "yards",
         path: "yard",
         lazy: () => import("./routes/yard"),
+      },
+      {
+        id: "yard-editor",
+        path: "yard/:id",
+        lazy: () => import("./routes/yard.$id"),
       },
       {
         id: "plants",

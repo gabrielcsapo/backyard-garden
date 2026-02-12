@@ -12,18 +12,18 @@ const Component = async () => {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-8">
-      <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
-        <Link to="/" className="hover:text-garden-700 transition-colors">
+      <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
+        <Link to="/" className="hover:text-garden-700 dark:hover:text-garden-400 transition-colors">
           Home
         </Link>
         <span>/</span>
-        <span className="text-gray-900">Settings</span>
+        <span className="text-gray-900 dark:text-gray-100">Settings</span>
       </nav>
 
-      <div className="bg-white rounded-xl border border-earth-200 shadow-sm">
-        <div className="px-6 py-5 border-b border-earth-100">
-          <h1 className="text-xl font-semibold text-gray-900">Garden Settings</h1>
-          <p className="text-sm text-gray-500 mt-1">
+      <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm">
+        <div className="px-6 py-5 border-b border-earth-100 dark:border-gray-700">
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Garden Settings</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Configure your growing zone and frost dates to get personalized planting
             recommendations.
           </p>

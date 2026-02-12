@@ -16,10 +16,10 @@ export function useToast() {
 let nextId = 0;
 
 const TYPE_STYLES: Record<ToastType, string> = {
-  success: "bg-garden-50 border-garden-300 text-garden-800",
-  error: "bg-red-50 border-red-300 text-red-800",
-  info: "bg-blue-50 border-blue-300 text-blue-800",
-  warning: "bg-amber-50 border-amber-300 text-amber-800",
+  success: "bg-garden-50 border-garden-300 text-garden-800 dark:bg-garden-900/50 dark:border-garden-700 dark:text-garden-300",
+  error: "bg-red-50 border-red-300 text-red-800 dark:bg-red-900/50 dark:border-red-700 dark:text-red-300",
+  info: "bg-blue-50 border-blue-300 text-blue-800 dark:bg-blue-900/50 dark:border-blue-700 dark:text-blue-300",
+  warning: "bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-900/50 dark:border-amber-700 dark:text-amber-300",
 };
 
 const TYPE_ICONS: Record<ToastType, string> = {

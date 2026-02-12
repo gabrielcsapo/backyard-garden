@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="backyard-garden icon">
+  <!-- Circle background -->
+  <circle cx="512" cy="512" r="480" fill="currentColor"/>
+
+  <!-- Sprout (cut-out style using white) -->
+  <g fill="white">
+    <!-- Stem -->
+    <rect x="480" y="560" width="64" height="240" rx="32"/>
+
+    <!-- Left Leaf -->
+    <path d="M512 560c-150 0-230-80-230-230 0-16 13-29 29-29 150 0 230 80 230 230 0 16-13 29-29 29zm-164-201c12 88 65 134 137 143-9-72-55-125-137-143z"/>
+
+    <!-- Right Leaf -->
+    <path d="M512 560c-16 0-29-13-29-29 0-150 80-230 230-230 16 0 29 13 29 29 0 150-80 230-230 230zm29-58c72-9 125-55 143-137-88 12-134 65-143 137z"/>
+  </g>
+</svg>

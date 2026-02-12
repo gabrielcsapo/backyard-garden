@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { PlantIcon } from "../lib/plant-icons";
 
 type Plant = {
   id: number;
@@ -21,14 +22,15 @@ type Plant = {
 };
 
 const CATEGORY_STYLES: Record<string, string> = {
-  vegetable: "bg-green-50 text-green-700 ring-green-600/20",
-  fruit: "bg-rose-50 text-rose-700 ring-rose-600/20",
-  herb: "bg-violet-50 text-violet-700 ring-violet-600/20",
-  legume: "bg-amber-50 text-amber-700 ring-amber-600/20",
-  root: "bg-orange-50 text-orange-700 ring-orange-600/20",
-  leafy_green: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
-  allium: "bg-purple-50 text-purple-700 ring-purple-600/20",
-  brassica: "bg-teal-50 text-teal-700 ring-teal-600/20",
+  vegetable: "bg-green-50 text-green-700 ring-green-600/20 dark:bg-green-900/30 dark:text-green-400 dark:ring-green-500/30",
+  fruit: "bg-rose-50 text-rose-700 ring-rose-600/20 dark:bg-rose-900/30 dark:text-rose-400 dark:ring-rose-500/30",
+  herb: "bg-violet-50 text-violet-700 ring-violet-600/20 dark:bg-violet-900/30 dark:text-violet-400 dark:ring-violet-500/30",
+  legume: "bg-amber-50 text-amber-700 ring-amber-600/20 dark:bg-amber-900/30 dark:text-amber-400 dark:ring-amber-500/30",
+  root: "bg-orange-50 text-orange-700 ring-orange-600/20 dark:bg-orange-900/30 dark:text-orange-400 dark:ring-orange-500/30",
+  leafy_green: "bg-emerald-50 text-emerald-700 ring-emerald-600/20 dark:bg-emerald-900/30 dark:text-emerald-400 dark:ring-emerald-500/30",
+  allium: "bg-purple-50 text-purple-700 ring-purple-600/20 dark:bg-purple-900/30 dark:text-purple-400 dark:ring-purple-500/30",
+  brassica: "bg-teal-50 text-teal-700 ring-teal-600/20 dark:bg-teal-900/30 dark:text-teal-400 dark:ring-teal-500/30",
+  flower: "bg-pink-50 text-pink-700 ring-pink-600/20 dark:bg-pink-900/30 dark:text-pink-400 dark:ring-pink-500/30",
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -40,6 +42,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   herb: "Herb",
   legume: "Legume",
   root: "Root",
+  flower: "Flower",
 };
 
 const SUN_CONFIG: Record<string, { icon: string; label: string }> = {
@@ -99,11 +102,11 @@ export function PlantSearch({
 
   return (
     <div>
-      <div className="bg-white rounded-xl border border-earth-200 shadow-sm p-4 mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-4 mb-6">
         <div className="flex flex-wrap gap-3">
           <div className="flex-1 min-w-[200px]">
             <input
-              className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition placeholder:text-gray-400"
+              className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition placeholder:text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder:text-gray-400"
               type="text"
               placeholder="Search plants..."
               value={search}
@@ -111,7 +114,7 @@ export function PlantSearch({
             />
           </div>
           <select
-            className="rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+            className="rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
           >
@@ -123,7 +126,7 @@ export function PlantSearch({
             ))}
           </select>
           <select
-            className="rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+            className="rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
             value={sunFilter}
             onChange={(e) => setSunFilter(e.target.value)}
           >
@@ -150,14 +153,14 @@ export function PlantSearch({
 
       {filtered.length === 0 && (
         <div className="text-center py-16">
-          <p className="text-gray-400 text-sm">No plants match your filters.</p>
+          <p className="text-gray-400 dark:text-gray-500 text-sm">No plants match your filters.</p>
         </div>
       )}
 
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-1 mt-8">
           <button
-            className="px-3 py-1.5 text-sm rounded-lg border border-earth-200 text-gray-600 hover:bg-earth-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+            className="px-3 py-1.5 text-sm rounded-lg border border-earth-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-earth-50 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
             disabled={page === 1}
             onClick={() => setPage((p) => p - 1)}
           >
@@ -168,8 +171,8 @@ export function PlantSearch({
               key={p}
               className={`px-3 py-1.5 text-sm rounded-lg border transition ${
                 p === page
-                  ? "border-garden-600 bg-garden-50 text-garden-700 font-medium"
-                  : "border-earth-200 text-gray-600 hover:bg-earth-50"
+                  ? "border-garden-600 bg-garden-50 text-garden-700 font-medium dark:bg-garden-900/30 dark:text-garden-400 dark:border-garden-500"
+                  : "border-earth-200 text-gray-600 hover:bg-earth-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700"
               }`}
               onClick={() => setPage(p)}
             >
@@ -177,7 +180,7 @@ export function PlantSearch({
             </button>
           ))}
           <button
-            className="px-3 py-1.5 text-sm rounded-lg border border-earth-200 text-gray-600 hover:bg-earth-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+            className="px-3 py-1.5 text-sm rounded-lg border border-earth-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-earth-50 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
             disabled={page === totalPages}
             onClick={() => setPage((p) => p + 1)}
           >
@@ -197,11 +200,14 @@ function PlantCard({ plant, lastFrostDate }: { plant: Plant; lastFrostDate: stri
   const catLabel = plant.category ? (CATEGORY_LABELS[plant.category] ?? plant.category) : null;
 
   return (
-    <div className="bg-white rounded-xl border border-earth-200 shadow-sm p-5 flex flex-col gap-3 hover:shadow-md transition-shadow">
+    <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-5 flex flex-col gap-3 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between gap-2">
-        <div>
-          <h3 className="text-base font-semibold text-gray-900">{plant.name}</h3>
-          {plant.variety && <p className="text-xs text-gray-500">{plant.variety}</p>}
+        <div className="flex items-center gap-2">
+          <PlantIcon name={plant.name} size={28} className="text-garden-600 dark:text-garden-400 shrink-0" />
+          <div>
+            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">{plant.name}</h3>
+            {plant.variety && <p className="text-xs text-gray-500 dark:text-gray-400">{plant.variety}</p>}
+          </div>
         </div>
         {catLabel && (
           <span
@@ -213,10 +219,10 @@ function PlantCard({ plant, lastFrostDate }: { plant: Plant; lastFrostDate: stri
       </div>
 
       {plant.description && (
-        <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">{plant.description}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2">{plant.description}</p>
       )}
 
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
         {sun && (
           <span>
             {sun.icon} {sun.label}
@@ -243,8 +249,9 @@ function PlantCard({ plant, lastFrostDate }: { plant: Plant; lastFrostDate: stri
             {plant.companions.map((c) => (
               <span
                 key={c}
-                className="text-[11px] bg-green-50 text-green-700 rounded-md px-1.5 py-0.5"
+                className="inline-flex items-center gap-1 text-[11px] bg-green-50 text-green-700 rounded-md px-1.5 py-0.5 dark:bg-green-900/30 dark:text-green-400"
               >
+                <PlantIcon name={c} size={12} className="text-green-600 dark:text-green-400" />
                 {c}
               </span>
             ))}
@@ -259,7 +266,8 @@ function PlantCard({ plant, lastFrostDate }: { plant: Plant; lastFrostDate: stri
           </p>
           <div className="flex flex-wrap gap-1">
             {plant.incompatible.map((c) => (
-              <span key={c} className="text-[11px] bg-red-50 text-red-600 rounded-md px-1.5 py-0.5">
+              <span key={c} className="inline-flex items-center gap-1 text-[11px] bg-red-50 text-red-600 rounded-md px-1.5 py-0.5 dark:bg-red-900/30 dark:text-red-400">
+                <PlantIcon name={c} size={12} className="text-red-500 dark:text-red-400" />
                 {c}
               </span>
             ))}
@@ -356,7 +364,7 @@ function PlantingCalendarBar({
       <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">
         Planting Calendar
       </p>
-      <div className="relative h-5 bg-gray-100 rounded-md overflow-hidden">
+      <div className="relative h-5 bg-gray-100 dark:bg-gray-700 rounded-md overflow-hidden">
         {segments.map((seg) => (
           <div
             key={seg.label}
@@ -368,7 +376,7 @@ function PlantingCalendarBar({
         {MONTHS.map((_, i) => (
           <div
             key={i}
-            className="absolute top-0 h-full border-l border-gray-200"
+            className="absolute top-0 h-full border-l border-gray-200 dark:border-gray-600"
             style={{ left: `${(i / 12) * 100}%` }}
           />
         ))}
@@ -383,7 +391,7 @@ function PlantingCalendarBar({
       {segments.length > 0 && (
         <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1">
           {segments.map((seg) => (
-            <span key={seg.label} className="flex items-center gap-1 text-[10px] text-gray-500">
+            <span key={seg.label} className="flex items-center gap-1 text-[10px] text-gray-500 dark:text-gray-400">
               <span className={`inline-block w-2 h-2 rounded-sm ${seg.color}`} />
               {seg.label}
             </span>

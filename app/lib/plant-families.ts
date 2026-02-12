@@ -115,6 +115,11 @@ export const PLANT_FAMILIES: Record<string, { label: string; color: string; plan
     color: "bg-green-100 text-green-700",
     plants: ["Asparagus"],
   },
+  zingiberaceae: {
+    label: "Gingers",
+    color: "bg-amber-100 text-amber-700",
+    plants: ["Ginger"],
+  },
 };
 
 /**

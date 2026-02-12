@@ -69,17 +69,17 @@ export function SettingsForm({
       <input type="hidden" name="firstFrostDate" value={firstFrost} />
 
       {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/30 dark:border-red-800 dark:text-red-400">
           {error}
         </div>
       )}
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1.5" htmlFor="zipInput">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5" htmlFor="zipInput">
           Zip Code
         </label>
         <input
-          className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition placeholder:text-gray-400"
+          className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition placeholder:text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder:text-gray-400"
           id="zipInput"
           type="text"
           inputMode="numeric"
@@ -89,22 +89,22 @@ export function SettingsForm({
           value={zip}
           onChange={(e) => setZip(e.target.value.replace(/\D/g, "").slice(0, 5))}
         />
-        <p className="text-xs text-gray-400 mt-1">
+        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
           Enter your zip code to auto-detect zone and frost dates.
         </p>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1.5" htmlFor="zoneSelect">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5" htmlFor="zoneSelect">
           USDA Hardiness Zone
           {autoDetected && (
-            <span className="ml-2 inline-flex items-center rounded-md bg-garden-50 px-1.5 py-0.5 text-[10px] font-medium text-garden-700 ring-1 ring-inset ring-garden-600/20">
+            <span className="ml-2 inline-flex items-center rounded-md bg-garden-50 dark:bg-garden-900/30 px-1.5 py-0.5 text-[10px] font-medium text-garden-700 dark:text-garden-400 ring-1 ring-inset ring-garden-600/20">
               Auto-detected
             </span>
           )}
         </label>
         <select
-          className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+          className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
           id="zoneSelect"
           value={zone}
           onChange={(e) => {
@@ -124,18 +124,18 @@ export function SettingsForm({
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label
-            className="block text-sm font-medium text-gray-700 mb-1.5"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
             htmlFor="lastFrostInput"
           >
             Last Frost Date (Spring)
             {autoDetected && (
-              <span className="ml-2 inline-flex items-center rounded-md bg-garden-50 px-1.5 py-0.5 text-[10px] font-medium text-garden-700 ring-1 ring-inset ring-garden-600/20">
+              <span className="ml-2 inline-flex items-center rounded-md bg-garden-50 dark:bg-garden-900/30 px-1.5 py-0.5 text-[10px] font-medium text-garden-700 dark:text-garden-400 ring-1 ring-inset ring-garden-600/20">
                 Auto-detected
               </span>
             )}
           </label>
           <input
-            className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+            className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
             id="lastFrostInput"
             type="date"
             value={lastFrost}
@@ -147,18 +147,18 @@ export function SettingsForm({
         </div>
         <div>
           <label
-            className="block text-sm font-medium text-gray-700 mb-1.5"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
             htmlFor="firstFrostInput"
           >
             First Frost Date (Fall)
             {autoDetected && (
-              <span className="ml-2 inline-flex items-center rounded-md bg-garden-50 px-1.5 py-0.5 text-[10px] font-medium text-garden-700 ring-1 ring-inset ring-garden-600/20">
+              <span className="ml-2 inline-flex items-center rounded-md bg-garden-50 dark:bg-garden-900/30 px-1.5 py-0.5 text-[10px] font-medium text-garden-700 dark:text-garden-400 ring-1 ring-inset ring-garden-600/20">
                 Auto-detected
               </span>
             )}
           </label>
           <input
-            className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+            className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
             id="firstFrostInput"
             type="date"
             value={firstFrost}

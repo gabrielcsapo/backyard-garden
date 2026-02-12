@@ -4,6 +4,7 @@ import React from "react";
 import { SHAPE_CONFIG } from "../lib/shapes.ts";
 import type { ShapeType } from "../lib/shapes.ts";
 import { useToast } from "../components/toast.client";
+import { useTheme } from "../components/theme-provider.client";
 
 type PreviewElement = {
   id: number;
@@ -27,29 +28,24 @@ export function YardPreview({
   heightFt: number;
   elements: PreviewElement[];
 }) {
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const [scale, setScale] = React.useState(1);
+  const { isDark } = useTheme();
 
   const gridWidth = widthFt * CELL_SIZE;
   const gridHeight = heightFt * CELL_SIZE;
 
-  React.useEffect(() => {
-    if (!containerRef.current) return;
-    const availableWidth = containerRef.current.clientWidth;
-    const maxHeight = 300;
-    const scaleX = availableWidth / gridWidth;
-    const scaleY = maxHeight / gridHeight;
-    setScale(Math.min(scaleX, scaleY, 1));
-  }, [gridWidth, gridHeight]);
+  const bgColor = isDark ? "#1f2937" : "#f9fafb";
+  const gridColor = isDark ? "#374151" : "#e5e7eb";
+  const labelColor = isDark ? "#d1d5db" : "#374151";
 
   return (
-    <div ref={containerRef} className="flex justify-center">
+    <div className="flex justify-center items-center h-40">
       <svg
-        width={gridWidth * scale}
-        height={gridHeight * scale}
+        width="100%"
+        height="100%"
         viewBox={`0 0 ${gridWidth} ${gridHeight}`}
+        preserveAspectRatio="xMidYMid meet"
       >
-        <rect width={gridWidth} height={gridHeight} fill="#f9fafb" />
+        <rect width={gridWidth} height={gridHeight} fill={bgColor} />
 
         {/* Light grid */}
         {Array.from({ length: Math.floor(widthFt / 5) + 1 }, (_, i) => (
@@ -59,7 +55,7 @@ export function YardPreview({
             y1={0}
             x2={i * 5 * CELL_SIZE}
             y2={gridHeight}
-            stroke="#e5e7eb"
+            stroke={gridColor}
             strokeWidth={0.5}
           />
         ))}
@@ -70,7 +66,7 @@ export function YardPreview({
             y1={i * 5 * CELL_SIZE}
             x2={gridWidth}
             y2={i * 5 * CELL_SIZE}
-            stroke="#e5e7eb"
+            stroke={gridColor}
             strokeWidth={0.5}
           />
         ))}
@@ -131,7 +127,7 @@ export function YardPreview({
                   textAnchor="middle"
                   dominantBaseline="middle"
                   fontSize={Math.min(11, w / (el.label.length * 0.7))}
-                  fill="#374151"
+                  fill={labelColor}
                   fontWeight="500"
                   pointerEvents="none"
                 >
@@ -191,8 +187,8 @@ export function TaskCheckbox({
         done
           ? "bg-garden-500 border-garden-500 text-white"
           : loading
-            ? "border-garden-300 bg-garden-50"
-            : "border-gray-300 hover:border-garden-400"
+            ? "border-garden-300 bg-garden-50 dark:bg-garden-900/30 dark:border-garden-600"
+            : "border-gray-300 dark:border-gray-600 hover:border-garden-400"
       }`}
     >
       {done && (

@@ -1,60 +1,180 @@
 "use client";
 
 import React from "react";
-import { SHAPE_CONFIG, SHAPE_TYPES } from "../lib/shapes.ts";
+import { Link, useNavigate } from "react-router";
+import { SHAPE_CONFIG } from "../lib/shapes.ts";
 import type { ShapeType } from "../lib/shapes.ts";
+import type {
+  ToolType,
+  Yard,
+  YardElement,
+  PlantInfo,
+  Planting,
+} from "../lib/yard-types.ts";
+import { CELL_SIZE } from "../lib/yard-types.ts";
+import { usePanZoom } from "../lib/use-pan-zoom.ts";
+import { useKeyboardShortcuts } from "../lib/use-keyboard-shortcuts.ts";
+import { computeSnapGuides } from "../lib/use-snap-guides.ts";
+import type { Guide } from "../lib/use-snap-guides.ts";
 import {
   addYardElement,
   updateYardElement,
   deleteYardElement,
   duplicateYardElement,
+  updateYard,
+  deleteYard,
 } from "./yard.actions.ts";
-import { addPlanting, updatePlanting, deletePlanting } from "./beds.$id.actions.ts";
-import { getShapeArea } from "../lib/shapes.ts";
+import {
+  addPlanting,
+  updatePlanting,
+  deletePlanting,
+} from "./beds.$id.actions.ts";
 import { rankBedsForPlant, getGlowColor } from "../lib/companion-scoring.ts";
 import type { BedScore } from "../lib/companion-scoring.ts";
 import { useToast } from "../components/toast.client";
 import { useConfirm } from "../components/confirm-dialog.client";
-import { checkCompanionConflicts } from "../lib/companions.ts";
+import { ShapeElement } from "../components/yard/shape-element.client.tsx";
+import { PropertiesPanel } from "../components/yard/properties-panel.client.tsx";
+import { BedPlantingsPanel } from "../components/yard/bed-plantings-panel.client.tsx";
+import { BedPlantIcons } from "../components/yard/bed-plant-icons.client.tsx";
+import {
+  SmartPlacePanel,
+  SmartPlaceButton,
+} from "../components/yard/smart-place-panel.client.tsx";
+import { Toolbar } from "../components/yard/toolbar.client.tsx";
+import { ZoomControls } from "../components/yard/zoom-controls.client.tsx";
+import { Minimap } from "../components/yard/minimap.client.tsx";
+import {
+  StatusBar,
+  updateCursorDisplay,
+} from "../components/yard/status-bar.client.tsx";
+import { SnapGuides } from "../components/yard/snap-guides.client.tsx";
+import { useTheme } from "../components/theme-provider.client";
+import { YardPreview } from "./home.client";
 
-type Yard = { id: number; name: string; widthFt: number; heightFt: number };
-type Element = {
-  id: number;
-  yardId: number;
-  shapeType: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  label: string | null;
-  sunExposure: string | null;
-  rotation: number | null;
-  metadata: unknown;
-};
-type PlantInfo = {
+type YardSummary = {
   id: number;
   name: string;
-  variety: string | null;
-  category: string | null;
-  spacingInches: number | null;
-  daysToHarvest: number | null;
-  sunRequirement: string | null;
-  companions: unknown;
-  incompatible: unknown;
-};
-type Planting = {
-  id: number;
-  plantId: number;
-  yardElementId: number;
-  status: string | null;
-  quantity: number | null;
-  notes: string | null;
-  plantedDate: string | null;
+  widthFt: number;
+  heightFt: number;
+  elements: {
+    id: number;
+    shapeType: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    label: string | null;
+    rotation: number | null;
+  }[];
+  elementCount: number;
+  plantingCount: number;
 };
 
-const CELL_SIZE = 28;
-const GRID_COLOR = "#e5e7eb";
-const GRID_COLOR_MAJOR = "#d1d5db";
+export function YardListPage({
+  yards,
+  createYardAction,
+}: {
+  yards: YardSummary[];
+  createYardAction: (formData: FormData) => Promise<void>;
+}) {
+  const [showCreateForm, setShowCreateForm] = React.useState(yards.length === 0);
+
+  return (
+    <main className="mx-auto max-w-6xl px-6 py-8">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Yards</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            Manage your garden yards and layouts.
+          </p>
+        </div>
+        {yards.length > 0 && !showCreateForm && (
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 rounded-lg bg-garden-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-garden-700 transition-colors cursor-pointer"
+            onClick={() => setShowCreateForm(true)}
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            New Yard
+          </button>
+        )}
+      </div>
+
+      {showCreateForm && (
+        <div className="max-w-lg mx-auto mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-8 text-center">
+            <div className="mx-auto w-12 h-12 rounded-full bg-garden-50 dark:bg-garden-900/30 flex items-center justify-center mb-4">
+              <svg
+                className="w-6 h-6 text-garden-600 dark:text-garden-400"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <path d="M3 9h18" />
+                <path d="M9 3v18" />
+              </svg>
+            </div>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+              {yards.length === 0 ? "Create Your First Yard" : "Create New Yard"}
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              Define your yard dimensions to start planning your garden layout.
+            </p>
+            <CreateYardForm action={createYardAction} />
+            {yards.length > 0 && (
+              <button
+                type="button"
+                className="mt-4 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 cursor-pointer"
+                onClick={() => setShowCreateForm(false)}
+              >
+                Cancel
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {yards.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {yards.map((yard) => (
+            <div
+              key={yard.id}
+              className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm overflow-hidden group"
+            >
+              <Link
+                to={`/yard/${yard.id}`}
+                className="block no-underline hover:shadow-md transition-shadow"
+              >
+                <div className="p-4 border-b border-earth-100 dark:border-gray-700">
+                  <YardPreview
+                    widthFt={yard.widthFt}
+                    heightFt={yard.heightFt}
+                    elements={yard.elements}
+                  />
+                </div>
+                <div className="px-4 py-3">
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover:text-garden-700 dark:group-hover:text-garden-400 transition-colors">
+                    {yard.name}
+                  </h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    {yard.widthFt} x {yard.heightFt} ft &middot; {yard.elementCount} bed{yard.elementCount !== 1 ? "s" : ""} &middot; {yard.plantingCount} planting{yard.plantingCount !== 1 ? "s" : ""}
+                  </p>
+                </div>
+              </Link>
+            </div>
+          ))}
+        </div>
+      )}
+    </main>
+  );
+}
 
 type SizeMode = "dimensions" | "sqft" | "acres";
 
@@ -69,7 +189,11 @@ function acresToDimensions(acres: number): { w: number; h: number } {
   return { w: side, h: side };
 }
 
-export function CreateYardForm({ action }: { action: (formData: FormData) => Promise<void> }) {
+export function CreateYardForm({
+  action,
+}: {
+  action: (formData: FormData) => Promise<void>;
+}) {
   const [sizeMode, setSizeMode] = React.useState<SizeMode>("dimensions");
   const [widthFt, setWidthFt] = React.useState(50);
   const [heightFt, setHeightFt] = React.useState(40);
@@ -98,9 +222,11 @@ export function CreateYardForm({ action }: { action: (formData: FormData) => Pro
       <input type="hidden" name="heightFt" value={effectiveHeight} />
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1.5">Yard Name</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+          Yard Name
+        </label>
         <input
-          className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+          className="w-full rounded-lg border border-earth-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
           type="text"
           name="name"
           placeholder="My Backyard"
@@ -109,8 +235,10 @@ export function CreateYardForm({ action }: { action: (formData: FormData) => Pro
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Size Input</label>
-        <div className="flex rounded-lg border border-earth-200 overflow-hidden">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Size Input
+        </label>
+        <div className="flex rounded-lg border border-earth-200 dark:border-gray-600 overflow-hidden">
           {(["dimensions", "sqft", "acres"] as const).map((mode) => (
             <button
               key={mode}
@@ -118,11 +246,15 @@ export function CreateYardForm({ action }: { action: (formData: FormData) => Pro
               className={`flex-1 px-3 py-1.5 text-sm font-medium transition cursor-pointer ${
                 sizeMode === mode
                   ? "bg-garden-600 text-white"
-                  : "bg-white text-gray-600 hover:bg-gray-50"
+                  : "bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600"
               }`}
               onClick={() => setSizeMode(mode)}
             >
-              {mode === "dimensions" ? "W x H" : mode === "sqft" ? "Sq Feet" : "Acres"}
+              {mode === "dimensions"
+                ? "W x H"
+                : mode === "sqft"
+                  ? "Sq Feet"
+                  : "Acres"}
             </button>
           ))}
         </div>
@@ -131,9 +263,11 @@ export function CreateYardForm({ action }: { action: (formData: FormData) => Pro
       {sizeMode === "dimensions" && (
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Width (ft)</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+              Width (ft)
+            </label>
             <input
-              className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+              className="w-full rounded-lg border border-earth-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
               type="number"
               min="10"
               max="1000"
@@ -142,9 +276,11 @@ export function CreateYardForm({ action }: { action: (formData: FormData) => Pro
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Height (ft)</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+              Height (ft)
+            </label>
             <input
-              className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+              className="w-full rounded-lg border border-earth-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
               type="number"
               min="10"
               max="1000"
@@ -157,11 +293,11 @@ export function CreateYardForm({ action }: { action: (formData: FormData) => Pro
 
       {sizeMode === "sqft" && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
             Total Square Feet
           </label>
           <input
-            className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+            className="w-full rounded-lg border border-earth-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
             type="number"
             min="100"
             max="500000"
@@ -173,9 +309,11 @@ export function CreateYardForm({ action }: { action: (formData: FormData) => Pro
 
       {sizeMode === "acres" && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Acres</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+            Acres
+          </label>
           <input
-            className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+            className="w-full rounded-lg border border-earth-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
             type="number"
             min="0.01"
             max="10"
@@ -186,7 +324,7 @@ export function CreateYardForm({ action }: { action: (formData: FormData) => Pro
         </div>
       )}
 
-      <div className="rounded-lg bg-earth-50 border border-earth-200 px-3 py-2 text-xs text-gray-500 space-y-0.5">
+      <div className="rounded-lg bg-earth-50 dark:bg-gray-700/50 border border-earth-200 dark:border-gray-600 px-3 py-2 text-xs text-gray-500 dark:text-gray-400 space-y-0.5">
         <p>
           Grid: {effectiveWidth} x {effectiveHeight} ft
         </p>
@@ -205,40 +343,200 @@ export function CreateYardForm({ action }: { action: (formData: FormData) => Pro
   );
 }
 
-export function YardEditor({
+function YardSettingsModal({
   yard,
+  onClose,
+  onSave,
+}: {
+  yard: Yard;
+  onClose: () => void;
+  onSave: (updated: { name: string; widthFt: number; heightFt: number }) => void;
+}) {
+  const [name, setName] = React.useState(yard.name);
+  const [widthFt, setWidthFt] = React.useState(yard.widthFt);
+  const [heightFt, setHeightFt] = React.useState(yard.heightFt);
+  const [saving, setSaving] = React.useState(false);
+  const { addToast } = useToast();
+  const confirm = useConfirm();
+  const navigate = useNavigate();
+
+  async function handleSave() {
+    setSaving(true);
+    const formData = new FormData();
+    formData.set("id", String(yard.id));
+    formData.set("name", name);
+    formData.set("widthFt", String(widthFt));
+    formData.set("heightFt", String(heightFt));
+    await updateYard(formData);
+    onSave({ name, widthFt, heightFt });
+    addToast("Yard updated", "success");
+    setSaving(false);
+    onClose();
+  }
+
+  async function handleDelete() {
+    const ok = await confirm({
+      title: "Delete yard?",
+      message: `"${yard.name}" and all its beds and plantings will be permanently removed.`,
+      destructive: true,
+    });
+    if (!ok) return;
+    const formData = new FormData();
+    formData.set("id", String(yard.id));
+    await deleteYard(formData);
+    addToast("Yard deleted", "info");
+    navigate("/yard");
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/30" onClick={onClose} />
+      <div className="relative bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-xl w-full max-w-sm mx-4 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Yard Settings</h2>
+          <button
+            type="button"
+            className="p-1 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition cursor-pointer"
+            onClick={onClose}
+          >
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Name</label>
+            <input
+              className="w-full rounded-lg border border-earth-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Width (ft)</label>
+              <input
+                className="w-full rounded-lg border border-earth-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+                type="number"
+                min="10"
+                max="1000"
+                value={widthFt}
+                onChange={(e) => setWidthFt(Number(e.target.value))}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Height (ft)</label>
+              <input
+                className="w-full rounded-lg border border-earth-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
+                type="number"
+                min="10"
+                max="1000"
+                value={heightFt}
+                onChange={(e) => setHeightFt(Number(e.target.value))}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between mt-6">
+          <button
+            type="button"
+            className="text-sm text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition cursor-pointer"
+            onClick={handleDelete}
+          >
+            Delete Yard
+          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              className="px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition cursor-pointer"
+              onClick={onClose}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="px-3 py-1.5 text-sm font-medium text-white bg-garden-600 hover:bg-garden-700 rounded-lg transition cursor-pointer disabled:opacity-50"
+              onClick={handleSave}
+              disabled={saving || !name.trim()}
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function YardEditor({
+  yard: initialYard,
   elements: initialElements,
   plants: allPlants,
   plantings: initialPlantings,
 }: {
   yard: Yard;
-  elements: Element[];
+  elements: YardElement[];
   plants: PlantInfo[];
   plantings: Planting[];
 }) {
+  const [yard, setYard] = React.useState(initialYard);
+  const [showSettings, setShowSettings] = React.useState(false);
   const [elements, setElements] = React.useState(initialElements);
   const [bedPlantings, setBedPlantings] = React.useState(initialPlantings);
   const [selectedId, setSelectedId] = React.useState<number | null>(null);
-  const [activeTool, setActiveTool] = React.useState<ShapeType | null>(null);
-  const [zoom, setZoom] = React.useState(1);
-  const [autoFitted, setAutoFitted] = React.useState(false);
+  const [activeTool, setActiveTool] = React.useState<ToolType>("select");
+  const [dragPos, setDragPos] = React.useState<{
+    id: number;
+    x: number;
+    y: number;
+  } | null>(null);
+  const [resizePos, setResizePos] = React.useState<{
+    id: number;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  } | null>(null);
+  const [snapGuides, setSnapGuides] = React.useState<Guide[]>([]);
+
   const svgRef = React.useRef<SVGSVGElement>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const dragRef = React.useRef<{
-    elementId: number;
-    startMouseX: number;
-    startMouseY: number;
-    startElX: number;
-    startElY: number;
+  const cursorRef = React.useRef<HTMLSpanElement>(null);
+
+  const actionRef = React.useRef<{
+    type: "drag" | "pan" | "resize";
     moved: boolean;
+    elementId?: number;
+    handle?: string;
+    startMouseX?: number;
+    startMouseY?: number;
+    startElX?: number;
+    startElY?: number;
+    startWidth?: number;
+    startHeight?: number;
   } | null>(null);
-  const [dragPos, setDragPos] = React.useState<{ id: number; x: number; y: number } | null>(null);
+
+  const gridWidth = yard.widthFt * CELL_SIZE;
+  const gridHeight = yard.heightFt * CELL_SIZE;
+  const panZoom = usePanZoom(svgRef, containerRef, gridWidth, gridHeight);
+  const { isDark } = useTheme();
+
+  // Grid colors — higher contrast in both modes
+  const GRID_COLOR = isDark ? "#374151" : "#d1d5db";
+  const GRID_COLOR_MAJOR = isDark ? "#4b5563" : "#9ca3af";
+  const GRID_BG = isDark ? "#1f2937" : "#f9fafb";
+  const VIEWPORT_BG = isDark ? "#111827" : "#e5e7eb";
+  const LABEL_COLOR = isDark ? "#6b7280" : "#6b7280";
 
   // Undo/redo
-  const historyRef = React.useRef<Element[][]>([initialElements]);
+  const historyRef = React.useRef<YardElement[][]>([initialElements]);
   const historyIndexRef = React.useRef(0);
 
-  function pushHistory(newElements: Element[]) {
+  function pushHistory(newElements: YardElement[]) {
     const idx = historyIndexRef.current;
     historyRef.current = [...historyRef.current.slice(0, idx + 1), newElements];
     historyIndexRef.current = idx + 1;
@@ -247,19 +545,18 @@ export function YardEditor({
   function undo() {
     if (historyIndexRef.current <= 0) return;
     historyIndexRef.current--;
-    const prev = historyRef.current[historyIndexRef.current];
-    setElements(prev);
+    setElements(historyRef.current[historyIndexRef.current]);
   }
 
   function redo() {
     if (historyIndexRef.current >= historyRef.current.length - 1) return;
     historyIndexRef.current++;
-    const next = historyRef.current[historyIndexRef.current];
-    setElements(next);
+    setElements(historyRef.current[historyIndexRef.current]);
   }
 
-  // Wrap setElements to push history
-  function setElementsWithHistory(updater: (prev: Element[]) => Element[]) {
+  function setElementsWithHistory(
+    updater: (prev: YardElement[]) => YardElement[],
+  ) {
     setElements((prev) => {
       const next = updater(prev);
       pushHistory(next);
@@ -267,18 +564,18 @@ export function YardEditor({
     });
   }
 
-  // Smart placement state
+  // Smart placement
   const [smartPlaceMode, setSmartPlaceMode] = React.useState(false);
-  const [smartPlacePlant, setSmartPlacePlant] = React.useState<PlantInfo | null>(null);
+  const [smartPlacePlant, setSmartPlacePlant] =
+    React.useState<PlantInfo | null>(null);
   const [bedScores, setBedScores] = React.useState<BedScore[]>([]);
-  const [smartSearch, setSmartSearch] = React.useState("");
 
   const { addToast } = useToast();
   const confirm = useConfirm();
 
   const selected = elements.find((e) => e.id === selectedId) ?? null;
 
-  // Compute companion glow when smart placing
+  // Companion glow
   React.useEffect(() => {
     if (smartPlacePlant) {
       const scores = rankBedsForPlant(
@@ -293,54 +590,30 @@ export function YardEditor({
     }
   }, [smartPlacePlant, elements, bedPlantings, allPlants]);
 
-  // Keyboard shortcuts
-  React.useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      // Don't interfere with input fields
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement ||
-        e.target instanceof HTMLSelectElement
-      )
-        return;
+  // --- Action handlers ---
 
-      if (e.key === "Delete" || e.key === "Backspace") {
-        if (selectedId) {
-          e.preventDefault();
-          handleDelete(selectedId);
-        }
-      }
-      if ((e.metaKey || e.ctrlKey) && e.key === "z" && !e.shiftKey) {
-        e.preventDefault();
-        undo();
-      }
-      if ((e.metaKey || e.ctrlKey) && e.key === "z" && e.shiftKey) {
-        e.preventDefault();
-        redo();
-      }
-      if ((e.metaKey || e.ctrlKey) && e.key === "d") {
-        e.preventDefault();
-        if (selectedId) handleDuplicate(selectedId);
-      }
-      if (selectedId && ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
-        e.preventDefault();
-        const dx = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
-        const dy = e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0;
-        handleUpdateElement(selectedId, {
-          x: String(Math.max(0, (elements.find((el) => el.id === selectedId)?.x ?? 0) + dx)),
-          y: String(Math.max(0, (elements.find((el) => el.id === selectedId)?.y ?? 0) + dy)),
-        });
-      }
-      if (e.key === "Escape") {
-        setSelectedId(null);
-        setActiveTool(null);
-        setSmartPlaceMode(false);
-        setSmartPlacePlant(null);
-      }
-    }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedId, elements]);
+  async function handleDelete(id: number) {
+    const el = elements.find((e) => e.id === id);
+    const elPlantings = bedPlantings.filter((p) => p.yardElementId === id);
+    const label =
+      el?.label || SHAPE_CONFIG[el?.shapeType as ShapeType]?.label || "element";
+    const msg =
+      elPlantings.length > 0
+        ? `"${label}" has ${elPlantings.length} planting${elPlantings.length > 1 ? "s" : ""}. All plantings will be removed.`
+        : `Remove "${label}" from your yard?`;
+    const ok = await confirm({
+      title: "Delete bed?",
+      message: msg,
+      destructive: true,
+    });
+    if (!ok) return;
+    const formData = new FormData();
+    formData.set("id", String(id));
+    await deleteYardElement(formData);
+    setElementsWithHistory((prev) => prev.filter((e) => e.id !== id));
+    setSelectedId(null);
+    addToast("Element deleted", "info");
+  }
 
   async function handleDuplicate(id: number) {
     const el = elements.find((e) => e.id === id);
@@ -361,174 +634,10 @@ export function YardEditor({
     addToast("Element duplicated", "success");
   }
 
-  const gridWidth = yard.widthFt * CELL_SIZE;
-  const gridHeight = yard.heightFt * CELL_SIZE;
-
-  // Auto-fit zoom to container on mount
-  React.useEffect(() => {
-    if (autoFitted || !containerRef.current) return;
-    const container = containerRef.current;
-    const availableWidth = container.clientWidth - 32;
-    const availableHeight = container.clientHeight - 32;
-    const scaleX = availableWidth / gridWidth;
-    const scaleY = availableHeight / gridHeight;
-    const fitZoom = Math.min(scaleX, scaleY, 2);
-    if (fitZoom > 0 && isFinite(fitZoom)) {
-      setZoom(Math.round(fitZoom * 100) / 100);
-    }
-    setAutoFitted(true);
-  }, [gridWidth, gridHeight, autoFitted]);
-
-  function getSvgCoords(e: React.MouseEvent | MouseEvent) {
-    if (!svgRef.current) return { x: 0, y: 0 };
-    const rect = svgRef.current.getBoundingClientRect();
-    return {
-      x: (e.clientX - rect.left) / zoom,
-      y: (e.clientY - rect.top) / zoom,
-    };
-  }
-
-  function handleElementMouseDown(e: React.MouseEvent, elementId: number) {
-    if (activeTool) return; // don't drag while placing
-    e.stopPropagation();
-    e.preventDefault();
-    const el = elements.find((el) => el.id === elementId);
-    if (!el) return;
-    const coords = getSvgCoords(e);
-    dragRef.current = {
-      elementId,
-      startMouseX: coords.x,
-      startMouseY: coords.y,
-      startElX: el.x,
-      startElY: el.y,
-      moved: false,
-    };
-  }
-
-  React.useEffect(() => {
-    function handleMouseMove(e: MouseEvent) {
-      const drag = dragRef.current;
-      if (!drag || !svgRef.current) return;
-      const coords = getSvgCoords(e);
-      const dx = coords.x - drag.startMouseX;
-      const dy = coords.y - drag.startMouseY;
-
-      // Only start visual drag after moving at least 4px (prevents accidental drags)
-      if (!drag.moved && Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
-      drag.moved = true;
-
-      const el = elements.find((el) => el.id === drag.elementId);
-      if (!el) return;
-
-      const newX = Math.max(
-        0,
-        Math.min(yard.widthFt - el.width, Math.round(drag.startElX + dx / CELL_SIZE)),
-      );
-      const newY = Math.max(
-        0,
-        Math.min(yard.heightFt - el.height, Math.round(drag.startElY + dy / CELL_SIZE)),
-      );
-
-      setDragPos({ id: drag.elementId, x: newX, y: newY });
-    }
-
-    function handleMouseUp() {
-      const drag = dragRef.current;
-      if (!drag) return;
-      dragRef.current = null;
-
-      if (drag.moved) {
-        // Commit the drag position
-        setDragPos((pos) => {
-          if (pos && pos.id === drag.elementId) {
-            // Update element in state and persist
-            setElements((prev) =>
-              prev.map((el) => (el.id === drag.elementId ? { ...el, x: pos.x, y: pos.y } : el)),
-            );
-            // Persist to server
-            const formData = new FormData();
-            formData.set("id", String(drag.elementId));
-            formData.set("x", String(pos.x));
-            formData.set("y", String(pos.y));
-            updateYardElement(formData);
-          }
-          return null;
-        });
-      } else {
-        // It was a click, not a drag — toggle selection
-        setSelectedId((prev) => (prev === drag.elementId ? null : drag.elementId));
-        setActiveTool(null);
-      }
-    }
-
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [elements, yard.widthFt, yard.heightFt, zoom]);
-
-  async function handleGridClick(e: React.MouseEvent<SVGSVGElement>) {
-    if (!activeTool || !svgRef.current) return;
-
-    const rect = svgRef.current.getBoundingClientRect();
-    const x = Math.floor((e.clientX - rect.left) / (CELL_SIZE * zoom));
-    const y = Math.floor((e.clientY - rect.top) / (CELL_SIZE * zoom));
-
-    const config = SHAPE_CONFIG[activeTool];
-    const formData = new FormData();
-    formData.set("yardId", String(yard.id));
-    formData.set("shapeType", activeTool);
-    formData.set("x", String(Math.min(x, yard.widthFt - config.defaultWidth)));
-    formData.set("y", String(Math.min(y, yard.heightFt - config.defaultHeight)));
-    formData.set("width", String(config.defaultWidth));
-    formData.set("height", String(config.defaultHeight));
-    formData.set("label", config.label);
-    formData.set("sunExposure", "full_sun");
-
-    await addYardElement(formData);
-    setActiveTool(null);
-
-    // Refetch is handled by RSC revalidation, but for now just add optimistically
-    const tempId = Date.now();
-    setElements((prev) => [
-      ...prev,
-      {
-        id: tempId,
-        yardId: yard.id,
-        shapeType: activeTool,
-        x: Math.min(x, yard.widthFt - config.defaultWidth),
-        y: Math.min(y, yard.heightFt - config.defaultHeight),
-        width: config.defaultWidth,
-        height: config.defaultHeight,
-        label: config.label,
-        sunExposure: "full_sun",
-        rotation: 0,
-        metadata: null,
-      },
-    ]);
-  }
-
-  async function handleDelete(id: number) {
-    const el = elements.find((e) => e.id === id);
-    const elPlantings = bedPlantings.filter((p) => p.yardElementId === id);
-    const label = el?.label || SHAPE_CONFIG[el?.shapeType as ShapeType]?.label || "element";
-    const msg =
-      elPlantings.length > 0
-        ? `"${label}" has ${elPlantings.length} planting${elPlantings.length > 1 ? "s" : ""}. All plantings will be removed.`
-        : `Remove "${label}" from your yard?`;
-    const ok = await confirm({ title: "Delete bed?", message: msg, destructive: true });
-    if (!ok) return;
-    const formData = new FormData();
-    formData.set("id", String(id));
-    await deleteYardElement(formData);
-    setElementsWithHistory((prev) => prev.filter((e) => e.id !== id));
-    setSelectedId(null);
-    addToast("Element deleted", "info");
-  }
-
-  async function handleUpdateElement(id: number, updates: Record<string, string>) {
+  async function handleUpdateElement(
+    id: number,
+    updates: Record<string, string>,
+  ) {
     const formData = new FormData();
     formData.set("id", String(id));
     for (const [k, v] of Object.entries(updates)) {
@@ -540,383 +649,638 @@ export function YardEditor({
         if (e.id !== id) return e;
         const updated = { ...e };
         if (updates.label !== undefined) updated.label = updates.label;
-        if (updates.sunExposure !== undefined) updated.sunExposure = updates.sunExposure;
+        if (updates.sunExposure !== undefined)
+          updated.sunExposure = updates.sunExposure;
         if (updates.x !== undefined) updated.x = Number(updates.x);
         if (updates.y !== undefined) updated.y = Number(updates.y);
         if (updates.width !== undefined) updated.width = Number(updates.width);
-        if (updates.height !== undefined) updated.height = Number(updates.height);
-        if (updates.rotation !== undefined) updated.rotation = Number(updates.rotation);
+        if (updates.height !== undefined)
+          updated.height = Number(updates.height);
+        if (updates.rotation !== undefined)
+          updated.rotation = Number(updates.rotation);
         return updated;
       }),
     );
   }
 
-  const [paletteOpen, setPaletteOpen] = React.useState(false);
+  // Keyboard shortcuts
+  useKeyboardShortcuts({
+    selectedId,
+    elements,
+    activeTool,
+    setActiveTool,
+    setSelectedId,
+    onDelete: handleDelete,
+    onDuplicate: handleDuplicate,
+    onMove: (id, dx, dy) => {
+      const el = elements.find((e) => e.id === id);
+      if (!el) return;
+      handleUpdateElement(id, {
+        x: String(Math.max(0, el.x + dx)),
+        y: String(Math.max(0, el.y + dy)),
+      });
+    },
+    onUndo: undo,
+    onRedo: redo,
+    onCloseAll: () => {
+      setSelectedId(null);
+      setActiveTool("select");
+      setSmartPlaceMode(false);
+      setSmartPlacePlant(null);
+    },
+  });
 
-  function fitToView() {
-    if (!containerRef.current) return;
-    const container = containerRef.current;
-    const availableWidth = container.clientWidth - 32;
-    const availableHeight = container.clientHeight - 32;
-    const scaleX = availableWidth / gridWidth;
-    const scaleY = availableHeight / gridHeight;
-    const fitZoom = Math.min(scaleX, scaleY, 2);
-    if (fitZoom > 0 && isFinite(fitZoom)) {
-      setZoom(Math.round(fitZoom * 100) / 100);
+  // --- Interaction: find element from click target ---
+
+  function findElementId(target: EventTarget | null): number | null {
+    let el = target as Element | null;
+    while (el && el !== svgRef.current) {
+      const id = el.getAttribute?.("data-element-id");
+      if (id) return Number(id);
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  function findResizeHandle(target: EventTarget | null): string | null {
+    let el = target as Element | null;
+    while (el && el !== svgRef.current) {
+      const handle = el.getAttribute?.("data-resize-handle");
+      if (handle) return handle;
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  // --- SVG mousedown: start drag or pan ---
+
+  function handleSvgMouseDown(e: React.MouseEvent) {
+    // Shape tools use click handler for placement, not mousedown
+    if (activeTool !== "select" && activeTool !== "hand") return;
+
+    // Check for resize handle first
+    const handleName = findResizeHandle(e.target);
+    if (handleName && selectedId && activeTool === "select") {
+      const el = elements.find((el) => el.id === selectedId);
+      if (!el) return;
+      e.preventDefault();
+      const coords = panZoom.getSvgCoords(e);
+      actionRef.current = {
+        type: "resize",
+        moved: false,
+        elementId: selectedId,
+        handle: handleName,
+        startMouseX: coords.x,
+        startMouseY: coords.y,
+        startElX: el.x,
+        startElY: el.y,
+        startWidth: el.width,
+        startHeight: el.height,
+      };
+      return;
+    }
+
+    const elementId = findElementId(e.target);
+
+    if (elementId && activeTool === "select") {
+      // Start element drag
+      const el = elements.find((el) => el.id === elementId);
+      if (!el) return;
+      e.preventDefault();
+      const coords = panZoom.getSvgCoords(e);
+      actionRef.current = {
+        type: "drag",
+        moved: false,
+        elementId,
+        startMouseX: coords.x,
+        startMouseY: coords.y,
+        startElX: el.x,
+        startElY: el.y,
+      };
+    } else {
+      // Start pan
+      e.preventDefault();
+      actionRef.current = { type: "pan", moved: false };
+      panZoom.startPan(e);
     }
   }
 
+  // --- Window mousemove/mouseup for drag + pan ---
+
+  React.useEffect(() => {
+    function handleMouseMove(e: MouseEvent) {
+      // Always update cursor position display
+      if (svgRef.current && cursorRef.current) {
+        const coords = panZoom.getSvgCoords(e);
+        updateCursorDisplay(cursorRef, coords.x, coords.y);
+      }
+
+      const action = actionRef.current;
+      if (!action) return;
+
+      if (action.type === "drag") {
+        const coords = panZoom.getSvgCoords(e);
+        const dx = coords.x - action.startMouseX!;
+        const dy = coords.y - action.startMouseY!;
+
+        if (!action.moved && Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
+        action.moved = true;
+
+        const el = elements.find((el) => el.id === action.elementId);
+        if (!el) return;
+
+        let newX = Math.max(
+          0,
+          Math.min(
+            yard.widthFt - el.width,
+            Math.round(action.startElX! + dx / CELL_SIZE),
+          ),
+        );
+        let newY = Math.max(
+          0,
+          Math.min(
+            yard.heightFt - el.height,
+            Math.round(action.startElY! + dy / CELL_SIZE),
+          ),
+        );
+
+        // Snap alignment guides
+        const snap = computeSnapGuides(
+          { id: el.id, x: newX, y: newY, width: el.width, height: el.height },
+          elements,
+        );
+        if (snap.snappedX !== null) newX = snap.snappedX;
+        if (snap.snappedY !== null) newY = snap.snappedY;
+        setSnapGuides(snap.guides);
+
+        setDragPos({ id: action.elementId!, x: newX, y: newY });
+      } else if (action.type === "resize") {
+        const coords = panZoom.getSvgCoords(e);
+        const dx = (coords.x - action.startMouseX!) / CELL_SIZE;
+        const dy = (coords.y - action.startMouseY!) / CELL_SIZE;
+
+        if (!action.moved && Math.abs(dx) < 0.2 && Math.abs(dy) < 0.2) return;
+        action.moved = true;
+
+        let newX = action.startElX!;
+        let newY = action.startElY!;
+        let newW = action.startWidth!;
+        let newH = action.startHeight!;
+        const handle = action.handle!;
+
+        if (handle.includes("e")) {
+          newW = Math.max(1, Math.round(action.startWidth! + dx));
+        }
+        if (handle.includes("w")) {
+          const dxRound = Math.round(dx);
+          newX = action.startElX! + dxRound;
+          newW = action.startWidth! - dxRound;
+          if (newW < 1) {
+            newX += newW - 1;
+            newW = 1;
+          }
+        }
+        if (handle.includes("s")) {
+          newH = Math.max(1, Math.round(action.startHeight! + dy));
+        }
+        if (handle.includes("n")) {
+          const dyRound = Math.round(dy);
+          newY = action.startElY! + dyRound;
+          newH = action.startHeight! - dyRound;
+          if (newH < 1) {
+            newY += newH - 1;
+            newH = 1;
+          }
+        }
+
+        // Clamp to yard bounds
+        newX = Math.max(0, newX);
+        newY = Math.max(0, newY);
+        newW = Math.min(newW, yard.widthFt - newX);
+        newH = Math.min(newH, yard.heightFt - newY);
+        newW = Math.max(1, newW);
+        newH = Math.max(1, newH);
+
+        setResizePos({
+          id: action.elementId!,
+          x: newX,
+          y: newY,
+          width: newW,
+          height: newH,
+        });
+      } else if (action.type === "pan") {
+        action.moved = true;
+        panZoom.onPanMove(e);
+      }
+    }
+
+    function handleMouseUp() {
+      const action = actionRef.current;
+      if (!action) return;
+      actionRef.current = null;
+
+      if (action.type === "drag") {
+        setSnapGuides([]);
+        if (action.moved) {
+          setDragPos((pos) => {
+            if (pos && pos.id === action.elementId) {
+              setElements((prev) =>
+                prev.map((el) =>
+                  el.id === action.elementId
+                    ? { ...el, x: pos.x, y: pos.y }
+                    : el,
+                ),
+              );
+              const formData = new FormData();
+              formData.set("id", String(action.elementId));
+              formData.set("x", String(pos.x));
+              formData.set("y", String(pos.y));
+              updateYardElement(formData);
+            }
+            return null;
+          });
+        } else {
+          // Click without move = toggle selection
+          setSelectedId((prev) =>
+            prev === action.elementId ? null : action.elementId!,
+          );
+        }
+      } else if (action.type === "resize") {
+        if (action.moved) {
+          setResizePos((pos) => {
+            if (pos && pos.id === action.elementId) {
+              setElements((prev) =>
+                prev.map((el) =>
+                  el.id === action.elementId
+                    ? {
+                        ...el,
+                        x: pos.x,
+                        y: pos.y,
+                        width: pos.width,
+                        height: pos.height,
+                      }
+                    : el,
+                ),
+              );
+              const formData = new FormData();
+              formData.set("id", String(action.elementId));
+              formData.set("x", String(pos.x));
+              formData.set("y", String(pos.y));
+              formData.set("width", String(pos.width));
+              formData.set("height", String(pos.height));
+              updateYardElement(formData);
+            }
+            return null;
+          });
+        }
+      } else if (action.type === "pan") {
+        if (!action.moved) {
+          // Click on empty space without pan = deselect
+          setSelectedId(null);
+        }
+        panZoom.endPan();
+      }
+    }
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [elements, yard.widthFt, yard.heightFt, activeTool]);
+
+  // --- Grid click: place element with shape tool ---
+
+  async function handleGridClick(e: React.MouseEvent<SVGSVGElement>) {
+    if (activeTool === "select" || activeTool === "hand") return;
+
+    const coords = panZoom.getSvgCoords(e);
+    const x = Math.floor(coords.x / CELL_SIZE);
+    const y = Math.floor(coords.y / CELL_SIZE);
+
+    const config = SHAPE_CONFIG[activeTool as ShapeType];
+    if (!config) return;
+
+    const clampedX = Math.max(
+      0,
+      Math.min(x, yard.widthFt - config.defaultWidth),
+    );
+    const clampedY = Math.max(
+      0,
+      Math.min(y, yard.heightFt - config.defaultHeight),
+    );
+
+    const formData = new FormData();
+    formData.set("yardId", String(yard.id));
+    formData.set("shapeType", activeTool);
+    formData.set("x", String(clampedX));
+    formData.set("y", String(clampedY));
+    formData.set("width", String(config.defaultWidth));
+    formData.set("height", String(config.defaultHeight));
+    formData.set("label", config.label);
+    formData.set("sunExposure", "full_sun");
+
+    await addYardElement(formData);
+
+    const tempId = Date.now();
+    setElementsWithHistory((prev) => [
+      ...prev,
+      {
+        id: tempId,
+        yardId: yard.id,
+        shapeType: activeTool,
+        x: clampedX,
+        y: clampedY,
+        width: config.defaultWidth,
+        height: config.defaultHeight,
+        label: config.label,
+        sunExposure: "full_sun",
+        rotation: 0,
+        metadata: null,
+      },
+    ]);
+    setSelectedId(tempId);
+    setActiveTool("select");
+  }
+
+  // --- Cursor style ---
+
+  const cursor =
+    activeTool === "hand"
+      ? "cursor-grab"
+      : activeTool !== "select"
+        ? "cursor-crosshair"
+        : "cursor-default";
+
+  // --- Render ---
+
   return (
-    <div className="relative" style={{ height: "calc(100vh - 120px)" }}>
-      {/* Full-width grid area */}
-      <div
-        ref={containerRef}
-        className="absolute inset-0 overflow-auto bg-white rounded-xl border border-earth-200 shadow-sm"
+    <div
+      className="h-screen w-full overflow-hidden relative"
+      ref={containerRef}
+    >
+      <svg
+        ref={svgRef}
+        width="100%"
+        height="100%"
+        viewBox={panZoom.viewBox}
+        className={cursor}
+        onMouseDown={handleSvgMouseDown}
+        onClick={handleGridClick}
       >
-        <div className="overflow-auto p-4 h-full flex items-center justify-center min-w-fit min-h-fit">
-          <svg
-            ref={svgRef}
-            width={gridWidth * zoom}
-            height={gridHeight * zoom}
-            viewBox={`0 0 ${gridWidth} ${gridHeight}`}
-            className={activeTool ? "cursor-crosshair" : "cursor-default"}
-            onClick={handleGridClick}
-            onMouseDown={(e) => {
-              if (!activeTool && e.target === svgRef.current?.querySelector("rect:first-child")) {
-                setSelectedId(null);
+        <defs>
+          <filter id="glow-green" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        {/* Viewport background (fills beyond grid) */}
+        <rect
+          x={panZoom.viewX}
+          y={panZoom.viewY}
+          width={panZoom.viewWidth}
+          height={panZoom.viewHeight}
+          fill={VIEWPORT_BG}
+        />
+
+        {/* Grid background */}
+        <rect width={gridWidth} height={gridHeight} fill={GRID_BG} />
+
+        {/* Grid lines */}
+        {Array.from({ length: yard.widthFt + 1 }, (_, i) => (
+          <line
+            key={`v-${i}`}
+            x1={i * CELL_SIZE}
+            y1={0}
+            x2={i * CELL_SIZE}
+            y2={gridHeight}
+            stroke={i % 5 === 0 ? GRID_COLOR_MAJOR : GRID_COLOR}
+            strokeWidth={i % 5 === 0 ? 1 : 0.5}
+          />
+        ))}
+        {Array.from({ length: yard.heightFt + 1 }, (_, i) => (
+          <line
+            key={`h-${i}`}
+            x1={0}
+            y1={i * CELL_SIZE}
+            x2={gridWidth}
+            y2={i * CELL_SIZE}
+            stroke={i % 5 === 0 ? GRID_COLOR_MAJOR : GRID_COLOR}
+            strokeWidth={i % 5 === 0 ? 1 : 0.5}
+          />
+        ))}
+
+        {/* Grid labels */}
+        {Array.from({ length: Math.floor(yard.widthFt / 5) + 1 }, (_, i) => (
+          <text
+            key={`lx-${i}`}
+            x={i * 5 * CELL_SIZE + 2}
+            y={10}
+            fontSize="8"
+            fill={LABEL_COLOR}
+          >
+            {i * 5}ft
+          </text>
+        ))}
+        {Array.from({ length: Math.floor(yard.heightFt / 5) + 1 }, (_, i) => (
+          <text
+            key={`ly-${i}`}
+            x={2}
+            y={i * 5 * CELL_SIZE + 10}
+            fontSize="8"
+            fill={LABEL_COLOR}
+          >
+            {i * 5}
+          </text>
+        ))}
+
+        {/* Yard elements */}
+        {elements.map((el) => {
+          const pos = dragPos?.id === el.id ? dragPos : null;
+          const rPos = resizePos?.id === el.id ? resizePos : null;
+          const displayEl = rPos
+            ? {
+                ...el,
+                x: rPos.x,
+                y: rPos.y,
+                width: rPos.width,
+                height: rPos.height,
               }
-            }}
-          >
-            <defs>
-              <filter id="glow-green" x="-30%" y="-30%" width="160%" height="160%">
-                <feGaussianBlur stdDeviation="4" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-            <rect width={gridWidth} height={gridHeight} fill="#f9fafb" />
-
-            {Array.from({ length: yard.widthFt + 1 }, (_, i) => (
-              <line
-                key={`v-${i}`}
-                x1={i * CELL_SIZE}
-                y1={0}
-                x2={i * CELL_SIZE}
-                y2={gridHeight}
-                stroke={i % 5 === 0 ? GRID_COLOR_MAJOR : GRID_COLOR}
-                strokeWidth={i % 5 === 0 ? 1 : 0.5}
+            : pos
+              ? { ...el, x: pos.x, y: pos.y }
+              : el;
+          const bedScore = bedScores.find((s) => s.bedId === el.id);
+          const glowColor = bedScore ? getGlowColor(bedScore) : null;
+          const elPlantings = bedPlantings.filter(
+            (p) => p.yardElementId === el.id,
+          );
+          return (
+            <React.Fragment key={el.id}>
+              <ShapeElement
+                element={displayEl}
+                isSelected={el.id === selectedId}
+                isDragging={pos !== null}
+                onMouseDown={() => {}}
+                glowColor={glowColor}
               />
-            ))}
-            {Array.from({ length: yard.heightFt + 1 }, (_, i) => (
-              <line
-                key={`h-${i}`}
-                x1={0}
-                y1={i * CELL_SIZE}
-                x2={gridWidth}
-                y2={i * CELL_SIZE}
-                stroke={i % 5 === 0 ? GRID_COLOR_MAJOR : GRID_COLOR}
-                strokeWidth={i % 5 === 0 ? 1 : 0.5}
-              />
-            ))}
-
-            {Array.from({ length: Math.floor(yard.widthFt / 5) + 1 }, (_, i) => (
-              <text key={`lx-${i}`} x={i * 5 * CELL_SIZE + 2} y={10} fontSize="8" fill="#9ca3af">
-                {i * 5}ft
-              </text>
-            ))}
-            {Array.from({ length: Math.floor(yard.heightFt / 5) + 1 }, (_, i) => (
-              <text key={`ly-${i}`} x={2} y={i * 5 * CELL_SIZE + 10} fontSize="8" fill="#9ca3af">
-                {i * 5}
-              </text>
-            ))}
-
-            {elements.map((el) => {
-              const pos = dragPos?.id === el.id ? dragPos : null;
-              const displayEl = pos ? { ...el, x: pos.x, y: pos.y } : el;
-              const bedScore = bedScores.find((s) => s.bedId === el.id);
-              const glowColor = bedScore ? getGlowColor(bedScore) : null;
-              return (
-                <ShapeElement
-                  key={el.id}
+              {elPlantings.length > 0 && (
+                <BedPlantIcons
                   element={displayEl}
-                  isSelected={el.id === selectedId}
-                  isDragging={pos !== null}
-                  onMouseDown={(e) => handleElementMouseDown(e, el.id)}
-                  glowColor={glowColor}
+                  plantings={elPlantings}
+                  plants={allPlants}
                 />
-              );
-            })}
-          </svg>
-        </div>
-      </div>
+              )}
+            </React.Fragment>
+          );
+        })}
 
-      {/* Top bar overlay — yard name + zoom controls */}
-      <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-10">
-        <div className="bg-white/90 backdrop-blur-sm rounded-lg border border-earth-200 shadow-sm px-3 py-1.5 pointer-events-auto">
-          <h1 className="text-sm font-semibold text-gray-900">{yard.name}</h1>
-          <p className="text-[10px] text-gray-400">
-            {yard.widthFt} x {yard.heightFt} ft
-          </p>
-        </div>
-        <div className="flex items-center gap-1 bg-white/90 backdrop-blur-sm rounded-lg border border-earth-200 shadow-sm px-1.5 py-1 pointer-events-auto">
-          <button
-            className="w-7 h-7 rounded-md hover:bg-gray-100 text-sm font-medium transition cursor-pointer flex items-center justify-center"
-            onClick={() => setZoom((z) => Math.max(0.25, z - 0.25))}
-            title="Zoom out"
-          >
-            -
-          </button>
-          <span className="text-xs text-gray-500 w-10 text-center tabular-nums">
-            {Math.round(zoom * 100)}%
-          </span>
-          <button
-            className="w-7 h-7 rounded-md hover:bg-gray-100 text-sm font-medium transition cursor-pointer flex items-center justify-center"
-            onClick={() => setZoom((z) => Math.min(3, z + 0.25))}
-            title="Zoom in"
-          >
-            +
-          </button>
-          <div className="w-px h-4 bg-earth-200 mx-0.5" />
-          <button
-            className="w-7 h-7 rounded-md hover:bg-gray-100 transition cursor-pointer flex items-center justify-center"
-            onClick={fitToView}
-            title="Fit to view"
-          >
-            <svg
-              className="w-3.5 h-3.5 text-gray-600"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-            </svg>
-          </button>
-        </div>
-      </div>
+        {/* Snap alignment guides */}
+        <SnapGuides guides={snapGuides} />
 
-      {/* Palette toggle + floating panel — bottom left */}
-      <div className="absolute bottom-3 left-3 z-10">
-        {paletteOpen ? (
-          <div className="bg-white/95 backdrop-blur-sm rounded-xl border border-earth-200 shadow-lg w-52 p-3 space-y-1.5 max-h-[calc(100vh-240px)] overflow-y-auto">
-            <div className="flex items-center justify-between mb-1">
-              <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">
-                Place Element
-              </p>
-              <button
-                type="button"
-                className="p-0.5 text-gray-400 hover:text-gray-600 cursor-pointer"
-                onClick={() => setPaletteOpen(false)}
-              >
-                <svg
-                  className="w-4 h-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M18 6 6 18M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            {SHAPE_TYPES.map((type) => {
-              const config = SHAPE_CONFIG[type];
-              const isActive = activeTool === type;
-              return (
-                <button
-                  key={type}
-                  className={`w-full text-left rounded-lg border px-2.5 py-1.5 text-sm transition cursor-pointer ${
-                    isActive
-                      ? "border-garden-500 bg-garden-50 text-garden-700 shadow-sm"
-                      : "border-earth-200 bg-white text-gray-700 hover:bg-gray-50"
-                  }`}
-                  onClick={() => {
-                    setActiveTool(isActive ? null : type);
-                    if (!isActive) setPaletteOpen(false);
-                  }}
-                >
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="w-3 h-3 rounded-sm shrink-0"
-                      style={{
-                        backgroundColor: config.color,
-                        border: `1px solid ${config.borderColor}`,
-                      }}
+        {/* Resize handles on selected element */}
+        {selected &&
+          activeTool === "select" &&
+          !dragPos &&
+          (() => {
+            const el =
+              resizePos?.id === selected.id
+                ? {
+                    ...selected,
+                    x: resizePos.x,
+                    y: resizePos.y,
+                    width: resizePos.width,
+                    height: resizePos.height,
+                  }
+                : selected;
+            const x = el.x * CELL_SIZE;
+            const y = el.y * CELL_SIZE;
+            const w = el.width * CELL_SIZE;
+            const h = el.height * CELL_SIZE;
+            const hs = CELL_SIZE; // visible handle size (half a grid cell)
+            const hit = CELL_SIZE; // invisible hit area (full grid cell)
+            const handles = [
+              { name: "nw", cx: x, cy: y },
+              { name: "n", cx: x + w / 2, cy: y },
+              { name: "ne", cx: x + w, cy: y },
+              { name: "e", cx: x + w, cy: y + h / 2 },
+              { name: "se", cx: x + w, cy: y + h },
+              { name: "s", cx: x + w / 2, cy: y + h },
+              { name: "sw", cx: x, cy: y + h },
+              { name: "w", cx: x, cy: y + h / 2 },
+            ];
+            const cursorMap: Record<string, string> = {
+              nw: "nwse-resize",
+              ne: "nesw-resize",
+              sw: "nesw-resize",
+              se: "nwse-resize",
+              n: "ns-resize",
+              s: "ns-resize",
+              e: "ew-resize",
+              w: "ew-resize",
+            };
+            return (
+              <g>
+                {handles.map((handle) => (
+                  <g
+                    key={handle.name}
+                    data-resize-handle={handle.name}
+                    style={{ cursor: cursorMap[handle.name] }}
+                  >
+                    {/* Invisible hit area */}
+                    <rect
+                      x={handle.cx - hit / 2}
+                      y={handle.cy - hit / 2}
+                      width={hit}
+                      height={hit}
+                      fill="transparent"
                     />
-                    <span className="font-medium">{config.label}</span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        ) : (
-          <button
-            type="button"
-            className={`flex items-center gap-2 rounded-lg border shadow-sm px-3 py-2 text-sm font-medium transition cursor-pointer ${
-              activeTool
-                ? "border-garden-500 bg-garden-50 text-garden-700"
-                : "border-earth-200 bg-white/90 backdrop-blur-sm text-gray-700 hover:bg-white"
-            }`}
-            onClick={() => setPaletteOpen(true)}
-          >
-            <svg
-              className="w-4 h-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M12 5v14M5 12h14" />
-            </svg>
-            {activeTool ? SHAPE_CONFIG[activeTool].label : "Add Element"}
-          </button>
-        )}
-      </div>
+                    {/* Visible handle */}
+                    <rect
+                      x={handle.cx - hs / 2}
+                      y={handle.cy - hs / 2}
+                      width={hs}
+                      height={hs}
+                      fill={isDark ? "#1f2937" : "white"}
+                      stroke="#3b82f6"
+                      strokeWidth={2}
+                      rx={2}
+                      pointerEvents="none"
+                    />
+                  </g>
+                ))}
+              </g>
+            );
+          })()}
+      </svg>
 
-      {/* Smart Placement panel — bottom right */}
-      <div className="absolute bottom-3 right-3 z-10">
+      {/* Vertical toolbar — left edge */}
+      <Toolbar activeTool={activeTool} onToolChange={setActiveTool} onSettings={() => setShowSettings(true)} />
+
+      {/* Zoom controls — top right */}
+      <ZoomControls
+        zoom={panZoom.zoom}
+        onZoomIn={() => panZoom.setZoom(Math.min(5, panZoom.zoom * 1.25))}
+        onZoomOut={() => panZoom.setZoom(panZoom.zoom / 1.25)}
+        onFitView={panZoom.fitToView}
+        onFillView={panZoom.fillView}
+      />
+
+      {/* Status bar — bottom */}
+      <StatusBar
+        cursorRef={cursorRef}
+        selectedElement={selected}
+        zoom={panZoom.zoom}
+        yard={yard}
+        onSettings={() => setShowSettings(true)}
+      />
+
+      {/* Minimap — bottom corner */}
+      <Minimap
+        yard={yard}
+        elements={elements}
+        viewX={panZoom.viewX}
+        viewY={panZoom.viewY}
+        viewWidth={panZoom.viewWidth}
+        viewHeight={panZoom.viewHeight}
+        gridWidth={gridWidth}
+        gridHeight={gridHeight}
+        onNavigate={panZoom.setView}
+        panelOpen={!!selected}
+      />
+
+      {/* Smart place — bottom right */}
+      <div className="absolute bottom-8 right-3 z-10">
         {smartPlaceMode ? (
-          <div className="bg-white/95 backdrop-blur-sm rounded-xl border border-earth-200 shadow-lg w-72 p-4 space-y-3 max-h-[calc(100vh-240px)] overflow-y-auto">
-            <div className="flex items-center justify-between">
-              <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                Smart Place
-              </h3>
-              <button
-                type="button"
-                className="p-0.5 text-gray-400 hover:text-gray-600 cursor-pointer"
-                onClick={() => {
-                  setSmartPlaceMode(false);
-                  setSmartPlacePlant(null);
-                  setSmartSearch("");
-                }}
-              >
-                <svg
-                  className="w-4 h-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M18 6 6 18M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            <input
-              type="text"
-              value={smartSearch}
-              onChange={(e) => setSmartSearch(e.target.value)}
-              placeholder="Search for a plant..."
-              className="w-full px-2.5 py-1.5 text-xs border border-earth-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-garden-500"
-              autoFocus
-            />
-            {smartSearch && !smartPlacePlant && (
-              <div className="max-h-32 overflow-y-auto space-y-0.5">
-                {allPlants
-                  .filter((p) => p.name.toLowerCase().includes(smartSearch.toLowerCase()))
-                  .slice(0, 10)
-                  .map((p) => (
-                    <button
-                      key={p.id}
-                      type="button"
-                      className="w-full text-left px-2 py-1.5 rounded-lg hover:bg-garden-50 text-xs font-medium text-gray-900 cursor-pointer"
-                      onClick={() => {
-                        setSmartPlacePlant(p);
-                        setSmartSearch(p.name);
-                      }}
-                    >
-                      {p.name}
-                      {p.variety ? ` (${p.variety})` : ""}
-                    </button>
-                  ))}
-              </div>
-            )}
-            {smartPlacePlant && bedScores.length > 0 && (
-              <div className="space-y-1.5">
-                <p className="text-[10px] text-gray-400">Best beds for {smartPlacePlant.name}:</p>
-                {bedScores
-                  .filter((s) => s.capacityRemaining > 0)
-                  .slice(0, 5)
-                  .map((score) => (
-                    <div
-                      key={score.bedId}
-                      className="flex items-center justify-between px-2 py-1.5 rounded-lg bg-earth-50 text-xs cursor-pointer hover:bg-earth-100"
-                      onClick={() => {
-                        setSelectedId(score.bedId);
-                        setSmartPlaceMode(false);
-                        setSmartPlacePlant(null);
-                        setSmartSearch("");
-                      }}
-                    >
-                      <div>
-                        <span className="font-medium text-gray-900">
-                          {score.bedLabel || `Bed #${score.bedId}`}
-                        </span>
-                        <div className="flex items-center gap-1 mt-0.5">
-                          {score.companionCount > 0 && (
-                            <span className="text-[10px] text-green-600">
-                              {score.companionCount} companions
-                            </span>
-                          )}
-                          {score.conflictCount > 0 && (
-                            <span className="text-[10px] text-red-600">
-                              {score.conflictCount} conflicts
-                            </span>
-                          )}
-                          {score.sunMatch && (
-                            <span className="text-[10px] text-gray-400">sun ok</span>
-                          )}
-                        </div>
-                      </div>
-                      <span
-                        className={`text-xs font-semibold ${score.score >= 3 ? "text-green-600" : score.score >= 0 ? "text-amber-600" : "text-red-600"}`}
-                      >
-                        {score.score >= 0 ? "+" : ""}
-                        {score.score}
-                      </span>
-                    </div>
-                  ))}
-                {bedScores.filter((s) => s.capacityRemaining > 0).length === 0 && (
-                  <p className="text-[10px] text-gray-400 text-center py-2">All beds are full</p>
-                )}
-              </div>
-            )}
-          </div>
+          <SmartPlacePanel
+            allPlants={allPlants}
+            bedScores={bedScores}
+            smartPlacePlant={smartPlacePlant}
+            onSelectPlant={(plant) => setSmartPlacePlant(plant)}
+            onSelectBed={(bedId) => {
+              setSelectedId(bedId);
+              setSmartPlaceMode(false);
+              setSmartPlacePlant(null);
+            }}
+            onClose={() => {
+              setSmartPlaceMode(false);
+              setSmartPlacePlant(null);
+            }}
+          />
         ) : (
           !selected && (
-            <button
-              type="button"
-              className="flex items-center gap-2 rounded-lg border border-garden-200 bg-garden-50/90 backdrop-blur-sm shadow-sm px-3 py-2 text-sm font-medium text-garden-700 hover:bg-garden-100 transition cursor-pointer"
-              onClick={() => setSmartPlaceMode(true)}
-            >
-              <svg
-                className="w-4 h-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M9 12l2 2 4-4" />
-                <circle cx="12" cy="12" r="10" />
-              </svg>
-              Smart Place
-            </button>
+            <SmartPlaceButton onClick={() => setSmartPlaceMode(true)} />
           )
         )}
       </div>
 
-      {/* Properties overlay — right side */}
+      {/* Properties + plantings panel — right side */}
       {selected && (
-        <div className="absolute top-3 right-3 bottom-3 z-10 w-72 pointer-events-none">
+        <div className="absolute top-14 right-3 bottom-8 z-10 w-72 pointer-events-none">
           <div className="pointer-events-auto space-y-3 max-h-full overflow-y-auto">
             <PropertiesPanel
               element={selected}
@@ -924,11 +1288,14 @@ export function YardEditor({
               onDelete={() => handleDelete(selected.id)}
               onClose={() => setSelectedId(null)}
             />
-            {(SHAPE_CONFIG[selected.shapeType as ShapeType]?.plantable ?? false) && (
+            {(SHAPE_CONFIG[selected.shapeType as ShapeType]?.plantable ??
+              false) && (
               <BedPlantingsPanel
                 element={selected}
                 plants={allPlants}
-                plantings={bedPlantings.filter((p) => p.yardElementId === selected.id)}
+                plantings={bedPlantings.filter(
+                  (p) => p.yardElementId === selected.id,
+                )}
                 onAddPlanting={async (plantId, quantity) => {
                   const formData = new FormData();
                   formData.set("plantId", String(plantId));
@@ -950,18 +1317,20 @@ export function YardEditor({
                     },
                   ]);
                 }}
-                onUpdatePlanting={async (
-                  plantingId,
-                  updates: { status?: string; quantity?: number; notes?: string },
-                ) => {
+                onUpdatePlanting={async (plantingId, updates) => {
                   const formData = new FormData();
                   formData.set("id", String(plantingId));
-                  if (updates.status != null) formData.set("status", updates.status);
-                  if (updates.quantity != null) formData.set("quantity", String(updates.quantity));
-                  if (updates.notes != null) formData.set("notes", updates.notes ?? "");
+                  if (updates.status != null)
+                    formData.set("status", updates.status);
+                  if (updates.quantity != null)
+                    formData.set("quantity", String(updates.quantity));
+                  if (updates.notes != null)
+                    formData.set("notes", updates.notes ?? "");
                   await updatePlanting(formData);
                   setBedPlantings((prev) =>
-                    prev.map((p) => (p.id === plantingId ? { ...p, ...updates } : p)),
+                    prev.map((p) =>
+                      p.id === plantingId ? { ...p, ...updates } : p,
+                    ),
                   );
                 }}
                 onDeletePlanting={async (plantingId) => {
@@ -974,824 +1343,24 @@ export function YardEditor({
                   const formData = new FormData();
                   formData.set("id", String(plantingId));
                   await deletePlanting(formData);
-                  setBedPlantings((prev) => prev.filter((p) => p.id !== plantingId));
+                  setBedPlantings((prev) =>
+                    prev.filter((p) => p.id !== plantingId),
+                  );
                 }}
               />
             )}
           </div>
         </div>
       )}
-    </div>
-  );
-}
 
-function ShapeElement({
-  element,
-  isSelected,
-  isDragging,
-  onMouseDown,
-  glowColor,
-}: {
-  element: Element;
-  isSelected: boolean;
-  isDragging: boolean;
-  onMouseDown: (e: React.MouseEvent) => void;
-  glowColor?: string | null;
-}) {
-  const config = SHAPE_CONFIG[element.shapeType as ShapeType] ?? SHAPE_CONFIG.rectangle;
-  const x = element.x * CELL_SIZE;
-  const y = element.y * CELL_SIZE;
-  const w = element.width * CELL_SIZE;
-  const h = element.height * CELL_SIZE;
-
-  const isCircular = ["circle", "keyhole", "spiral", "mandala"].includes(element.shapeType);
-
-  const rotation = element.rotation ?? 0;
-  const cx = x + w / 2;
-  const cy = y + h / 2;
-
-  return (
-    <g
-      onMouseDown={onMouseDown}
-      className={isDragging ? "cursor-grabbing" : "cursor-grab"}
-      style={{ opacity: isDragging ? 0.7 : 1 }}
-      transform={rotation !== 0 ? `rotate(${rotation}, ${cx}, ${cy})` : undefined}
-    >
-      {isCircular ? (
-        <ellipse
-          cx={x + w / 2}
-          cy={y + h / 2}
-          rx={w / 2}
-          ry={h / 2}
-          fill={config.color}
-          stroke={isSelected ? "#2563eb" : config.borderColor}
-          strokeWidth={isSelected ? 2 : 1}
-          opacity={0.85}
-        />
-      ) : element.shapeType === "hugelkultur" ? (
-        <path
-          d={`M ${x} ${y + h} Q ${x + w * 0.25} ${y + h * 0.2}, ${x + w / 2} ${y} Q ${x + w * 0.75} ${y + h * 0.2}, ${x + w} ${y + h} Z`}
-          fill={config.color}
-          stroke={isSelected ? "#2563eb" : config.borderColor}
-          strokeWidth={isSelected ? 2 : 1}
-          opacity={0.85}
-        />
-      ) : (
-        <rect
-          x={x}
-          y={y}
-          width={w}
-          height={h}
-          rx={element.shapeType === "container" ? 6 : 2}
-          fill={config.color}
-          stroke={isSelected ? "#2563eb" : config.borderColor}
-          strokeWidth={isSelected ? 2 : 1}
-          opacity={0.85}
+      {/* Yard settings modal */}
+      {showSettings && (
+        <YardSettingsModal
+          yard={yard}
+          onClose={() => setShowSettings(false)}
+          onSave={(updated) => setYard((prev) => ({ ...prev, ...updated }))}
         />
       )}
-
-      {/* Keyhole notch */}
-      {element.shapeType === "keyhole" && (
-        <>
-          <rect
-            x={x + w / 2 - CELL_SIZE * 0.5}
-            y={y + h / 2}
-            width={CELL_SIZE}
-            height={h / 2}
-            fill="#f9fafb"
-            stroke={config.borderColor}
-            strokeWidth={0.5}
-          />
-          <circle cx={x + w / 2} cy={y + h / 2} r={CELL_SIZE * 0.7} fill="#92400e" opacity={0.3} />
-        </>
-      )}
-
-      {/* Water source indicator */}
-      {element.shapeType === "water" && (
-        <circle cx={x + w / 2} cy={y + h / 2} r={CELL_SIZE * 0.3} fill="#3b82f6" opacity={0.6} />
-      )}
-
-      {/* Label */}
-      {element.label && (
-        <text
-          x={x + w / 2}
-          y={y + h / 2 + (isCircular ? 0 : 4)}
-          textAnchor="middle"
-          dominantBaseline="middle"
-          fontSize={Math.min(11, w / (element.label.length * 0.7))}
-          fill="#374151"
-          fontWeight="500"
-          pointerEvents="none"
-        >
-          {element.label}
-        </text>
-      )}
-
-      {/* Companion glow */}
-      {glowColor && (
-        <rect
-          x={x - 3}
-          y={y - 3}
-          width={w + 6}
-          height={h + 6}
-          fill="none"
-          stroke={glowColor}
-          strokeWidth={3}
-          opacity={0.6}
-          rx={6}
-          filter="url(#glow-green)"
-        />
-      )}
-
-      {/* Selection indicator */}
-      {isSelected && (
-        <rect
-          x={x - 2}
-          y={y - 2}
-          width={w + 4}
-          height={h + 4}
-          fill="none"
-          stroke="#2563eb"
-          strokeWidth={1}
-          strokeDasharray="4 2"
-          rx={4}
-        />
-      )}
-    </g>
-  );
-}
-
-function PropertiesPanel({
-  element,
-  onUpdate,
-  onDelete,
-  onClose,
-}: {
-  element: Element;
-  onUpdate: (updates: Record<string, string>) => void;
-  onDelete: () => void;
-  onClose?: () => void;
-}) {
-  const config = SHAPE_CONFIG[element.shapeType as ShapeType] ?? SHAPE_CONFIG.rectangle;
-
-  return (
-    <div className="bg-white/95 backdrop-blur-sm rounded-xl border border-earth-200 shadow-lg p-4 space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span
-            className="w-3 h-3 rounded-sm"
-            style={{ backgroundColor: config.color, border: `1px solid ${config.borderColor}` }}
-          />
-          <h3 className="text-sm font-semibold text-gray-900">{config.label}</h3>
-        </div>
-        {onClose && (
-          <button
-            type="button"
-            className="p-0.5 text-gray-400 hover:text-gray-600 cursor-pointer"
-            onClick={onClose}
-          >
-            <svg
-              className="w-4 h-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M18 6 6 18M6 6l12 12" />
-            </svg>
-          </button>
-        )}
-      </div>
-
-      <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Label</label>
-        <input
-          className="w-full rounded-lg border border-earth-200 bg-white px-2.5 py-1.5 text-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
-          type="text"
-          defaultValue={element.label ?? ""}
-          onBlur={(e) => onUpdate({ label: e.target.value })}
-        />
-      </div>
-
-      <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Sun Exposure</label>
-        <select
-          className="w-full rounded-lg border border-earth-200 bg-white px-2.5 py-1.5 text-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
-          defaultValue={element.sunExposure ?? "full_sun"}
-          onChange={(e) => onUpdate({ sunExposure: e.target.value })}
-        >
-          <option value="full_sun">Full Sun</option>
-          <option value="partial_shade">Partial Shade</option>
-          <option value="full_shade">Full Shade</option>
-        </select>
-      </div>
-
-      <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Rotation</label>
-        <div className="flex items-center gap-1">
-          <button
-            type="button"
-            className="flex-1 px-2 py-1.5 text-xs font-medium rounded-lg border border-earth-200 bg-white hover:bg-gray-50 transition cursor-pointer"
-            onClick={() =>
-              onUpdate({ rotation: String(((element.rotation ?? 0) - 45 + 360) % 360) })
-            }
-            title="Rotate 45° left"
-          >
-            <svg
-              className="w-3.5 h-3.5 mx-auto"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M2.5 2v6h6" />
-              <path d="M2.51 8A10 10 0 0 1 21 12" />
-            </svg>
-          </button>
-          <span className="flex-1 text-center text-sm font-medium text-gray-700">
-            {element.rotation ?? 0}°
-          </span>
-          <button
-            type="button"
-            className="flex-1 px-2 py-1.5 text-xs font-medium rounded-lg border border-earth-200 bg-white hover:bg-gray-50 transition cursor-pointer"
-            onClick={() => onUpdate({ rotation: String(((element.rotation ?? 0) + 45) % 360) })}
-            title="Rotate 45° right"
-          >
-            <svg
-              className="w-3.5 h-3.5 mx-auto"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21.5 2v6h-6" />
-              <path d="M21.49 8A10 10 0 0 0 3 12" />
-            </svg>
-          </button>
-        </div>
-        <div className="flex gap-1 mt-1.5">
-          {[0, 90, 180, 270].map((deg) => (
-            <button
-              key={deg}
-              type="button"
-              className={`flex-1 px-1 py-1 text-xs rounded-md border transition cursor-pointer ${
-                (element.rotation ?? 0) === deg
-                  ? "border-garden-500 bg-garden-50 text-garden-700 font-medium"
-                  : "border-earth-200 bg-white text-gray-500 hover:bg-gray-50"
-              }`}
-              onClick={() => onUpdate({ rotation: String(deg) })}
-            >
-              {deg}°
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-2">
-        <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Width (ft)</label>
-          <input
-            className="w-full rounded-lg border border-earth-200 bg-white px-2.5 py-1.5 text-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
-            type="number"
-            min="1"
-            defaultValue={element.width}
-            onBlur={(e) => onUpdate({ width: e.target.value })}
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Height (ft)</label>
-          <input
-            className="w-full rounded-lg border border-earth-200 bg-white px-2.5 py-1.5 text-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
-            type="number"
-            min="1"
-            defaultValue={element.height}
-            onBlur={(e) => onUpdate({ height: e.target.value })}
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-2">
-        <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">X (ft)</label>
-          <input
-            className="w-full rounded-lg border border-earth-200 bg-white px-2.5 py-1.5 text-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
-            type="number"
-            min="0"
-            defaultValue={element.x}
-            onBlur={(e) => onUpdate({ x: e.target.value })}
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Y (ft)</label>
-          <input
-            className="w-full rounded-lg border border-earth-200 bg-white px-2.5 py-1.5 text-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
-            type="number"
-            min="0"
-            defaultValue={element.y}
-            onBlur={(e) => onUpdate({ y: e.target.value })}
-          />
-        </div>
-      </div>
-
-      <div className="text-xs text-gray-400 space-y-1">
-        <p>
-          Position: ({element.x}, {element.y})
-        </p>
-        <p>
-          Size: {element.width} x {element.height} ft
-        </p>
-        <p>Area: ~{Math.round(element.width * element.height)} sq ft</p>
-      </div>
-
-      <button
-        className="w-full rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-100 transition cursor-pointer"
-        onClick={onDelete}
-      >
-        Delete Element
-      </button>
-    </div>
-  );
-}
-
-const STATUS_ORDER = [
-  "planned",
-  "seeded",
-  "sprouted",
-  "transplanted",
-  "growing",
-  "harvesting",
-  "done",
-];
-
-const STATUS_LABELS: Record<string, string> = {
-  planned: "Planned",
-  seeded: "Seeded",
-  sprouted: "Sprouted",
-  transplanted: "Transplanted",
-  growing: "Growing",
-  harvesting: "Harvesting",
-  done: "Done",
-};
-
-const STATUS_COLORS: Record<string, { bg: string; text: string; dot: string }> = {
-  planned: { bg: "bg-gray-100", text: "text-gray-700", dot: "bg-gray-400" },
-  seeded: { bg: "bg-amber-50", text: "text-amber-700", dot: "bg-amber-400" },
-  sprouted: { bg: "bg-lime-50", text: "text-lime-700", dot: "bg-lime-400" },
-  transplanted: { bg: "bg-emerald-50", text: "text-emerald-700", dot: "bg-emerald-400" },
-  growing: { bg: "bg-green-50", text: "text-green-700", dot: "bg-green-500" },
-  harvesting: { bg: "bg-orange-50", text: "text-orange-700", dot: "bg-orange-400" },
-  done: { bg: "bg-earth-100", text: "text-earth-600", dot: "bg-earth-400" },
-};
-
-function BedPlantingsPanel({
-  element,
-  plants,
-  plantings,
-  onAddPlanting,
-  onUpdatePlanting,
-  onDeletePlanting,
-}: {
-  element: Element;
-  plants: PlantInfo[];
-  plantings: Planting[];
-  onAddPlanting: (plantId: number, quantity: number) => Promise<void>;
-  onUpdatePlanting: (
-    plantingId: number,
-    updates: { status?: string; quantity?: number; notes?: string },
-  ) => Promise<void>;
-  onDeletePlanting: (plantingId: number) => Promise<void>;
-}) {
-  const [search, setSearch] = React.useState("");
-  const [adding, setAdding] = React.useState(false);
-  const [editingPlanting, setEditingPlanting] = React.useState<Planting | null>(null);
-  const { addToast } = useToast();
-
-  const bedArea = getShapeArea(element.shapeType, element.width, element.height);
-  const bedAreaSqIn = bedArea * 144;
-
-  // Calculate capacity
-  const usedSqIn = plantings.reduce((sum, p) => {
-    const plant = plants.find((pl) => pl.id === p.plantId);
-    const spacing = plant?.spacingInches ?? 12;
-    return sum + (p.quantity ?? 1) * spacing * spacing;
-  }, 0);
-  const capacityPercent =
-    bedAreaSqIn > 0 ? Math.min(100, Math.round((usedSqIn / bedAreaSqIn) * 100)) : 0;
-
-  function maxFit(spacingInches: number) {
-    const remainingSqIn = bedAreaSqIn - usedSqIn;
-    if (remainingSqIn <= 0) return 0;
-    return Math.max(0, Math.floor(remainingSqIn / (spacingInches * spacingInches)));
-  }
-
-  const filtered =
-    search.length > 0
-      ? plants.filter(
-          (p) =>
-            p.name.toLowerCase().includes(search.toLowerCase()) ||
-            (p.variety?.toLowerCase().includes(search.toLowerCase()) ?? false),
-        )
-      : [];
-
-  return (
-    <div className="bg-white/95 backdrop-blur-sm rounded-xl border border-earth-200 shadow-lg p-4 space-y-3">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-900">Plantings</h3>
-        <span className="text-xs text-gray-500">~{Math.round(bedArea)} sq ft</span>
-      </div>
-
-      {/* Capacity bar */}
-      <div>
-        <div className="flex items-center justify-between text-xs mb-1">
-          <span className="text-gray-500">Capacity</span>
-          <span
-            className="font-medium"
-            style={{
-              color:
-                capacityPercent > 90 ? "#ef4444" : capacityPercent > 70 ? "#f59e0b" : "#22c55e",
-            }}
-          >
-            {capacityPercent}%
-          </span>
-        </div>
-        <div className="h-1.5 bg-earth-100 rounded-full overflow-hidden">
-          <div
-            className="h-full rounded-full transition-all"
-            style={{
-              width: `${capacityPercent}%`,
-              backgroundColor:
-                capacityPercent > 90 ? "#ef4444" : capacityPercent > 70 ? "#f59e0b" : "#22c55e",
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Current plantings */}
-      {plantings.length > 0 && (
-        <div className="space-y-1.5">
-          {plantings.map((p) => {
-            const plant = plants.find((pl) => pl.id === p.plantId);
-            const status = p.status ?? "planned";
-            const colors = STATUS_COLORS[status] ?? STATUS_COLORS.planned;
-
-            return (
-              <button
-                key={p.id}
-                type="button"
-                className="w-full flex items-center gap-2 px-2 py-1.5 bg-earth-50 rounded-lg hover:bg-earth-100 transition-colors cursor-pointer text-left"
-                onClick={() => setEditingPlanting(p)}
-              >
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-xs font-medium text-gray-900 truncate">
-                      {plant?.name ?? "Unknown"}
-                    </span>
-                    <span className="text-xs text-gray-400">x{p.quantity ?? 1}</span>
-                  </div>
-                  <span
-                    className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-medium ${colors.bg} ${colors.text}`}
-                  >
-                    <span className={`w-1 h-1 rounded-full ${colors.dot}`} />
-                    {STATUS_LABELS[status]}
-                  </span>
-                </div>
-                <svg
-                  className="w-3.5 h-3.5 text-gray-400 shrink-0"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="m9 18 6-6-6-6" />
-                </svg>
-              </button>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Add plant */}
-      {!adding ? (
-        <button
-          type="button"
-          className="w-full flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-garden-700 bg-garden-50 hover:bg-garden-100 rounded-lg transition cursor-pointer"
-          onClick={() => setAdding(true)}
-        >
-          <svg
-            className="w-3.5 h-3.5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M12 5v14M5 12h14" />
-          </svg>
-          Add Plant
-        </button>
-      ) : (
-        <div>
-          <div className="flex items-center gap-1 mb-2">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search plants..."
-              autoFocus
-              className="flex-1 px-2.5 py-1.5 text-xs border border-earth-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-garden-500 focus:border-transparent"
-            />
-            <button
-              type="button"
-              className="p-1.5 text-gray-400 hover:text-gray-600"
-              onClick={() => {
-                setAdding(false);
-                setSearch("");
-              }}
-            >
-              <svg
-                className="w-3.5 h-3.5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M18 6 6 18M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-
-          {search.length > 0 && (
-            <div className="max-h-48 overflow-y-auto space-y-0.5">
-              {filtered.slice(0, 15).map((plant) => {
-                const fits = maxFit(plant.spacingInches ?? 12);
-                const suggested = Math.max(1, Math.min(fits, 10));
-
-                return (
-                  <button
-                    key={plant.id}
-                    type="button"
-                    className="w-full text-left px-2 py-1.5 rounded-lg hover:bg-garden-50 transition-colors flex items-center justify-between gap-1"
-                    onClick={async () => {
-                      // Check for companion conflicts
-                      const existingPlantNames = plantings
-                        .map((p) => plants.find((pl) => pl.id === p.plantId)?.name)
-                        .filter(Boolean) as string[];
-                      const conflicts = checkCompanionConflicts(
-                        {
-                          name: plant.name,
-                          companions: plant.companions as string[] | null,
-                          incompatible: plant.incompatible as string[] | null,
-                        },
-                        existingPlantNames.map((n) => {
-                          const pl = plants.find((p) => p.name === n);
-                          return {
-                            name: n,
-                            companions: (pl?.companions ?? null) as string[] | null,
-                            incompatible: (pl?.incompatible ?? null) as string[] | null,
-                          };
-                        }),
-                      );
-                      if (conflicts.conflicts.length > 0) {
-                        addToast(
-                          `Warning: ${plant.name} conflicts with ${conflicts.conflicts.join(", ")}`,
-                          "warning",
-                        );
-                      }
-                      await onAddPlanting(plant.id, suggested);
-                      setSearch("");
-                      setAdding(false);
-                    }}
-                  >
-                    <div className="min-w-0">
-                      <span className="text-xs font-medium text-gray-900 truncate block">
-                        {plant.name}
-                        {plant.variety && (
-                          <span className="font-normal text-gray-400"> ({plant.variety})</span>
-                        )}
-                      </span>
-                      <span className="text-[10px] text-gray-400">
-                        {plant.spacingInches}" spacing &middot; {plant.daysToHarvest}d harvest
-                      </span>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <span className="text-xs font-medium text-garden-700">Fits {fits}</span>
-                    </div>
-                  </button>
-                );
-              })}
-              {filtered.length === 0 && (
-                <p className="text-[10px] text-gray-400 text-center py-3">No plants found</p>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {plantings.length === 0 && !adding && (
-        <p className="text-[10px] text-gray-400 text-center">No plants in this bed yet</p>
-      )}
-
-      {/* Edit planting modal */}
-      {editingPlanting && (
-        <EditPlantingModal
-          planting={editingPlanting}
-          plant={plants.find((pl) => pl.id === editingPlanting.plantId) ?? null}
-          onSave={async (updates) => {
-            await onUpdatePlanting(editingPlanting.id, updates);
-            setEditingPlanting(null);
-          }}
-          onDelete={async () => {
-            await onDeletePlanting(editingPlanting.id);
-            setEditingPlanting(null);
-          }}
-          onClose={() => setEditingPlanting(null)}
-        />
-      )}
-    </div>
-  );
-}
-
-function EditPlantingModal({
-  planting,
-  plant,
-  onSave,
-  onDelete,
-  onClose,
-}: {
-  planting: Planting;
-  plant: PlantInfo | null;
-  onSave: (updates: { status?: string; quantity?: number; notes?: string }) => Promise<void>;
-  onDelete: () => Promise<void>;
-  onClose: () => void;
-}) {
-  const [status, setStatus] = React.useState(planting.status ?? "planned");
-  const [quantity, setQuantity] = React.useState(planting.quantity ?? 1);
-  const [notes, setNotes] = React.useState(planting.notes ?? "");
-  const [saving, setSaving] = React.useState(false);
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/30" onClick={onClose} />
-      <div className="relative bg-white rounded-xl shadow-xl border border-earth-200 w-80 max-w-[90vw] p-5 space-y-4">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-sm font-semibold text-gray-900">
-              {plant?.name ?? "Unknown Plant"}
-            </h3>
-            {plant?.variety && <p className="text-xs text-gray-400">{plant.variety}</p>}
-          </div>
-          <button
-            type="button"
-            className="p-1 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition cursor-pointer"
-            onClick={onClose}
-          >
-            <svg
-              className="w-4 h-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M18 6 6 18M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Status */}
-        <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1.5">Status</label>
-          <div className="flex flex-wrap gap-1">
-            {STATUS_ORDER.map((s) => {
-              const colors = STATUS_COLORS[s] ?? STATUS_COLORS.planned;
-              const isActive = status === s;
-              return (
-                <button
-                  key={s}
-                  type="button"
-                  className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-medium transition cursor-pointer ${
-                    isActive
-                      ? `${colors.bg} ${colors.text} ring-1 ring-current`
-                      : "bg-gray-50 text-gray-400 hover:bg-gray-100"
-                  }`}
-                  onClick={() => setStatus(s)}
-                >
-                  <span
-                    className={`w-1.5 h-1.5 rounded-full ${isActive ? colors.dot : "bg-gray-300"}`}
-                  />
-                  {STATUS_LABELS[s]}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Quantity */}
-        <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1.5">Quantity</label>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              className="w-8 h-8 rounded-lg border border-earth-200 bg-white hover:bg-gray-50 text-sm font-medium transition cursor-pointer flex items-center justify-center"
-              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-            >
-              -
-            </button>
-            <input
-              type="number"
-              min="1"
-              value={quantity}
-              onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
-              className="w-16 text-center rounded-lg border border-earth-200 px-2 py-1.5 text-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition"
-            />
-            <button
-              type="button"
-              className="w-8 h-8 rounded-lg border border-earth-200 bg-white hover:bg-gray-50 text-sm font-medium transition cursor-pointer flex items-center justify-center"
-              onClick={() => setQuantity((q) => q + 1)}
-            >
-              +
-            </button>
-          </div>
-        </div>
-
-        {/* Notes */}
-        <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1.5">Notes</label>
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            placeholder="Optional notes..."
-            rows={2}
-            className="w-full rounded-lg border border-earth-200 px-2.5 py-1.5 text-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition resize-none"
-          />
-        </div>
-
-        {/* Actions */}
-        <div className="flex items-center gap-2 pt-1">
-          <button
-            type="button"
-            className="flex-1 rounded-lg bg-garden-600 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-garden-700 transition cursor-pointer disabled:opacity-50"
-            disabled={saving}
-            onClick={async () => {
-              setSaving(true);
-              await onSave({ status, quantity, notes: notes || undefined });
-              setSaving(false);
-            }}
-          >
-            {saving ? "Saving..." : "Save"}
-          </button>
-          <button
-            type="button"
-            className="rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition cursor-pointer"
-            onClick={onClose}
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            className="rounded-lg border border-red-200 bg-red-50 p-2 text-red-600 hover:bg-red-100 transition cursor-pointer"
-            title="Delete planting"
-            onClick={async () => {
-              setSaving(true);
-              await onDelete();
-            }}
-          >
-            <svg
-              className="w-4 h-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Info */}
-        {plant && (
-          <div className="text-[10px] text-gray-400 border-t border-earth-100 pt-2 space-y-0.5">
-            {plant.spacingInches && <p>Spacing: {plant.spacingInches}" apart</p>}
-            {plant.daysToHarvest && <p>Days to harvest: {plant.daysToHarvest}</p>}
-            {planting.plantedDate && <p>Planted: {planting.plantedDate}</p>}
-          </div>
-        )}
-      </div>
     </div>
   );
 }

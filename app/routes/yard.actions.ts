@@ -1,6 +1,7 @@
 "use server";
 
 import { eq } from "drizzle-orm";
+import { redirect } from "react-router";
 import { db } from "../db/index.ts";
 import { yards, yardElements } from "../db/schema.ts";
 
@@ -13,7 +14,12 @@ export async function createYard(formData: FormData) {
     throw new Error("Name, width, and height are required");
   }
 
-  await db.insert(yards).values({ name, widthFt, heightFt });
+  const result = await db
+    .insert(yards)
+    .values({ name, widthFt, heightFt })
+    .returning({ id: yards.id });
+  const newId = result[0].id;
+  throw redirect(`/yard/${newId}`);
 }
 
 export async function updateYard(formData: FormData) {
