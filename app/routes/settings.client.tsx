@@ -12,6 +12,8 @@ type CurrentSettings = {
   zone: string | null;
   lastFrostDate: string | null;
   firstFrostDate: string | null;
+  latitude: number | null;
+  longitude: number | null;
 } | null;
 
 export function SettingsForm({
@@ -29,6 +31,8 @@ export function SettingsForm({
   const [zone, setZone] = React.useState(currentSettings?.zone ?? "");
   const [lastFrost, setLastFrost] = React.useState(currentSettings?.lastFrostDate ?? "");
   const [firstFrost, setFirstFrost] = React.useState(currentSettings?.firstFrostDate ?? "");
+  const [latitude, setLatitude] = React.useState(currentSettings?.latitude?.toString() ?? "");
+  const [longitude, setLongitude] = React.useState(currentSettings?.longitude?.toString() ?? "");
   const [autoDetected, setAutoDetected] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const { addToast } = useToast();
@@ -67,6 +71,8 @@ export function SettingsForm({
       <input type="hidden" name="zone" value={zone} />
       <input type="hidden" name="lastFrostDate" value={lastFrost} />
       <input type="hidden" name="firstFrostDate" value={firstFrost} />
+      <input type="hidden" name="latitude" value={latitude} />
+      <input type="hidden" name="longitude" value={longitude} />
 
       {error && (
         <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/30 dark:border-red-800 dark:text-red-400">
@@ -167,6 +173,57 @@ export function SettingsForm({
               setAutoDetected(false);
             }}
           />
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+          Location (for weather)
+        </label>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <input
+              className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition placeholder:text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder:text-gray-400"
+              type="text"
+              inputMode="decimal"
+              placeholder="Latitude"
+              value={latitude}
+              onChange={(e) => setLatitude(e.target.value)}
+            />
+          </div>
+          <div>
+            <input
+              className="w-full rounded-lg border border-earth-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-garden-500 focus:ring-2 focus:ring-garden-500/20 focus:outline-none transition placeholder:text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder:text-gray-400"
+              type="text"
+              inputMode="decimal"
+              placeholder="Longitude"
+              value={longitude}
+              onChange={(e) => setLongitude(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="flex items-center gap-2 mt-1.5">
+          <p className="text-xs text-gray-400 dark:text-gray-500">
+            Required for weather forecasts and frost alerts.
+          </p>
+          <button
+            type="button"
+            className="text-xs text-garden-600 dark:text-garden-400 hover:text-garden-700 dark:hover:text-garden-300 cursor-pointer"
+            onClick={() => {
+              if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                  (pos) => {
+                    setLatitude(pos.coords.latitude.toFixed(4));
+                    setLongitude(pos.coords.longitude.toFixed(4));
+                    addToast("Location detected!", "success");
+                  },
+                  () => addToast("Could not detect location.", "error"),
+                );
+              }
+            }}
+          >
+            Detect location
+          </button>
         </div>
       </div>
 

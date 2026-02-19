@@ -77,3 +77,41 @@ export function formatDate(date: Date): string {
     day: "numeric",
   });
 }
+
+/**
+ * Adjust frost dates based on season extension type.
+ * Returns shifted last frost (earlier) and first frost (later) dates.
+ */
+export function adjustFrostDatesForExtension(
+  lastFrostDate: string,
+  firstFrostDate: string | null,
+  extensionType: string,
+): { adjustedLastFrost: string; adjustedFirstFrost: string | null } {
+  const weeksShift: Record<string, number> = {
+    none: 0,
+    cold_frame: 3,
+    row_cover: 2,
+    hoop_house: 4,
+    greenhouse: 8,
+  };
+
+  const shift = weeksShift[extensionType] ?? 0;
+  if (shift === 0) {
+    return { adjustedLastFrost: lastFrostDate, adjustedFirstFrost: firstFrostDate };
+  }
+
+  const lastFrost = new Date(lastFrostDate);
+  lastFrost.setDate(lastFrost.getDate() - shift * 7);
+
+  let adjustedFirstFrost: string | null = null;
+  if (firstFrostDate) {
+    const firstFrost = new Date(firstFrostDate);
+    firstFrost.setDate(firstFrost.getDate() + shift * 7);
+    adjustedFirstFrost = firstFrost.toISOString().split("T")[0];
+  }
+
+  return {
+    adjustedLastFrost: lastFrost.toISOString().split("T")[0],
+    adjustedFirstFrost,
+  };
+}

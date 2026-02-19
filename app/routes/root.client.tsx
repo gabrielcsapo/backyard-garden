@@ -100,6 +100,82 @@ const NAV_ITEMS = [
       </svg>
     ),
   },
+  {
+    label: "Tasks",
+    to: "/tasks",
+    icon: (
+      <svg
+        className="w-5 h-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M9 11l3 3L22 4" />
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+      </svg>
+    ),
+  },
+  {
+    label: "Pests",
+    to: "/pests",
+    icon: (
+      <svg
+        className="w-5 h-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="8" x2="12" y2="12" />
+        <line x1="12" y1="16" x2="12.01" y2="16" />
+      </svg>
+    ),
+  },
+  {
+    label: "Seeds",
+    to: "/seeds",
+    icon: (
+      <svg
+        className="w-5 h-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </svg>
+    ),
+  },
+  {
+    label: "Soil",
+    to: "/soil",
+    icon: (
+      <svg
+        className="w-5 h-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M2 22h20" />
+        <path d="M7 10c0-3 2-5 5-5s5 2 5 5" />
+        <path d="M4 22V10" />
+        <path d="M20 22V10" />
+        <path d="M12 5V2" />
+        <path d="M8 22v-4c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2v4" />
+      </svg>
+    ),
+  },
 ];
 
 
@@ -215,6 +291,27 @@ export function Sidebar() {
             <NavLink key={item.to} item={item} isActive={isActive(item.to)} collapsed={false} />
           ))}
         </nav>
+
+        {/* API Docs link */}
+        <div className="px-3 pb-1">
+          <Link
+            to="/docs"
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors no-underline ${
+              isActive("/docs")
+                ? "bg-garden-50 text-garden-700 dark:bg-garden-900/30 dark:text-garden-400"
+                : "text-gray-400 hover:text-gray-600 hover:bg-earth-50 dark:text-gray-500 dark:hover:text-gray-300 dark:hover:bg-gray-800"
+            }`}
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <polyline points="10 9 9 9 8 9" />
+            </svg>
+            API Docs
+          </Link>
+        </div>
 
         {/* Dark mode toggle + Settings at bottom */}
         <div className="border-t border-earth-100 dark:border-gray-800 px-3 py-3 flex items-center gap-1">

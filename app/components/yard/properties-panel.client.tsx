@@ -211,6 +211,53 @@ export function PropertiesPanel({
         </div>
       </div>
 
+      <div>
+        <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+          Season Extension
+        </label>
+        <select
+          className={inputClass}
+          defaultValue={(element as any).seasonExtension ?? "none"}
+          onChange={(e) => onUpdate({ seasonExtension: e.target.value })}
+        >
+          <option value="none">None</option>
+          <option value="cold_frame">Cold Frame</option>
+          <option value="row_cover">Row Cover</option>
+          <option value="hoop_house">Hoop House</option>
+          <option value="greenhouse">Greenhouse</option>
+        </select>
+      </div>
+
+      <div>
+        <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+          Irrigation
+        </label>
+        <select
+          className={inputClass}
+          defaultValue={(element as any).irrigationType ?? "none"}
+          onChange={(e) => onUpdate({ irrigationType: e.target.value })}
+        >
+          <option value="none">None</option>
+          <option value="drip">Drip</option>
+          <option value="sprinkler">Sprinkler</option>
+          <option value="soaker_hose">Soaker Hose</option>
+          <option value="hand">Hand Watering</option>
+        </select>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          id="mulched-checkbox"
+          className="rounded border-earth-200 dark:border-gray-600 text-garden-600 focus:ring-garden-500 cursor-pointer"
+          defaultChecked={(element as any).mulched === 1}
+          onChange={(e) => onUpdate({ mulched: e.target.checked ? "1" : "0" })}
+        />
+        <label htmlFor="mulched-checkbox" className="text-xs font-medium text-gray-500 dark:text-gray-400 cursor-pointer">
+          Mulched
+        </label>
+      </div>
+
       <div className="text-xs text-gray-400 space-y-1">
         <p>
           Position: ({element.x}, {element.y})

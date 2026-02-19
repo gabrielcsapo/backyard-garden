@@ -13,9 +13,49 @@
     "indoorStartWeeksBeforeFrost": 6,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Basil", "Carrot", "Parsley", "Chives", "Pepper", "Marigold"],
-    "incompatible": ["Cabbage", "Fennel", "Kohlrabi", "Corn"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Basil",
+      "Carrot",
+      "Parsley",
+      "Chives",
+      "Pepper",
+      "Marigold"
+    ],
+    "incompatible": [
+      "Cabbage",
+      "Fennel",
+      "Kohlrabi",
+      "Corn"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "tender",
+    "growthHabit": "upright",
+    "matureHeightInches": 72,
+    "rootDepth": "deep",
+    "expectedYieldPerPlant": 10,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1300,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Tomato Hornworm",
+      "Aphids",
+      "Whiteflies",
+      "Flea Beetles",
+      "Spider Mites"
+    ],
+    "commonDiseases": [
+      "Early Blight",
+      "Late Blight",
+      "Fusarium Wilt",
+      "Blossom End Rot",
+      "Septoria Leaf Spot"
+    ],
+    "harvestWindowDays": 60,
+    "storageLifeDays": 7
   },
   {
     "name": "Pepper",
@@ -31,9 +71,44 @@
     "indoorStartWeeksBeforeFrost": 8,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Tomato", "Basil", "Carrot", "Parsley", "Spinach"],
-    "incompatible": ["Fennel", "Kohlrabi"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Tomato",
+      "Basil",
+      "Carrot",
+      "Parsley",
+      "Spinach"
+    ],
+    "incompatible": [
+      "Fennel",
+      "Kohlrabi"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "tender",
+    "growthHabit": "upright",
+    "matureHeightInches": 30,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 2,
+    "minSoilTempF": 65,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1200,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Pepper Maggots",
+      "Flea Beetles",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Bacterial Spot",
+      "Anthracnose",
+      "Phytophthora Blight",
+      "Mosaic Virus"
+    ],
+    "harvestWindowDays": 45,
+    "storageLifeDays": 14
   },
   {
     "name": "Hot Pepper",
@@ -49,9 +124,43 @@
     "indoorStartWeeksBeforeFrost": 8,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Tomato", "Basil", "Carrot", "Parsley"],
-    "incompatible": ["Fennel", "Kohlrabi"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Tomato",
+      "Basil",
+      "Carrot",
+      "Parsley"
+    ],
+    "incompatible": [
+      "Fennel",
+      "Kohlrabi"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "tender",
+    "growthHabit": "upright",
+    "matureHeightInches": 30,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 3,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 2,
+    "minSoilTempF": 65,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1300,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Pepper Maggots",
+      "Flea Beetles",
+      "Spider Mites"
+    ],
+    "commonDiseases": [
+      "Bacterial Spot",
+      "Anthracnose",
+      "Phytophthora Blight",
+      "Mosaic Virus"
+    ],
+    "harvestWindowDays": 60,
+    "storageLifeDays": 14
   },
   {
     "name": "Cucumber",
@@ -67,9 +176,46 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": -2,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Peas", "Lettuce", "Radish", "Dill", "Corn", "Green Beans"],
-    "incompatible": ["Potato", "Sage", "Mint"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Peas",
+      "Lettuce",
+      "Radish",
+      "Dill",
+      "Corn",
+      "Green Beans"
+    ],
+    "incompatible": [
+      "Potato",
+      "Sage",
+      "Mint"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "tender",
+    "growthHabit": "climbing",
+    "matureHeightInches": 72,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 5,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1000,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Cucumber Beetles",
+      "Aphids",
+      "Squash Vine Borers",
+      "Spider Mites"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Downy Mildew",
+      "Bacterial Wilt",
+      "Mosaic Virus"
+    ],
+    "harvestWindowDays": 30,
+    "storageLifeDays": 10
   },
   {
     "name": "Zucchini",
@@ -85,9 +231,42 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": -2,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Corn", "Green Beans", "Radish", "Nasturtium"],
-    "incompatible": ["Potato"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Corn",
+      "Green Beans",
+      "Radish",
+      "Nasturtium"
+    ],
+    "incompatible": [
+      "Potato"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "tender",
+    "growthHabit": "spreading",
+    "matureHeightInches": 30,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 8,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 900,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Squash Vine Borers",
+      "Squash Bugs",
+      "Cucumber Beetles",
+      "Aphids"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Downy Mildew",
+      "Blossom End Rot",
+      "Bacterial Wilt"
+    ],
+    "harvestWindowDays": 45,
+    "storageLifeDays": 7
   },
   {
     "name": "Summer Squash",
@@ -103,9 +282,42 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": -2,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Corn", "Green Beans", "Radish", "Nasturtium"],
-    "incompatible": ["Potato"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Corn",
+      "Green Beans",
+      "Radish",
+      "Nasturtium"
+    ],
+    "incompatible": [
+      "Potato"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "tender",
+    "growthHabit": "spreading",
+    "matureHeightInches": 30,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 6,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 950,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Squash Vine Borers",
+      "Squash Bugs",
+      "Cucumber Beetles",
+      "Aphids"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Downy Mildew",
+      "Blossom End Rot",
+      "Bacterial Wilt"
+    ],
+    "harvestWindowDays": 40,
+    "storageLifeDays": 7
   },
   {
     "name": "Winter Squash",
@@ -121,9 +333,41 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": -2,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Corn", "Green Beans", "Radish"],
-    "incompatible": ["Potato"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Corn",
+      "Green Beans",
+      "Radish"
+    ],
+    "incompatible": [
+      "Potato"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "tender",
+    "growthHabit": "spreading",
+    "matureHeightInches": 24,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 12,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1600,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Squash Vine Borers",
+      "Squash Bugs",
+      "Cucumber Beetles",
+      "Aphids"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Downy Mildew",
+      "Fusarium Wilt",
+      "Anthracnose"
+    ],
+    "harvestWindowDays": 21,
+    "storageLifeDays": 180
   },
   {
     "name": "Pumpkin",
@@ -139,9 +383,41 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": -2,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Corn", "Green Beans", "Radish"],
-    "incompatible": ["Potato"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Corn",
+      "Green Beans",
+      "Radish"
+    ],
+    "incompatible": [
+      "Potato"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "tender",
+    "growthHabit": "spreading",
+    "matureHeightInches": 24,
+    "rootDepth": "deep",
+    "expectedYieldPerPlant": 15,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1800,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Squash Vine Borers",
+      "Squash Bugs",
+      "Cucumber Beetles",
+      "Aphids"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Downy Mildew",
+      "Fusarium Wilt",
+      "Anthracnose"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 90
   },
   {
     "name": "Corn",
@@ -157,9 +433,44 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": -2,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Peas", "Green Beans", "Cucumber", "Zucchini", "Pumpkin", "Winter Squash"],
-    "incompatible": ["Tomato"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Peas",
+      "Green Beans",
+      "Cucumber",
+      "Zucchini",
+      "Pumpkin",
+      "Winter Squash"
+    ],
+    "incompatible": [
+      "Tomato"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "tender",
+    "growthHabit": "upright",
+    "matureHeightInches": 84,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 2,
+    "expectedYieldUnit": "count",
+    "seedViabilityYears": 2,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1400,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Corn Earworm",
+      "European Corn Borer",
+      "Cutworms",
+      "Japanese Beetles"
+    ],
+    "commonDiseases": [
+      "Corn Smut",
+      "Northern Corn Leaf Blight",
+      "Rust",
+      "Stewart's Wilt"
+    ],
+    "harvestWindowDays": 7,
+    "storageLifeDays": 5
   },
   {
     "name": "Eggplant",
@@ -175,9 +486,42 @@
     "indoorStartWeeksBeforeFrost": 8,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 3,
-    "companions": ["Pepper", "Basil", "Spinach", "Thyme"],
-    "incompatible": ["Fennel"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Pepper",
+      "Basil",
+      "Spinach",
+      "Thyme"
+    ],
+    "incompatible": [
+      "Fennel"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "tender",
+    "growthHabit": "upright",
+    "matureHeightInches": 36,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 65,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1400,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Flea Beetles",
+      "Colorado Potato Beetles",
+      "Aphids",
+      "Spider Mites"
+    ],
+    "commonDiseases": [
+      "Verticillium Wilt",
+      "Phytophthora Blight",
+      "Early Blight",
+      "Anthracnose"
+    ],
+    "harvestWindowDays": 45,
+    "storageLifeDays": 7
   },
   {
     "name": "Okra",
@@ -193,9 +537,39 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": -3,
     "transplantWeeksAfterFrost": 3,
-    "companions": ["Pepper", "Basil", "Eggplant"],
+    "companions": [
+      "Pepper",
+      "Basil",
+      "Eggplant"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "tender",
+    "growthHabit": "upright",
+    "matureHeightInches": 60,
+    "rootDepth": "deep",
+    "expectedYieldPerPlant": 3,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 2,
+    "minSoilTempF": 65,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1100,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Corn Earworm",
+      "Stink Bugs",
+      "Japanese Beetles"
+    ],
+    "commonDiseases": [
+      "Fusarium Wilt",
+      "Powdery Mildew",
+      "Root-Knot Nematodes",
+      "Southern Blight"
+    ],
+    "harvestWindowDays": 60,
+    "storageLifeDays": 3
   },
   {
     "name": "Artichoke",
@@ -211,9 +585,39 @@
     "indoorStartWeeksBeforeFrost": 10,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Tarragon", "Peas", "Sunflower"],
+    "companions": [
+      "Tarragon",
+      "Peas",
+      "Sunflower"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "rosette",
+    "matureHeightInches": 48,
+    "rootDepth": "deep",
+    "expectedYieldPerPlant": 10,
+    "expectedYieldUnit": "count",
+    "seedViabilityYears": 5,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1800,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Slugs",
+      "Snails",
+      "Artichoke Plume Moth"
+    ],
+    "commonDiseases": [
+      "Botrytis Rot",
+      "Powdery Mildew",
+      "Verticillium Wilt",
+      "Crown Rot"
+    ],
+    "harvestWindowDays": 30,
+    "storageLifeDays": 14
   },
   {
     "name": "Lettuce",
@@ -229,9 +633,41 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Carrot", "Radish", "Strawberry", "Chives", "Cucumber"],
+    "companions": [
+      "Carrot",
+      "Radish",
+      "Strawberry",
+      "Chives",
+      "Cucumber"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": 2
+    "successionIntervalWeeks": 2,
+    "waterNeeds": "medium",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "rosette",
+    "matureHeightInches": 10,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 0.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 700,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Slugs",
+      "Snails",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Downy Mildew",
+      "Lettuce Drop",
+      "Tipburn",
+      "Mosaic Virus"
+    ],
+    "harvestWindowDays": 21,
+    "storageLifeDays": 10
   },
   {
     "name": "Romaine Lettuce",
@@ -247,9 +683,40 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Carrot", "Radish", "Strawberry", "Chives"],
+    "companions": [
+      "Carrot",
+      "Radish",
+      "Strawberry",
+      "Chives"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": 2
+    "successionIntervalWeeks": 2,
+    "waterNeeds": "medium",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 12,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 0.75,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 850,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Slugs",
+      "Snails",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Downy Mildew",
+      "Lettuce Drop",
+      "Tipburn",
+      "Mosaic Virus"
+    ],
+    "harvestWindowDays": 21,
+    "storageLifeDays": 10
   },
   {
     "name": "Spinach",
@@ -265,9 +732,41 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": 6,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Strawberry", "Peas", "Radish", "Eggplant", "Pepper"],
+    "companions": [
+      "Strawberry",
+      "Peas",
+      "Radish",
+      "Eggplant",
+      "Pepper"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": 3
+    "successionIntervalWeeks": 3,
+    "waterNeeds": "medium",
+    "frostTolerance": "hardy",
+    "growthHabit": "rosette",
+    "matureHeightInches": 8,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 0.3,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 35,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 600,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Leaf Miners",
+      "Flea Beetles",
+      "Slugs"
+    ],
+    "commonDiseases": [
+      "Downy Mildew",
+      "Fusarium Wilt",
+      "White Rust",
+      "Mosaic Virus"
+    ],
+    "harvestWindowDays": 30,
+    "storageLifeDays": 7
   },
   {
     "name": "Kale",
@@ -283,9 +782,44 @@
     "indoorStartWeeksBeforeFrost": 6,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Beet", "Lettuce", "Onion", "Potato", "Dill"],
-    "incompatible": ["Strawberry", "Tomato"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Beet",
+      "Lettuce",
+      "Onion",
+      "Potato",
+      "Dill"
+    ],
+    "incompatible": [
+      "Strawberry",
+      "Tomato"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 24,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 1,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 700,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Cabbage Worms",
+      "Aphids",
+      "Flea Beetles",
+      "Cabbage Loopers"
+    ],
+    "commonDiseases": [
+      "Black Rot",
+      "Downy Mildew",
+      "Clubroot",
+      "Alternaria Leaf Spot"
+    ],
+    "harvestWindowDays": 90,
+    "storageLifeDays": 7
   },
   {
     "name": "Swiss Chard",
@@ -301,9 +835,43 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": 2,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Green Beans", "Lettuce", "Onion", "Cabbage"],
-    "incompatible": ["Corn", "Potato"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Green Beans",
+      "Lettuce",
+      "Onion",
+      "Cabbage"
+    ],
+    "incompatible": [
+      "Corn",
+      "Potato"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 18,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 1,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 750,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Leaf Miners",
+      "Aphids",
+      "Flea Beetles",
+      "Slugs"
+    ],
+    "commonDiseases": [
+      "Cercospora Leaf Spot",
+      "Downy Mildew",
+      "Powdery Mildew",
+      "Damping Off"
+    ],
+    "harvestWindowDays": 60,
+    "storageLifeDays": 7
   },
   {
     "name": "Arugula",
@@ -319,9 +887,43 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Lettuce", "Spinach", "Carrot", "Beet", "Dill"],
-    "incompatible": ["Strawberry"],
-    "successionIntervalWeeks": 2
+    "companions": [
+      "Lettuce",
+      "Spinach",
+      "Carrot",
+      "Beet",
+      "Dill"
+    ],
+    "incompatible": [
+      "Strawberry"
+    ],
+    "successionIntervalWeeks": 2,
+    "waterNeeds": "medium",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "rosette",
+    "matureHeightInches": 10,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 0.25,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 500,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Flea Beetles",
+      "Aphids",
+      "Slugs",
+      "Cabbage Worms"
+    ],
+    "commonDiseases": [
+      "Downy Mildew",
+      "White Rust",
+      "Bacterial Leaf Spot",
+      "Damping Off"
+    ],
+    "harvestWindowDays": 21,
+    "storageLifeDays": 5
   },
   {
     "name": "Collard Greens",
@@ -337,9 +939,44 @@
     "indoorStartWeeksBeforeFrost": 6,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Onion", "Potato", "Dill", "Thyme"],
-    "incompatible": ["Strawberry", "Tomato"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Onion",
+      "Potato",
+      "Dill",
+      "Thyme"
+    ],
+    "incompatible": [
+      "Strawberry",
+      "Tomato"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 30,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 1.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 800,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Cabbage Worms",
+      "Aphids",
+      "Flea Beetles",
+      "Cabbage Loopers",
+      "Harlequin Bugs"
+    ],
+    "commonDiseases": [
+      "Black Rot",
+      "Downy Mildew",
+      "Clubroot",
+      "Alternaria Leaf Spot"
+    ],
+    "harvestWindowDays": 90,
+    "storageLifeDays": 7
   },
   {
     "name": "Bok Choy",
@@ -355,9 +992,43 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Lettuce", "Spinach", "Thyme", "Onion"],
-    "incompatible": ["Strawberry", "Tomato"],
-    "successionIntervalWeeks": 3
+    "companions": [
+      "Lettuce",
+      "Spinach",
+      "Thyme",
+      "Onion"
+    ],
+    "incompatible": [
+      "Strawberry",
+      "Tomato"
+    ],
+    "successionIntervalWeeks": 3,
+    "waterNeeds": "medium",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 12,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 0.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 600,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Flea Beetles",
+      "Aphids",
+      "Cabbage Worms",
+      "Slugs"
+    ],
+    "commonDiseases": [
+      "Downy Mildew",
+      "Black Rot",
+      "Clubroot",
+      "Alternaria Leaf Spot"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 7
   },
   {
     "name": "Endive",
@@ -373,9 +1044,39 @@
     "indoorStartWeeksBeforeFrost": 8,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Lettuce", "Radish", "Carrot"],
+    "companions": [
+      "Lettuce",
+      "Radish",
+      "Carrot"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": 3
+    "successionIntervalWeeks": 3,
+    "waterNeeds": "medium",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "rosette",
+    "matureHeightInches": 12,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 0.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 5,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 850,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Slugs",
+      "Snails",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Downy Mildew",
+      "Lettuce Drop",
+      "Tipburn",
+      "Bottom Rot"
+    ],
+    "harvestWindowDays": 21,
+    "storageLifeDays": 10
   },
   {
     "name": "Radicchio",
@@ -391,9 +1092,40 @@
     "indoorStartWeeksBeforeFrost": 8,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Lettuce", "Carrot", "Radish", "Endive"],
+    "companions": [
+      "Lettuce",
+      "Carrot",
+      "Radish",
+      "Endive"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "rosette",
+    "matureHeightInches": 10,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 0.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 5,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 900,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Slugs",
+      "Snails",
+      "Flea Beetles"
+    ],
+    "commonDiseases": [
+      "Downy Mildew",
+      "Bottom Rot",
+      "Bacterial Soft Rot",
+      "Tipburn"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 14
   },
   {
     "name": "Broccoli",
@@ -409,9 +1141,47 @@
     "indoorStartWeeksBeforeFrost": 6,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Onion", "Garlic", "Beet", "Lettuce", "Spinach", "Dill"],
-    "incompatible": ["Tomato", "Strawberry", "Pepper"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Onion",
+      "Garlic",
+      "Beet",
+      "Lettuce",
+      "Spinach",
+      "Dill"
+    ],
+    "incompatible": [
+      "Tomato",
+      "Strawberry",
+      "Pepper"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 30,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 1.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 900,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Cabbage Worms",
+      "Cabbage Loopers",
+      "Aphids",
+      "Flea Beetles",
+      "Harlequin Bugs"
+    ],
+    "commonDiseases": [
+      "Clubroot",
+      "Black Rot",
+      "Downy Mildew",
+      "Alternaria Leaf Spot"
+    ],
+    "harvestWindowDays": 21,
+    "storageLifeDays": 10
   },
   {
     "name": "Cauliflower",
@@ -427,9 +1197,46 @@
     "indoorStartWeeksBeforeFrost": 6,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Onion", "Garlic", "Beet", "Lettuce", "Spinach", "Dill"],
-    "incompatible": ["Tomato", "Strawberry", "Pepper"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Onion",
+      "Garlic",
+      "Beet",
+      "Lettuce",
+      "Spinach",
+      "Dill"
+    ],
+    "incompatible": [
+      "Tomato",
+      "Strawberry",
+      "Pepper"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 24,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 2,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 1000,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Cabbage Worms",
+      "Cabbage Loopers",
+      "Aphids",
+      "Flea Beetles"
+    ],
+    "commonDiseases": [
+      "Clubroot",
+      "Black Rot",
+      "Downy Mildew",
+      "Alternaria Leaf Spot"
+    ],
+    "harvestWindowDays": 10,
+    "storageLifeDays": 14
   },
   {
     "name": "Cabbage",
@@ -445,9 +1252,47 @@
     "indoorStartWeeksBeforeFrost": 6,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Onion", "Garlic", "Beet", "Lettuce", "Dill", "Thyme"],
-    "incompatible": ["Tomato", "Strawberry", "Pepper"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Onion",
+      "Garlic",
+      "Beet",
+      "Lettuce",
+      "Dill",
+      "Thyme"
+    ],
+    "incompatible": [
+      "Tomato",
+      "Strawberry",
+      "Pepper"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "hardy",
+    "growthHabit": "rosette",
+    "matureHeightInches": 18,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 3,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 950,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Cabbage Worms",
+      "Cabbage Loopers",
+      "Aphids",
+      "Flea Beetles",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Clubroot",
+      "Black Rot",
+      "Fusarium Yellows",
+      "Downy Mildew"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 90
   },
   {
     "name": "Brussels Sprouts",
@@ -463,9 +1308,47 @@
     "indoorStartWeeksBeforeFrost": 8,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Onion", "Garlic", "Beet", "Carrot", "Dill", "Thyme"],
-    "incompatible": ["Tomato", "Strawberry", "Pepper"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Onion",
+      "Garlic",
+      "Beet",
+      "Carrot",
+      "Dill",
+      "Thyme"
+    ],
+    "incompatible": [
+      "Tomato",
+      "Strawberry",
+      "Pepper"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 36,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 1.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 1400,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Cabbage Worms",
+      "Cabbage Loopers",
+      "Aphids",
+      "Flea Beetles",
+      "Harlequin Bugs"
+    ],
+    "commonDiseases": [
+      "Clubroot",
+      "Black Rot",
+      "Downy Mildew",
+      "Alternaria Leaf Spot"
+    ],
+    "harvestWindowDays": 30,
+    "storageLifeDays": 21
   },
   {
     "name": "Kohlrabi",
@@ -481,9 +1364,43 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Onion", "Beet", "Lettuce"],
-    "incompatible": ["Tomato", "Pepper", "Strawberry"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Onion",
+      "Beet",
+      "Lettuce"
+    ],
+    "incompatible": [
+      "Tomato",
+      "Pepper",
+      "Strawberry"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "hardy",
+    "growthHabit": "rosette",
+    "matureHeightInches": 12,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 0.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 700,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Cabbage Worms",
+      "Aphids",
+      "Flea Beetles",
+      "Cabbage Root Maggots"
+    ],
+    "commonDiseases": [
+      "Clubroot",
+      "Black Rot",
+      "Downy Mildew",
+      "White Rust"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 30
   },
   {
     "name": "Carrot",
@@ -499,9 +1416,45 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Tomato", "Lettuce", "Peas", "Onion", "Rosemary", "Sage", "Leek"],
-    "incompatible": ["Dill"],
-    "successionIntervalWeeks": 3
+    "companions": [
+      "Tomato",
+      "Lettuce",
+      "Peas",
+      "Onion",
+      "Rosemary",
+      "Sage",
+      "Leek"
+    ],
+    "incompatible": [
+      "Dill"
+    ],
+    "successionIntervalWeeks": 3,
+    "waterNeeds": "medium",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 12,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 0.25,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 45,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 900,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Carrot Rust Fly",
+      "Aphids",
+      "Wireworms",
+      "Nematodes"
+    ],
+    "commonDiseases": [
+      "Alternaria Leaf Blight",
+      "Cercospora Leaf Spot",
+      "Cavity Spot",
+      "Damping Off"
+    ],
+    "harvestWindowDays": 30,
+    "storageLifeDays": 120
   },
   {
     "name": "Beet",
@@ -517,9 +1470,43 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Lettuce", "Onion", "Cabbage", "Broccoli", "Garlic"],
-    "incompatible": ["Pole Beans"],
-    "successionIntervalWeeks": 3
+    "companions": [
+      "Lettuce",
+      "Onion",
+      "Cabbage",
+      "Broccoli",
+      "Garlic"
+    ],
+    "incompatible": [
+      "Pole Beans"
+    ],
+    "successionIntervalWeeks": 3,
+    "waterNeeds": "medium",
+    "frostTolerance": "hardy",
+    "growthHabit": "rosette",
+    "matureHeightInches": 12,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 0.25,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 750,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Leaf Miners",
+      "Aphids",
+      "Flea Beetles",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Cercospora Leaf Spot",
+      "Downy Mildew",
+      "Damping Off",
+      "Root Rot"
+    ],
+    "harvestWindowDays": 21,
+    "storageLifeDays": 90
   },
   {
     "name": "Radish",
@@ -535,9 +1522,41 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": 6,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Lettuce", "Peas", "Cucumber", "Carrot", "Spinach"],
+    "companions": [
+      "Lettuce",
+      "Peas",
+      "Cucumber",
+      "Carrot",
+      "Spinach"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": 2
+    "successionIntervalWeeks": 2,
+    "waterNeeds": "medium",
+    "frostTolerance": "hardy",
+    "growthHabit": "rosette",
+    "matureHeightInches": 8,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 2,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 350,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Flea Beetles",
+      "Cabbage Root Maggots",
+      "Aphids",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Clubroot",
+      "Black Root",
+      "Downy Mildew",
+      "Damping Off"
+    ],
+    "harvestWindowDays": 7,
+    "storageLifeDays": 14
   },
   {
     "name": "Turnip",
@@ -553,9 +1572,41 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Peas", "Onion", "Garlic"],
-    "incompatible": ["Potato"],
-    "successionIntervalWeeks": 3
+    "companions": [
+      "Peas",
+      "Onion",
+      "Garlic"
+    ],
+    "incompatible": [
+      "Potato"
+    ],
+    "successionIntervalWeeks": 3,
+    "waterNeeds": "medium",
+    "frostTolerance": "hardy",
+    "growthHabit": "rosette",
+    "matureHeightInches": 12,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 0.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 650,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Flea Beetles",
+      "Cabbage Root Maggots",
+      "Aphids",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Clubroot",
+      "White Rust",
+      "Downy Mildew",
+      "Black Rot"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 60
   },
   {
     "name": "Parsnip",
@@ -571,9 +1622,43 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Peas", "Radish", "Onion", "Garlic"],
-    "incompatible": ["Carrot", "Dill"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Peas",
+      "Radish",
+      "Onion",
+      "Garlic"
+    ],
+    "incompatible": [
+      "Carrot",
+      "Dill"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 18,
+    "rootDepth": "deep",
+    "expectedYieldPerPlant": 0.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 1,
+    "minSoilTempF": 35,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 1500,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Carrot Rust Fly",
+      "Aphids",
+      "Celery Fly",
+      "Wireworms"
+    ],
+    "commonDiseases": [
+      "Canker",
+      "Powdery Mildew",
+      "Root Rot",
+      "Leaf Spot"
+    ],
+    "harvestWindowDays": 60,
+    "storageLifeDays": 120
   },
   {
     "name": "Potato",
@@ -589,9 +1674,48 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": 2,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Green Beans", "Corn", "Cabbage", "Peas", "Garlic"],
-    "incompatible": ["Tomato", "Cucumber", "Zucchini", "Pumpkin", "Winter Squash"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Green Beans",
+      "Corn",
+      "Cabbage",
+      "Peas",
+      "Garlic"
+    ],
+    "incompatible": [
+      "Tomato",
+      "Cucumber",
+      "Zucchini",
+      "Pumpkin",
+      "Winter Squash"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 24,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 3,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 0,
+    "minSoilTempF": 45,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 1200,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Colorado Potato Beetles",
+      "Aphids",
+      "Wireworms",
+      "Flea Beetles"
+    ],
+    "commonDiseases": [
+      "Late Blight",
+      "Early Blight",
+      "Scab",
+      "Blackleg",
+      "Verticillium Wilt"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 120
   },
   {
     "name": "Sweet Potato",
@@ -607,9 +1731,41 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 4,
-    "companions": ["Thyme", "Dill", "Green Beans"],
-    "incompatible": ["Tomato"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Thyme",
+      "Dill",
+      "Green Beans"
+    ],
+    "incompatible": [
+      "Tomato"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "tender",
+    "growthHabit": "spreading",
+    "matureHeightInches": 16,
+    "rootDepth": "deep",
+    "expectedYieldPerPlant": 3,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 0,
+    "minSoilTempF": 65,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1800,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Sweet Potato Weevils",
+      "Wireworms",
+      "Flea Beetles",
+      "Whiteflies"
+    ],
+    "commonDiseases": [
+      "Fusarium Wilt",
+      "Black Rot",
+      "Scurf",
+      "Soft Rot"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 180
   },
   {
     "name": "Onion",
@@ -625,9 +1781,46 @@
     "indoorStartWeeksBeforeFrost": 10,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Carrot", "Lettuce", "Beet", "Cabbage", "Broccoli", "Tomato"],
-    "incompatible": ["Peas", "Green Beans", "Lima Beans"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Carrot",
+      "Lettuce",
+      "Beet",
+      "Cabbage",
+      "Broccoli",
+      "Tomato"
+    ],
+    "incompatible": [
+      "Peas",
+      "Green Beans",
+      "Lima Beans"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 18,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 0.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 1,
+    "minSoilTempF": 35,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 1400,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Onion Maggots",
+      "Thrips",
+      "Cutworms",
+      "Nematodes"
+    ],
+    "commonDiseases": [
+      "Downy Mildew",
+      "Botrytis Neck Rot",
+      "Pink Root",
+      "White Rot"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 180
   },
   {
     "name": "Garlic",
@@ -643,9 +1836,46 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Tomato", "Beet", "Carrot", "Lettuce", "Broccoli", "Cabbage"],
-    "incompatible": ["Peas", "Green Beans", "Lima Beans"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Tomato",
+      "Beet",
+      "Carrot",
+      "Lettuce",
+      "Broccoli",
+      "Cabbage"
+    ],
+    "incompatible": [
+      "Peas",
+      "Green Beans",
+      "Lima Beans"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 24,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 3,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 0,
+    "minSoilTempF": 35,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 1800,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Onion Maggots",
+      "Thrips",
+      "Nematodes",
+      "Bulb Mites"
+    ],
+    "commonDiseases": [
+      "White Rot",
+      "Rust",
+      "Fusarium Basal Rot",
+      "Botrytis"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 240
   },
   {
     "name": "Leek",
@@ -661,9 +1891,42 @@
     "indoorStartWeeksBeforeFrost": 10,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Carrot", "Onion", "Celery"],
-    "incompatible": ["Peas", "Green Beans"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Carrot",
+      "Onion",
+      "Celery"
+    ],
+    "incompatible": [
+      "Peas",
+      "Green Beans"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 24,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 0.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 2,
+    "minSoilTempF": 35,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 1500,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Onion Maggots",
+      "Thrips",
+      "Leek Moths",
+      "Slugs"
+    ],
+    "commonDiseases": [
+      "Rust",
+      "White Tip",
+      "Downy Mildew",
+      "Botrytis"
+    ],
+    "harvestWindowDays": 60,
+    "storageLifeDays": 30
   },
   {
     "name": "Shallot",
@@ -679,9 +1942,43 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Carrot", "Beet", "Lettuce", "Tomato"],
-    "incompatible": ["Peas", "Green Beans"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Carrot",
+      "Beet",
+      "Lettuce",
+      "Tomato"
+    ],
+    "incompatible": [
+      "Peas",
+      "Green Beans"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 18,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 4,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 1,
+    "minSoilTempF": 35,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 1200,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Onion Maggots",
+      "Thrips",
+      "Nematodes",
+      "Aphids"
+    ],
+    "commonDiseases": [
+      "White Rot",
+      "Downy Mildew",
+      "Botrytis Neck Rot",
+      "Pink Root"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 180
   },
   {
     "name": "Peas",
@@ -697,9 +1994,47 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": 6,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Carrot", "Radish", "Turnip", "Corn", "Cucumber", "Spinach"],
-    "incompatible": ["Onion", "Garlic", "Leek", "Shallot"],
-    "successionIntervalWeeks": 2
+    "companions": [
+      "Carrot",
+      "Radish",
+      "Turnip",
+      "Corn",
+      "Cucumber",
+      "Spinach"
+    ],
+    "incompatible": [
+      "Onion",
+      "Garlic",
+      "Leek",
+      "Shallot"
+    ],
+    "successionIntervalWeeks": 2,
+    "waterNeeds": "medium",
+    "frostTolerance": "hardy",
+    "growthHabit": "climbing",
+    "matureHeightInches": 60,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 0.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 800,
+    "nitrogenFixing": 1,
+    "commonPests": [
+      "Aphids",
+      "Pea Moths",
+      "Thrips",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Fusarium Wilt",
+      "Root Rot",
+      "Downy Mildew"
+    ],
+    "harvestWindowDays": 21,
+    "storageLifeDays": 5
   },
   {
     "name": "Green Beans",
@@ -715,9 +2050,48 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": -1,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Corn", "Cucumber", "Potato", "Carrot", "Eggplant", "Zucchini"],
-    "incompatible": ["Onion", "Garlic", "Leek", "Shallot", "Beet"],
-    "successionIntervalWeeks": 2
+    "companions": [
+      "Corn",
+      "Cucumber",
+      "Potato",
+      "Carrot",
+      "Eggplant",
+      "Zucchini"
+    ],
+    "incompatible": [
+      "Onion",
+      "Garlic",
+      "Leek",
+      "Shallot",
+      "Beet"
+    ],
+    "successionIntervalWeeks": 2,
+    "waterNeeds": "medium",
+    "frostTolerance": "tender",
+    "growthHabit": "upright",
+    "matureHeightInches": 20,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 0.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 900,
+    "nitrogenFixing": 1,
+    "commonPests": [
+      "Mexican Bean Beetles",
+      "Aphids",
+      "Japanese Beetles",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Bean Rust",
+      "Bacterial Blight",
+      "Mosaic Virus",
+      "White Mold"
+    ],
+    "harvestWindowDays": 21,
+    "storageLifeDays": 7
   },
   {
     "name": "Lima Beans",
@@ -733,9 +2107,46 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": -2,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Corn", "Cucumber", "Carrot", "Potato"],
-    "incompatible": ["Onion", "Garlic", "Leek", "Shallot", "Beet"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Corn",
+      "Cucumber",
+      "Carrot",
+      "Potato"
+    ],
+    "incompatible": [
+      "Onion",
+      "Garlic",
+      "Leek",
+      "Shallot",
+      "Beet"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "tender",
+    "growthHabit": "upright",
+    "matureHeightInches": 24,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 0.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 65,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1200,
+    "nitrogenFixing": 1,
+    "commonPests": [
+      "Mexican Bean Beetles",
+      "Aphids",
+      "Japanese Beetles",
+      "Stink Bugs"
+    ],
+    "commonDiseases": [
+      "Bean Rust",
+      "Downy Mildew",
+      "White Mold",
+      "Anthracnose"
+    ],
+    "harvestWindowDays": 21,
+    "storageLifeDays": 5
   },
   {
     "name": "Edamame",
@@ -751,9 +2162,42 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": -2,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Corn", "Potato", "Cucumber"],
-    "incompatible": ["Onion", "Garlic"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Corn",
+      "Potato",
+      "Cucumber"
+    ],
+    "incompatible": [
+      "Onion",
+      "Garlic"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "tender",
+    "growthHabit": "upright",
+    "matureHeightInches": 24,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 0.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1300,
+    "nitrogenFixing": 1,
+    "commonPests": [
+      "Mexican Bean Beetles",
+      "Aphids",
+      "Stink Bugs",
+      "Japanese Beetles"
+    ],
+    "commonDiseases": [
+      "Soybean Rust",
+      "Bacterial Blight",
+      "Mosaic Virus",
+      "Root Rot"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 3
   },
   {
     "name": "Basil",
@@ -769,9 +2213,42 @@
     "indoorStartWeeksBeforeFrost": 6,
     "directSowWeeksBeforeFrost": -2,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Tomato", "Pepper", "Eggplant", "Oregano"],
-    "incompatible": ["Sage"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Tomato",
+      "Pepper",
+      "Eggplant",
+      "Oregano"
+    ],
+    "incompatible": [
+      "Sage"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "tender",
+    "growthHabit": "upright",
+    "matureHeightInches": 24,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 4,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 5,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 900,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Japanese Beetles",
+      "Slugs",
+      "Whiteflies"
+    ],
+    "commonDiseases": [
+      "Fusarium Wilt",
+      "Downy Mildew",
+      "Bacterial Leaf Spot",
+      "Damping Off"
+    ],
+    "harvestWindowDays": 60,
+    "storageLifeDays": 5
   },
   {
     "name": "Cilantro",
@@ -787,9 +2264,42 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": 2,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Tomato", "Spinach", "Lettuce", "Peas"],
-    "incompatible": ["Fennel"],
-    "successionIntervalWeeks": 3
+    "companions": [
+      "Tomato",
+      "Spinach",
+      "Lettuce",
+      "Peas"
+    ],
+    "incompatible": [
+      "Fennel"
+    ],
+    "successionIntervalWeeks": 3,
+    "waterNeeds": "medium",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 18,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 2,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 5,
+    "minSoilTempF": 50,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 600,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Whiteflies",
+      "Leafhoppers",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Bacterial Leaf Spot",
+      "Damping Off",
+      "Soft Rot"
+    ],
+    "harvestWindowDays": 21,
+    "storageLifeDays": 7
   },
   {
     "name": "Parsley",
@@ -805,9 +2315,44 @@
     "indoorStartWeeksBeforeFrost": 8,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Tomato", "Carrot", "Pepper", "Chives", "Asparagus"],
-    "incompatible": ["Lettuce", "Mint"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Tomato",
+      "Carrot",
+      "Pepper",
+      "Chives",
+      "Asparagus"
+    ],
+    "incompatible": [
+      "Lettuce",
+      "Mint"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "hardy",
+    "growthHabit": "rosette",
+    "matureHeightInches": 12,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 3,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 2,
+    "minSoilTempF": 50,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1000,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Parsleyworm",
+      "Aphids",
+      "Carrot Rust Fly",
+      "Whiteflies"
+    ],
+    "commonDiseases": [
+      "Septoria Leaf Spot",
+      "Crown Rot",
+      "Powdery Mildew",
+      "Damping Off"
+    ],
+    "harvestWindowDays": 90,
+    "storageLifeDays": 10
   },
   {
     "name": "Dill",
@@ -823,9 +2368,44 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": 2,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Cabbage", "Lettuce", "Cucumber", "Onion", "Broccoli"],
-    "incompatible": ["Carrot", "Tomato"],
-    "successionIntervalWeeks": 3
+    "companions": [
+      "Cabbage",
+      "Lettuce",
+      "Cucumber",
+      "Onion",
+      "Broccoli"
+    ],
+    "incompatible": [
+      "Carrot",
+      "Tomato"
+    ],
+    "successionIntervalWeeks": 3,
+    "waterNeeds": "low",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 36,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 2,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 5,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 700,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Parsleyworm",
+      "Aphids",
+      "Tomato Hornworm",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Cercospora Leaf Blight",
+      "Damping Off",
+      "Root Rot"
+    ],
+    "harvestWindowDays": 30,
+    "storageLifeDays": 7
   },
   {
     "name": "Oregano",
@@ -841,9 +2421,40 @@
     "indoorStartWeeksBeforeFrost": 8,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Tomato", "Pepper", "Basil", "Broccoli"],
+    "companions": [
+      "Tomato",
+      "Pepper",
+      "Basil",
+      "Broccoli"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "hardy",
+    "growthHabit": "spreading",
+    "matureHeightInches": 18,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 3,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1100,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Spider Mites",
+      "Leafhoppers",
+      "Thrips"
+    ],
+    "commonDiseases": [
+      "Root Rot",
+      "Rust",
+      "Botrytis",
+      "Mint Rust"
+    ],
+    "harvestWindowDays": 90,
+    "storageLifeDays": 7
   },
   {
     "name": "Thyme",
@@ -859,9 +2470,41 @@
     "indoorStartWeeksBeforeFrost": 8,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Tomato", "Eggplant", "Cabbage", "Brussels Sprouts", "Strawberry"],
+    "companions": [
+      "Tomato",
+      "Eggplant",
+      "Cabbage",
+      "Brussels Sprouts",
+      "Strawberry"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "hardy",
+    "growthHabit": "ground_cover",
+    "matureHeightInches": 10,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 2,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1200,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Spider Mites",
+      "Whiteflies",
+      "Thrips"
+    ],
+    "commonDiseases": [
+      "Root Rot",
+      "Botrytis",
+      "Fungal Leaf Spot",
+      "Rust"
+    ],
+    "harvestWindowDays": 120,
+    "storageLifeDays": 7
   },
   {
     "name": "Rosemary",
@@ -877,9 +2520,43 @@
     "indoorStartWeeksBeforeFrost": 12,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Carrot", "Cabbage", "Green Beans", "Sage"],
-    "incompatible": ["Cucumber", "Mint"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Carrot",
+      "Cabbage",
+      "Green Beans",
+      "Sage"
+    ],
+    "incompatible": [
+      "Cucumber",
+      "Mint"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 48,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 4,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 2,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1400,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Spider Mites",
+      "Whiteflies",
+      "Spittlebugs"
+    ],
+    "commonDiseases": [
+      "Root Rot",
+      "Powdery Mildew",
+      "Botrytis",
+      "Bacterial Leaf Spot"
+    ],
+    "harvestWindowDays": 180,
+    "storageLifeDays": 14
   },
   {
     "name": "Sage",
@@ -895,9 +2572,44 @@
     "indoorStartWeeksBeforeFrost": 8,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Rosemary", "Cabbage", "Carrot", "Broccoli", "Cauliflower"],
-    "incompatible": ["Basil", "Cucumber"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Rosemary",
+      "Cabbage",
+      "Carrot",
+      "Broccoli",
+      "Cauliflower"
+    ],
+    "incompatible": [
+      "Basil",
+      "Cucumber"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 24,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 3,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1100,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Spider Mites",
+      "Slugs",
+      "Whiteflies"
+    ],
+    "commonDiseases": [
+      "Root Rot",
+      "Powdery Mildew",
+      "Rust",
+      "Wilt"
+    ],
+    "harvestWindowDays": 120,
+    "storageLifeDays": 7
   },
   {
     "name": "Mint",
@@ -913,9 +2625,43 @@
     "indoorStartWeeksBeforeFrost": 8,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Cabbage", "Tomato", "Peas"],
-    "incompatible": ["Parsley", "Rosemary", "Cucumber"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Cabbage",
+      "Tomato",
+      "Peas"
+    ],
+    "incompatible": [
+      "Parsley",
+      "Rosemary",
+      "Cucumber"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "spreading",
+    "matureHeightInches": 18,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 4,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 55,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 900,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Spider Mites",
+      "Flea Beetles",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Mint Rust",
+      "Powdery Mildew",
+      "Verticillium Wilt",
+      "Anthracnose"
+    ],
+    "harvestWindowDays": 120,
+    "storageLifeDays": 7
   },
   {
     "name": "Chives",
@@ -931,9 +2677,44 @@
     "indoorStartWeeksBeforeFrost": 8,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Tomato", "Carrot", "Lettuce", "Pepper", "Parsley"],
-    "incompatible": ["Peas", "Green Beans"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Tomato",
+      "Carrot",
+      "Lettuce",
+      "Pepper",
+      "Parsley"
+    ],
+    "incompatible": [
+      "Peas",
+      "Green Beans"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 12,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 2,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 2,
+    "minSoilTempF": 45,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 800,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Onion Maggots",
+      "Thrips",
+      "Aphids",
+      "Bulb Mites"
+    ],
+    "commonDiseases": [
+      "Rust",
+      "Downy Mildew",
+      "Botrytis",
+      "White Rot"
+    ],
+    "harvestWindowDays": 120,
+    "storageLifeDays": 7
   },
   {
     "name": "Lavender",
@@ -949,9 +2730,42 @@
     "indoorStartWeeksBeforeFrost": 10,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Rosemary", "Thyme", "Sage", "Oregano"],
-    "incompatible": ["Mint"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Rosemary",
+      "Thyme",
+      "Sage",
+      "Oregano"
+    ],
+    "incompatible": [
+      "Mint"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 24,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 2,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1400,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Whiteflies",
+      "Spittlebugs",
+      "Spider Mites"
+    ],
+    "commonDiseases": [
+      "Root Rot",
+      "Phytophthora",
+      "Septoria Leaf Spot",
+      "Shab"
+    ],
+    "harvestWindowDays": 30,
+    "storageLifeDays": 365
   },
   {
     "name": "Tarragon",
@@ -967,9 +2781,39 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Artichoke", "Tomato", "Eggplant"],
+    "companions": [
+      "Artichoke",
+      "Tomato",
+      "Eggplant"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 24,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 2,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 0,
+    "minSoilTempF": 50,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 900,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Whiteflies",
+      "Spider Mites",
+      "Slugs"
+    ],
+    "commonDiseases": [
+      "Root Rot",
+      "Powdery Mildew",
+      "Rust",
+      "Downy Mildew"
+    ],
+    "harvestWindowDays": 90,
+    "storageLifeDays": 7
   },
   {
     "name": "Strawberry",
@@ -985,9 +2829,48 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Lettuce", "Spinach", "Thyme", "Carrot", "Onion"],
-    "incompatible": ["Cabbage", "Broccoli", "Cauliflower", "Kale"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Lettuce",
+      "Spinach",
+      "Thyme",
+      "Carrot",
+      "Onion"
+    ],
+    "incompatible": [
+      "Cabbage",
+      "Broccoli",
+      "Cauliflower",
+      "Kale"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "ground_cover",
+    "matureHeightInches": 8,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 1,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 0,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1100,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Slugs",
+      "Strawberry Root Weevils",
+      "Aphids",
+      "Spider Mites",
+      "Birds"
+    ],
+    "commonDiseases": [
+      "Botrytis Fruit Rot",
+      "Powdery Mildew",
+      "Verticillium Wilt",
+      "Leaf Scorch",
+      "Anthracnose"
+    ],
+    "harvestWindowDays": 30,
+    "storageLifeDays": 3
   },
   {
     "name": "Watermelon",
@@ -1003,9 +2886,41 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": -2,
     "transplantWeeksAfterFrost": 3,
-    "companions": ["Corn", "Radish", "Nasturtium"],
-    "incompatible": ["Potato"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Corn",
+      "Radish",
+      "Nasturtium"
+    ],
+    "incompatible": [
+      "Potato"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "very_high",
+    "frostTolerance": "tender",
+    "growthHabit": "spreading",
+    "matureHeightInches": 18,
+    "rootDepth": "deep",
+    "expectedYieldPerPlant": 15,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 65,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1600,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Cucumber Beetles",
+      "Aphids",
+      "Squash Vine Borers",
+      "Spider Mites"
+    ],
+    "commonDiseases": [
+      "Fusarium Wilt",
+      "Anthracnose",
+      "Gummy Stem Blight",
+      "Powdery Mildew"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 14
   },
   {
     "name": "Cantaloupe",
@@ -1021,9 +2936,42 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": -2,
     "transplantWeeksAfterFrost": 3,
-    "companions": ["Corn", "Radish", "Lettuce"],
-    "incompatible": ["Potato", "Cucumber"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Corn",
+      "Radish",
+      "Lettuce"
+    ],
+    "incompatible": [
+      "Potato",
+      "Cucumber"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "tender",
+    "growthHabit": "spreading",
+    "matureHeightInches": 18,
+    "rootDepth": "deep",
+    "expectedYieldPerPlant": 6,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 5,
+    "minSoilTempF": 65,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1400,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Cucumber Beetles",
+      "Aphids",
+      "Squash Vine Borers",
+      "Spider Mites"
+    ],
+    "commonDiseases": [
+      "Fusarium Wilt",
+      "Powdery Mildew",
+      "Downy Mildew",
+      "Anthracnose"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 10
   },
   {
     "name": "Honeydew",
@@ -1039,9 +2987,42 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": -2,
     "transplantWeeksAfterFrost": 3,
-    "companions": ["Corn", "Radish", "Lettuce"],
-    "incompatible": ["Potato", "Cucumber"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Corn",
+      "Radish",
+      "Lettuce"
+    ],
+    "incompatible": [
+      "Potato",
+      "Cucumber"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "tender",
+    "growthHabit": "spreading",
+    "matureHeightInches": 18,
+    "rootDepth": "deep",
+    "expectedYieldPerPlant": 6,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 5,
+    "minSoilTempF": 65,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1600,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Cucumber Beetles",
+      "Aphids",
+      "Squash Vine Borers",
+      "Whiteflies"
+    ],
+    "commonDiseases": [
+      "Fusarium Wilt",
+      "Powdery Mildew",
+      "Downy Mildew",
+      "Gummy Stem Blight"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 21
   },
   {
     "name": "Celery",
@@ -1057,9 +3038,43 @@
     "indoorStartWeeksBeforeFrost": 10,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Leek", "Onion", "Tomato", "Green Beans"],
-    "incompatible": ["Corn", "Potato"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Leek",
+      "Onion",
+      "Tomato",
+      "Green Beans"
+    ],
+    "incompatible": [
+      "Corn",
+      "Potato"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "very_high",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 24,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 1.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 5,
+    "minSoilTempF": 50,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1800,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Celery Leaf Tier",
+      "Carrot Rust Fly",
+      "Slugs"
+    ],
+    "commonDiseases": [
+      "Early Blight",
+      "Late Blight",
+      "Fusarium Yellows",
+      "Pink Rot"
+    ],
+    "harvestWindowDays": 21,
+    "storageLifeDays": 21
   },
   {
     "name": "Asparagus",
@@ -1075,9 +3090,42 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Tomato", "Parsley", "Basil"],
-    "incompatible": ["Onion", "Garlic"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Tomato",
+      "Parsley",
+      "Basil"
+    ],
+    "incompatible": [
+      "Onion",
+      "Garlic"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 60,
+    "rootDepth": "deep",
+    "expectedYieldPerPlant": 0.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 50,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 500,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Asparagus Beetles",
+      "Aphids",
+      "Cutworms",
+      "Slugs"
+    ],
+    "commonDiseases": [
+      "Fusarium Crown Rot",
+      "Rust",
+      "Purple Spot",
+      "Cercospora Leaf Spot"
+    ],
+    "harvestWindowDays": 42,
+    "storageLifeDays": 5
   },
   {
     "name": "Fennel",
@@ -1093,9 +3141,43 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": 2,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Dill"],
-    "incompatible": ["Tomato", "Pepper", "Eggplant", "Green Beans", "Cilantro"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Dill"
+    ],
+    "incompatible": [
+      "Tomato",
+      "Pepper",
+      "Eggplant",
+      "Green Beans",
+      "Cilantro"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 24,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 0.75,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 50,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 900,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Parsleyworm",
+      "Aphids",
+      "Whiteflies",
+      "Slugs"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Cercospora Leaf Blight",
+      "Root Rot",
+      "Damping Off"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 14
   },
   {
     "name": "Scallion",
@@ -1111,9 +3193,43 @@
     "indoorStartWeeksBeforeFrost": 8,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Carrot", "Lettuce", "Beet", "Tomato"],
-    "incompatible": ["Peas", "Green Beans"],
-    "successionIntervalWeeks": 3
+    "companions": [
+      "Carrot",
+      "Lettuce",
+      "Beet",
+      "Tomato"
+    ],
+    "incompatible": [
+      "Peas",
+      "Green Beans"
+    ],
+    "successionIntervalWeeks": 3,
+    "waterNeeds": "medium",
+    "frostTolerance": "hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 14,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 1,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 1,
+    "minSoilTempF": 35,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 800,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Onion Maggots",
+      "Thrips",
+      "Aphids",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Downy Mildew",
+      "White Rot",
+      "Pink Root",
+      "Botrytis"
+    ],
+    "harvestWindowDays": 21,
+    "storageLifeDays": 10
   },
   {
     "name": "Tomatillo",
@@ -1129,9 +3245,43 @@
     "indoorStartWeeksBeforeFrost": 6,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Basil", "Parsley", "Carrot", "Pepper"],
-    "incompatible": ["Fennel", "Corn"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Basil",
+      "Parsley",
+      "Carrot",
+      "Pepper"
+    ],
+    "incompatible": [
+      "Fennel",
+      "Corn"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "tender",
+    "growthHabit": "spreading",
+    "matureHeightInches": 48,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 3,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1200,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Tomato Hornworm",
+      "Flea Beetles",
+      "Aphids",
+      "Potato Beetles"
+    ],
+    "commonDiseases": [
+      "Early Blight",
+      "Verticillium Wilt",
+      "Mosaic Virus",
+      "Septoria Leaf Spot"
+    ],
+    "harvestWindowDays": 45,
+    "storageLifeDays": 14
   },
   {
     "name": "Rutabaga",
@@ -1147,9 +3297,40 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Peas", "Onion"],
-    "incompatible": ["Potato"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Peas",
+      "Onion"
+    ],
+    "incompatible": [
+      "Potato"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "hardy",
+    "growthHabit": "rosette",
+    "matureHeightInches": 14,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 1,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 1200,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Cabbage Root Maggots",
+      "Flea Beetles",
+      "Aphids",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Clubroot",
+      "Powdery Mildew",
+      "Black Rot",
+      "Downy Mildew"
+    ],
+    "harvestWindowDays": 21,
+    "storageLifeDays": 120
   },
   {
     "name": "Celeriac",
@@ -1165,9 +3346,41 @@
     "indoorStartWeeksBeforeFrost": 10,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Leek", "Onion", "Tomato"],
-    "incompatible": ["Corn"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Leek",
+      "Onion",
+      "Tomato"
+    ],
+    "incompatible": [
+      "Corn"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "rosette",
+    "matureHeightInches": 18,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 1,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 5,
+    "minSoilTempF": 50,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1600,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Carrot Rust Fly",
+      "Celery Leaf Tier",
+      "Aphids",
+      "Slugs"
+    ],
+    "commonDiseases": [
+      "Septoria Leaf Spot",
+      "Crown Rot",
+      "Fusarium Yellows",
+      "Soft Rot"
+    ],
+    "harvestWindowDays": 21,
+    "storageLifeDays": 120
   },
   {
     "name": "Daikon Radish",
@@ -1183,9 +3396,39 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Lettuce", "Peas", "Spinach"],
+    "companions": [
+      "Lettuce",
+      "Peas",
+      "Spinach"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 18,
+    "rootDepth": "deep",
+    "expectedYieldPerPlant": 1,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 800,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Flea Beetles",
+      "Cabbage Root Maggots",
+      "Aphids",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Clubroot",
+      "Black Root",
+      "Downy Mildew",
+      "White Rust"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 21
   },
   {
     "name": "Mizuna",
@@ -1201,9 +3444,39 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Lettuce", "Spinach", "Radish"],
+    "companions": [
+      "Lettuce",
+      "Spinach",
+      "Radish"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": 2
+    "successionIntervalWeeks": 2,
+    "waterNeeds": "medium",
+    "frostTolerance": "hardy",
+    "growthHabit": "rosette",
+    "matureHeightInches": 10,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 0.25,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 450,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Flea Beetles",
+      "Aphids",
+      "Slugs",
+      "Cabbage Worms"
+    ],
+    "commonDiseases": [
+      "Downy Mildew",
+      "White Rust",
+      "Alternaria Leaf Spot",
+      "Damping Off"
+    ],
+    "harvestWindowDays": 30,
+    "storageLifeDays": 5
   },
   {
     "name": "Mustard Greens",
@@ -1219,9 +3492,42 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Lettuce", "Spinach", "Onion", "Garlic"],
-    "incompatible": ["Strawberry"],
-    "successionIntervalWeeks": 2
+    "companions": [
+      "Lettuce",
+      "Spinach",
+      "Onion",
+      "Garlic"
+    ],
+    "incompatible": [
+      "Strawberry"
+    ],
+    "successionIntervalWeeks": 2,
+    "waterNeeds": "medium",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "rosette",
+    "matureHeightInches": 18,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 0.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 500,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Flea Beetles",
+      "Aphids",
+      "Cabbage Worms",
+      "Cabbage Loopers"
+    ],
+    "commonDiseases": [
+      "Downy Mildew",
+      "White Rust",
+      "Black Rot",
+      "Alternaria Leaf Spot"
+    ],
+    "harvestWindowDays": 30,
+    "storageLifeDays": 5
   },
   {
     "name": "Pole Beans",
@@ -1237,9 +3543,47 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": -1,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Corn", "Cucumber", "Carrot", "Eggplant"],
-    "incompatible": ["Onion", "Garlic", "Leek", "Shallot", "Beet"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Corn",
+      "Cucumber",
+      "Carrot",
+      "Eggplant"
+    ],
+    "incompatible": [
+      "Onion",
+      "Garlic",
+      "Leek",
+      "Shallot",
+      "Beet"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "tender",
+    "growthHabit": "climbing",
+    "matureHeightInches": 96,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 1,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1100,
+    "nitrogenFixing": 1,
+    "commonPests": [
+      "Mexican Bean Beetles",
+      "Aphids",
+      "Japanese Beetles",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Bean Rust",
+      "Bacterial Blight",
+      "Mosaic Virus",
+      "White Mold",
+      "Anthracnose"
+    ],
+    "harvestWindowDays": 42,
+    "storageLifeDays": 7
   },
   {
     "name": "Lemongrass",
@@ -1255,9 +3599,38 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 4,
-    "companions": ["Tomato", "Pepper"],
+    "companions": [
+      "Tomato",
+      "Pepper"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "tender",
+    "growthHabit": "upright",
+    "matureHeightInches": 48,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 8,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 1,
+    "minSoilTempF": 65,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1800,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Spider Mites",
+      "Mealybugs",
+      "Whiteflies",
+      "Aphids"
+    ],
+    "commonDiseases": [
+      "Rust",
+      "Leaf Blight",
+      "Red Leaf Spot",
+      "Root Rot"
+    ],
+    "harvestWindowDays": 90,
+    "storageLifeDays": 14
   },
   {
     "name": "Chamomile",
@@ -1273,9 +3646,40 @@
     "indoorStartWeeksBeforeFrost": 6,
     "directSowWeeksBeforeFrost": 2,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Cabbage", "Onion", "Cucumber", "Basil"],
+    "companions": [
+      "Cabbage",
+      "Onion",
+      "Cucumber",
+      "Basil"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 24,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 1,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 45,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 800,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Thrips",
+      "Mealybugs",
+      "Whiteflies"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Botrytis",
+      "Damping Off",
+      "Root Rot"
+    ],
+    "harvestWindowDays": 42,
+    "storageLifeDays": 365
   },
   {
     "name": "Sunflower",
@@ -1291,9 +3695,42 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": -1,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Cucumber", "Corn", "Lettuce", "Peas"],
-    "incompatible": ["Potato"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Cucumber",
+      "Corn",
+      "Lettuce",
+      "Peas"
+    ],
+    "incompatible": [
+      "Potato"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 96,
+    "rootDepth": "deep",
+    "expectedYieldPerPlant": 4,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 5,
+    "minSoilTempF": 55,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1300,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Sunflower Moths",
+      "Aphids",
+      "Birds",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Sclerotinia Head Rot",
+      "Rust",
+      "Downy Mildew",
+      "Verticillium Wilt"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 180
   },
   {
     "name": "Ground Cherry",
@@ -1309,9 +3746,41 @@
     "indoorStartWeeksBeforeFrost": 6,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Basil", "Parsley", "Carrot"],
-    "incompatible": ["Fennel"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Basil",
+      "Parsley",
+      "Carrot"
+    ],
+    "incompatible": [
+      "Fennel"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "tender",
+    "growthHabit": "spreading",
+    "matureHeightInches": 30,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 2,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 5,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1200,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Tomato Hornworm",
+      "Flea Beetles",
+      "Aphids",
+      "Whiteflies"
+    ],
+    "commonDiseases": [
+      "Early Blight",
+      "Septoria Leaf Spot",
+      "Mosaic Virus",
+      "Damping Off"
+    ],
+    "harvestWindowDays": 45,
+    "storageLifeDays": 14
   },
   {
     "name": "Rhubarb",
@@ -1327,9 +3796,39 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Garlic", "Onion", "Strawberry"],
+    "companions": [
+      "Garlic",
+      "Onion",
+      "Strawberry"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "rosette",
+    "matureHeightInches": 36,
+    "rootDepth": "deep",
+    "expectedYieldPerPlant": 3,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 800,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Rhubarb Curculio",
+      "Slugs",
+      "Japanese Beetles",
+      "Aphids"
+    ],
+    "commonDiseases": [
+      "Crown Rot",
+      "Leaf Spot",
+      "Anthracnose",
+      "Botrytis"
+    ],
+    "harvestWindowDays": 60,
+    "storageLifeDays": 14
   },
   {
     "name": "Watercress",
@@ -1345,9 +3844,37 @@
     "indoorStartWeeksBeforeFrost": 6,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Mint"],
+    "companions": [
+      "Mint"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "very_high",
+    "frostTolerance": "hardy",
+    "growthHabit": "ground_cover",
+    "matureHeightInches": 6,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 2,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 5,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 600,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Whiteflies",
+      "Snails",
+      "Flea Beetles"
+    ],
+    "commonDiseases": [
+      "Cercospora Leaf Spot",
+      "Damping Off",
+      "Root Rot",
+      "Downy Mildew"
+    ],
+    "harvestWindowDays": 60,
+    "storageLifeDays": 3
   },
   {
     "name": "Sorrel",
@@ -1363,9 +3890,38 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": 0,
-    "companions": ["Strawberry", "Lettuce"],
+    "companions": [
+      "Strawberry",
+      "Lettuce"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "rosette",
+    "matureHeightInches": 18,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 0.5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 700,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Slugs",
+      "Snails",
+      "Leaf Miners"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Rust",
+      "Leaf Spot",
+      "Root Rot"
+    ],
+    "harvestWindowDays": 90,
+    "storageLifeDays": 5
   },
   {
     "name": "Nasturtium",
@@ -1381,9 +3937,41 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": -1,
     "transplantWeeksAfterFrost": 1,
-    "companions": ["Tomato", "Cucumber", "Zucchini", "Cabbage", "Radish"],
+    "companions": [
+      "Tomato",
+      "Cucumber",
+      "Zucchini",
+      "Cabbage",
+      "Radish"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "tender",
+    "growthHabit": "spreading",
+    "matureHeightInches": 12,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 30,
+    "expectedYieldUnit": "count",
+    "seedViabilityYears": 5,
+    "minSoilTempF": 55,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 800,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Cabbage Worms",
+      "Flea Beetles",
+      "Caterpillars"
+    ],
+    "commonDiseases": [
+      "Bacterial Wilt",
+      "Mosaic Virus",
+      "Leaf Spot",
+      "Powdery Mildew"
+    ],
+    "harvestWindowDays": 60,
+    "storageLifeDays": 3
   },
   {
     "name": "Marigold",
@@ -1399,9 +3987,43 @@
     "indoorStartWeeksBeforeFrost": 6,
     "directSowWeeksBeforeFrost": -1,
     "transplantWeeksAfterFrost": 1,
-    "companions": ["Tomato", "Pepper", "Eggplant", "Cucumber", "Zucchini"],
-    "incompatible": ["Green Beans"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Tomato",
+      "Pepper",
+      "Eggplant",
+      "Cucumber",
+      "Zucchini"
+    ],
+    "incompatible": [
+      "Green Beans"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "tender",
+    "growthHabit": "upright",
+    "matureHeightInches": 14,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 50,
+    "expectedYieldUnit": "count",
+    "seedViabilityYears": 2,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 750,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Spider Mites",
+      "Slugs",
+      "Japanese Beetles"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Botrytis",
+      "Aster Yellows",
+      "Damping Off"
+    ],
+    "harvestWindowDays": 60,
+    "storageLifeDays": 7
   },
   {
     "name": "Ginger",
@@ -1417,9 +4039,41 @@
     "indoorStartWeeksBeforeFrost": 8,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 4,
-    "companions": ["Cilantro", "Lemongrass", "Chives", "Spinach", "Lettuce"],
+    "companions": [
+      "Cilantro",
+      "Lemongrass",
+      "Chives",
+      "Spinach",
+      "Lettuce"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "tender",
+    "growthHabit": "upright",
+    "matureHeightInches": 36,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 1,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 0,
+    "minSoilTempF": 68,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 2500,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Spider Mites",
+      "Root-Knot Nematodes",
+      "Fungus Gnats"
+    ],
+    "commonDiseases": [
+      "Bacterial Wilt",
+      "Rhizome Rot",
+      "Fusarium Yellows",
+      "Leaf Spot"
+    ],
+    "harvestWindowDays": 30,
+    "storageLifeDays": 90
   },
   {
     "name": "Dahlia",
@@ -1435,9 +4089,47 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 3,
-    "companions": ["Marigold", "Nasturtium", "Chives", "Cilantro"],
-    "incompatible": ["Cabbage", "Broccoli", "Cauliflower", "Potato"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Marigold",
+      "Nasturtium",
+      "Chives",
+      "Cilantro"
+    ],
+    "incompatible": [
+      "Cabbage",
+      "Broccoli",
+      "Cauliflower",
+      "Potato"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "tender",
+    "growthHabit": "upright",
+    "matureHeightInches": 48,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 30,
+    "expectedYieldUnit": "count",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1200,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Spider Mites",
+      "Slugs",
+      "Earwigs",
+      "Thrips"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Botrytis",
+      "Dahlia Mosaic Virus",
+      "Crown Gall",
+      "Tuber Rot"
+    ],
+    "harvestWindowDays": 60,
+    "storageLifeDays": 7
   },
   {
     "name": "Zinnia",
@@ -1453,9 +4145,40 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": -2,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Marigold", "Nasturtium", "Tomato", "Dahlia"],
+    "companions": [
+      "Marigold",
+      "Nasturtium",
+      "Tomato",
+      "Dahlia"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": 2
+    "successionIntervalWeeks": 2,
+    "waterNeeds": "low",
+    "frostTolerance": "tender",
+    "growthHabit": "upright",
+    "matureHeightInches": 36,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 40,
+    "expectedYieldUnit": "count",
+    "seedViabilityYears": 5,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1000,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Japanese Beetles",
+      "Spider Mites",
+      "Whiteflies"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Alternaria Leaf Spot",
+      "Bacterial Leaf Spot",
+      "Botrytis"
+    ],
+    "harvestWindowDays": 60,
+    "storageLifeDays": 7
   },
   {
     "name": "Cosmos",
@@ -1471,9 +4194,40 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": -1,
     "transplantWeeksAfterFrost": 1,
-    "companions": ["Marigold", "Zinnia", "Tomato", "Dill"],
+    "companions": [
+      "Marigold",
+      "Zinnia",
+      "Tomato",
+      "Dill"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": 3
+    "successionIntervalWeeks": 3,
+    "waterNeeds": "low",
+    "frostTolerance": "tender",
+    "growthHabit": "upright",
+    "matureHeightInches": 48,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 50,
+    "expectedYieldUnit": "count",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 55,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 700,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Thrips",
+      "Japanese Beetles",
+      "Slugs"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Aster Yellows",
+      "Bacterial Wilt",
+      "Botrytis"
+    ],
+    "harvestWindowDays": 60,
+    "storageLifeDays": 5
   },
   {
     "name": "Snapdragon",
@@ -1489,9 +4243,39 @@
     "indoorStartWeeksBeforeFrost": 8,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": -2,
-    "companions": ["Pansy", "Marigold", "Zinnia"],
+    "companions": [
+      "Pansy",
+      "Marigold",
+      "Zinnia"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 30,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 20,
+    "expectedYieldUnit": "count",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 55,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 900,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Spider Mites",
+      "Caterpillars",
+      "Thrips"
+    ],
+    "commonDiseases": [
+      "Rust",
+      "Downy Mildew",
+      "Botrytis",
+      "Root Rot"
+    ],
+    "harvestWindowDays": 45,
+    "storageLifeDays": 7
   },
   {
     "name": "Petunia",
@@ -1507,9 +4291,39 @@
     "indoorStartWeeksBeforeFrost": 10,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Basil", "Tomato", "Marigold"],
+    "companions": [
+      "Basil",
+      "Tomato",
+      "Marigold"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "tender",
+    "growthHabit": "spreading",
+    "matureHeightInches": 12,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 0,
+    "expectedYieldUnit": "count",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1200,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Budworms",
+      "Slugs",
+      "Thrips"
+    ],
+    "commonDiseases": [
+      "Botrytis",
+      "Powdery Mildew",
+      "Root Rot",
+      "Mosaic Virus"
+    ],
+    "harvestWindowDays": 90,
+    "storageLifeDays": 3
   },
   {
     "name": "Morning Glory",
@@ -1525,9 +4339,38 @@
     "indoorStartWeeksBeforeFrost": 4,
     "directSowWeeksBeforeFrost": -2,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Sunflower", "Corn"],
+    "companions": [
+      "Sunflower",
+      "Corn"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "tender",
+    "growthHabit": "climbing",
+    "matureHeightInches": 120,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 0,
+    "expectedYieldUnit": "count",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 60,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1600,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Spider Mites",
+      "Japanese Beetles",
+      "Leaf Miners"
+    ],
+    "commonDiseases": [
+      "Rust",
+      "Fusarium Wilt",
+      "White Blister",
+      "Leaf Spot"
+    ],
+    "harvestWindowDays": 60,
+    "storageLifeDays": 1
   },
   {
     "name": "Sweet Pea",
@@ -1543,9 +4386,38 @@
     "indoorStartWeeksBeforeFrost": 6,
     "directSowWeeksBeforeFrost": 4,
     "transplantWeeksAfterFrost": -2,
-    "companions": ["Peas", "Nasturtium"],
+    "companions": [
+      "Peas",
+      "Nasturtium"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "hardy",
+    "growthHabit": "climbing",
+    "matureHeightInches": 72,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 0,
+    "expectedYieldUnit": "count",
+    "seedViabilityYears": 4,
+    "minSoilTempF": 45,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 800,
+    "nitrogenFixing": 1,
+    "commonPests": [
+      "Aphids",
+      "Thrips",
+      "Slugs",
+      "Snails"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Botrytis",
+      "Root Rot",
+      "Mosaic Virus"
+    ],
+    "harvestWindowDays": 45,
+    "storageLifeDays": 5
   },
   {
     "name": "Pansy",
@@ -1561,9 +4433,39 @@
     "indoorStartWeeksBeforeFrost": 8,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": -3,
-    "companions": ["Snapdragon", "Lettuce", "Spinach"],
+    "companions": [
+      "Snapdragon",
+      "Lettuce",
+      "Spinach"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "rosette",
+    "matureHeightInches": 8,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 0,
+    "expectedYieldUnit": "count",
+    "seedViabilityYears": 2,
+    "minSoilTempF": 45,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 800,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Slugs",
+      "Spider Mites",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Downy Mildew",
+      "Botrytis",
+      "Leaf Spot"
+    ],
+    "harvestWindowDays": 60,
+    "storageLifeDays": 3
   },
   {
     "name": "Hollyhock",
@@ -1579,9 +4481,39 @@
     "indoorStartWeeksBeforeFrost": 8,
     "directSowWeeksBeforeFrost": -1,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Sunflower", "Dahlia", "Cosmos"],
+    "companions": [
+      "Sunflower",
+      "Dahlia",
+      "Cosmos"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 84,
+    "rootDepth": "deep",
+    "expectedYieldPerPlant": 0,
+    "expectedYieldUnit": "count",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 55,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1200,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Japanese Beetles",
+      "Aphids",
+      "Slugs",
+      "Spider Mites"
+    ],
+    "commonDiseases": [
+      "Hollyhock Rust",
+      "Anthracnose",
+      "Powdery Mildew",
+      "Leaf Spot"
+    ],
+    "harvestWindowDays": 30,
+    "storageLifeDays": 5
   },
   {
     "name": "Gladiolus",
@@ -1597,9 +4529,39 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Zinnia", "Cosmos", "Marigold"],
+    "companions": [
+      "Zinnia",
+      "Cosmos",
+      "Marigold"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": 2
+    "successionIntervalWeeks": 2,
+    "waterNeeds": "medium",
+    "frostTolerance": "tender",
+    "growthHabit": "upright",
+    "matureHeightInches": 48,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 2,
+    "expectedYieldUnit": "count",
+    "seedViabilityYears": 0,
+    "minSoilTempF": 55,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1000,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Thrips",
+      "Aphids",
+      "Spider Mites",
+      "Slugs"
+    ],
+    "commonDiseases": [
+      "Fusarium Corm Rot",
+      "Botrytis",
+      "Gladiolus Rust",
+      "Scab"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 7
   },
   {
     "name": "Black-Eyed Susan",
@@ -1615,9 +4577,40 @@
     "indoorStartWeeksBeforeFrost": 8,
     "directSowWeeksBeforeFrost": -2,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Coneflower", "Zinnia", "Cosmos", "Lavender"],
+    "companions": [
+      "Coneflower",
+      "Zinnia",
+      "Cosmos",
+      "Lavender"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 30,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 0,
+    "expectedYieldUnit": "count",
+    "seedViabilityYears": 3,
+    "minSoilTempF": 55,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1200,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Sawflies",
+      "Goldfinch",
+      "Slugs"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Septoria Leaf Spot",
+      "Downy Mildew",
+      "Rust"
+    ],
+    "harvestWindowDays": 45,
+    "storageLifeDays": 7
   },
   {
     "name": "Coneflower",
@@ -1633,9 +4626,39 @@
     "indoorStartWeeksBeforeFrost": 8,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Black-Eyed Susan", "Lavender", "Zinnia"],
+    "companions": [
+      "Black-Eyed Susan",
+      "Lavender",
+      "Zinnia"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 36,
+    "rootDepth": "deep",
+    "expectedYieldPerPlant": 0,
+    "expectedYieldUnit": "count",
+    "seedViabilityYears": 2,
+    "minSoilTempF": 55,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1200,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Japanese Beetles",
+      "Aphids",
+      "Eriophyid Mites",
+      "Goldfinch"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Aster Yellows",
+      "Septoria Leaf Spot",
+      "Bacterial Leaf Spot"
+    ],
+    "harvestWindowDays": 45,
+    "storageLifeDays": 7
   },
   {
     "name": "Peony",
@@ -1651,9 +4674,39 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": null,
-    "companions": ["Lavender", "Coneflower", "Black-Eyed Susan"],
+    "companions": [
+      "Lavender",
+      "Coneflower",
+      "Black-Eyed Susan"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 36,
+    "rootDepth": "deep",
+    "expectedYieldPerPlant": 10,
+    "expectedYieldUnit": "count",
+    "seedViabilityYears": 0,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 1000,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Thrips",
+      "Scale Insects",
+      "Nematodes",
+      "Ants"
+    ],
+    "commonDiseases": [
+      "Botrytis Blight",
+      "Powdery Mildew",
+      "Phytophthora Blight",
+      "Leaf Blotch"
+    ],
+    "harvestWindowDays": 14,
+    "storageLifeDays": 5
   },
   {
     "name": "Blueberry",
@@ -1669,9 +4722,41 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 4,
-    "companions": ["Strawberry", "Basil", "Thyme"],
+    "companions": [
+      "Strawberry",
+      "Basil",
+      "Thyme"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": null
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 72,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 5,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 0,
+    "minSoilTempF": 45,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1200,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Birds",
+      "Spotted Wing Drosophila",
+      "Blueberry Maggot",
+      "Japanese Beetles",
+      "Aphids"
+    ],
+    "commonDiseases": [
+      "Mummy Berry",
+      "Botrytis Blight",
+      "Anthracnose",
+      "Powdery Mildew",
+      "Root Rot"
+    ],
+    "harvestWindowDays": 42,
+    "storageLifeDays": 10
   },
   {
     "name": "Raspberry",
@@ -1687,9 +4772,46 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Garlic", "Chives", "Marigold"],
-    "incompatible": ["Potato", "Tomato", "Eggplant", "Blackberry"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Garlic",
+      "Chives",
+      "Marigold"
+    ],
+    "incompatible": [
+      "Potato",
+      "Tomato",
+      "Eggplant",
+      "Blackberry"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "high",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 60,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 2,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 0,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1000,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Spotted Wing Drosophila",
+      "Japanese Beetles",
+      "Raspberry Cane Borers",
+      "Aphids",
+      "Spider Mites"
+    ],
+    "commonDiseases": [
+      "Anthracnose",
+      "Botrytis Fruit Rot",
+      "Cane Blight",
+      "Phytophthora Root Rot",
+      "Raspberry Mosaic Virus"
+    ],
+    "harvestWindowDays": 35,
+    "storageLifeDays": 3
   },
   {
     "name": "Blackberry",
@@ -1705,9 +4827,46 @@
     "indoorStartWeeksBeforeFrost": null,
     "directSowWeeksBeforeFrost": null,
     "transplantWeeksAfterFrost": 2,
-    "companions": ["Garlic", "Chives", "Marigold"],
-    "incompatible": ["Raspberry", "Tomato", "Potato", "Eggplant"],
-    "successionIntervalWeeks": null
+    "companions": [
+      "Garlic",
+      "Chives",
+      "Marigold"
+    ],
+    "incompatible": [
+      "Raspberry",
+      "Tomato",
+      "Potato",
+      "Eggplant"
+    ],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 72,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 4,
+    "expectedYieldUnit": "lbs",
+    "seedViabilityYears": 0,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 1100,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Spotted Wing Drosophila",
+      "Japanese Beetles",
+      "Raspberry Crown Borers",
+      "Aphids",
+      "Spider Mites"
+    ],
+    "commonDiseases": [
+      "Anthracnose",
+      "Botrytis Fruit Rot",
+      "Cane Blight",
+      "Orange Rust",
+      "Double Blossom"
+    ],
+    "harvestWindowDays": 30,
+    "storageLifeDays": 3
   },
   {
     "name": "Borage",
@@ -1723,8 +4882,475 @@
     "indoorStartWeeksBeforeFrost": 6,
     "directSowWeeksBeforeFrost": -1,
     "transplantWeeksAfterFrost": 1,
-    "companions": ["Tomato", "Strawberry", "Cucumber", "Zucchini", "Cabbage"],
+    "companions": [
+      "Tomato",
+      "Strawberry",
+      "Cucumber",
+      "Zucchini",
+      "Cabbage"
+    ],
     "incompatible": [],
-    "successionIntervalWeeks": 4
+    "successionIntervalWeeks": 4,
+    "waterNeeds": "low",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 30,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 3,
+    "expectedYieldUnit": "oz",
+    "seedViabilityYears": 5,
+    "minSoilTempF": 50,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 800,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Japanese Beetles",
+      "Slugs",
+      "Caterpillars"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Downy Mildew",
+      "Leaf Spot",
+      "Damping Off"
+    ],
+    "harvestWindowDays": 45,
+    "storageLifeDays": 3
+  },
+  {
+    "name": "Crimson Clover",
+    "variety": null,
+    "description": "A stunning nitrogen-fixing annual legume cover crop with brilliant crimson flower heads. Fixes 70-150 lbs nitrogen per acre. Attracts pollinators and beneficial insects. Easy to terminate and decomposes quickly.",
+    "category": "cover_crop",
+    "family": "fabaceae",
+    "zoneMin": "6",
+    "zoneMax": "10",
+    "sunRequirement": "full_sun",
+    "daysToHarvest": null,
+    "spacingInches": 1,
+    "indoorStartWeeksBeforeFrost": null,
+    "directSowWeeksBeforeFrost": 6,
+    "transplantWeeksAfterFrost": null,
+    "companions": [],
+    "incompatible": [],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 18,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 0,
+    "expectedYieldUnit": null,
+    "seedViabilityYears": 3,
+    "minSoilTempF": 42,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 0,
+    "nitrogenFixing": 1,
+    "commonPests": [
+      "Clover Root Curculio",
+      "Aphids",
+      "Slugs"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Root Rot",
+      "Clover Rot"
+    ],
+    "harvestWindowDays": 0,
+    "storageLifeDays": 0
+  },
+  {
+    "name": "Winter Rye",
+    "variety": null,
+    "description": "An extremely cold-hardy cereal grain cover crop that germinates quickly in cool soil. Excellent for weed suppression and erosion control. Produces extensive root biomass that improves soil structure.",
+    "category": "cover_crop",
+    "family": "poaceae",
+    "zoneMin": "3",
+    "zoneMax": "9",
+    "sunRequirement": "full_sun",
+    "daysToHarvest": null,
+    "spacingInches": 1,
+    "indoorStartWeeksBeforeFrost": null,
+    "directSowWeeksBeforeFrost": 6,
+    "transplantWeeksAfterFrost": null,
+    "companions": [
+      "Crimson Clover",
+      "Hairy Vetch"
+    ],
+    "incompatible": [],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 48,
+    "rootDepth": "deep",
+    "expectedYieldPerPlant": 0,
+    "expectedYieldUnit": null,
+    "seedViabilityYears": 2,
+    "minSoilTempF": 34,
+    "gddBaseTemp": 32,
+    "gddToHarvest": 0,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Armyworms",
+      "Aphids",
+      "Wireworms"
+    ],
+    "commonDiseases": [
+      "Ergot",
+      "Rust",
+      "Snow Mold"
+    ],
+    "harvestWindowDays": 0,
+    "storageLifeDays": 0
+  },
+  {
+    "name": "Buckwheat",
+    "variety": null,
+    "description": "A fast-growing warm-season cover crop that matures in just 30-40 days. Excellent pollinator plant with abundant white flowers. Suppresses weeds, accumulates phosphorus, and improves soil tilth.",
+    "category": "cover_crop",
+    "family": "polygonaceae",
+    "zoneMin": "3",
+    "zoneMax": "10",
+    "sunRequirement": "full_sun",
+    "daysToHarvest": null,
+    "spacingInches": 1,
+    "indoorStartWeeksBeforeFrost": null,
+    "directSowWeeksBeforeFrost": -2,
+    "transplantWeeksAfterFrost": null,
+    "companions": [],
+    "incompatible": [],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "tender",
+    "growthHabit": "upright",
+    "matureHeightInches": 36,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 0,
+    "expectedYieldUnit": null,
+    "seedViabilityYears": 3,
+    "minSoilTempF": 55,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 0,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Japanese Beetles",
+      "Deer"
+    ],
+    "commonDiseases": [
+      "Damping Off",
+      "Root Rot",
+      "Leaf Spot"
+    ],
+    "harvestWindowDays": 0,
+    "storageLifeDays": 0
+  },
+  {
+    "name": "Hairy Vetch",
+    "variety": null,
+    "description": "A vigorous nitrogen-fixing winter annual legume that can fix 60-120 lbs nitrogen per acre. Vining growth smothers weeds. Often mixed with winter rye for a balanced cover crop blend.",
+    "category": "cover_crop",
+    "family": "fabaceae",
+    "zoneMin": "4",
+    "zoneMax": "9",
+    "sunRequirement": "full_sun",
+    "daysToHarvest": null,
+    "spacingInches": 1,
+    "indoorStartWeeksBeforeFrost": null,
+    "directSowWeeksBeforeFrost": 6,
+    "transplantWeeksAfterFrost": null,
+    "companions": [
+      "Winter Rye",
+      "Oats"
+    ],
+    "incompatible": [],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "climbing",
+    "matureHeightInches": 36,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 0,
+    "expectedYieldUnit": null,
+    "seedViabilityYears": 5,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 0,
+    "nitrogenFixing": 1,
+    "commonPests": [
+      "Vetch Bruchid",
+      "Aphids",
+      "Cutworms"
+    ],
+    "commonDiseases": [
+      "Downy Mildew",
+      "Root Rot",
+      "Botrytis"
+    ],
+    "harvestWindowDays": 0,
+    "storageLifeDays": 0
+  },
+  {
+    "name": "Field Peas",
+    "variety": "Austrian Winter",
+    "description": "A cool-season nitrogen-fixing annual legume distinct from garden peas. Fixes 50-120 lbs nitrogen per acre. Often mixed with oats or cereal rye. Good forage value and excellent for soil building.",
+    "category": "cover_crop",
+    "family": "fabaceae",
+    "zoneMin": "3",
+    "zoneMax": "9",
+    "sunRequirement": "full_sun",
+    "daysToHarvest": null,
+    "spacingInches": 2,
+    "indoorStartWeeksBeforeFrost": null,
+    "directSowWeeksBeforeFrost": 6,
+    "transplantWeeksAfterFrost": null,
+    "companions": [
+      "Oats",
+      "Winter Rye"
+    ],
+    "incompatible": [],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "hardy",
+    "growthHabit": "climbing",
+    "matureHeightInches": 36,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 0,
+    "expectedYieldUnit": null,
+    "seedViabilityYears": 3,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 0,
+    "nitrogenFixing": 1,
+    "commonPests": [
+      "Pea Aphids",
+      "Pea Weevils",
+      "Thrips"
+    ],
+    "commonDiseases": [
+      "Fusarium Wilt",
+      "Ascochyta Blight",
+      "Powdery Mildew"
+    ],
+    "harvestWindowDays": 0,
+    "storageLifeDays": 0
+  },
+  {
+    "name": "White Clover",
+    "variety": "Dutch",
+    "description": "A low-growing perennial nitrogen-fixing legume ideal as a living mulch or pathway cover. Fixes 80-200 lbs nitrogen per acre. Excellent pollinator plant that tolerates foot traffic and mowing.",
+    "category": "cover_crop",
+    "family": "fabaceae",
+    "zoneMin": "3",
+    "zoneMax": "10",
+    "sunRequirement": "partial_shade",
+    "daysToHarvest": null,
+    "spacingInches": 1,
+    "indoorStartWeeksBeforeFrost": null,
+    "directSowWeeksBeforeFrost": 4,
+    "transplantWeeksAfterFrost": null,
+    "companions": [],
+    "incompatible": [],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "very_hardy",
+    "growthHabit": "ground_cover",
+    "matureHeightInches": 6,
+    "rootDepth": "shallow",
+    "expectedYieldPerPlant": 0,
+    "expectedYieldUnit": null,
+    "seedViabilityYears": 3,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 0,
+    "nitrogenFixing": 1,
+    "commonPests": [
+      "Clover Root Curculio",
+      "Slugs",
+      "Aphids"
+    ],
+    "commonDiseases": [
+      "Clover Rot",
+      "Powdery Mildew",
+      "Root Rot"
+    ],
+    "harvestWindowDays": 0,
+    "storageLifeDays": 0
+  },
+  {
+    "name": "Annual Ryegrass",
+    "variety": null,
+    "description": "A fast-establishing cool-season grass cover crop that provides excellent erosion control. Scavenges residual nitrogen and produces abundant root biomass. Easy to establish and widely adapted.",
+    "category": "cover_crop",
+    "family": "poaceae",
+    "zoneMin": "4",
+    "zoneMax": "9",
+    "sunRequirement": "full_sun",
+    "daysToHarvest": null,
+    "spacingInches": 1,
+    "indoorStartWeeksBeforeFrost": null,
+    "directSowWeeksBeforeFrost": 6,
+    "transplantWeeksAfterFrost": null,
+    "companions": [
+      "Crimson Clover",
+      "White Clover"
+    ],
+    "incompatible": [],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 30,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 0,
+    "expectedYieldUnit": null,
+    "seedViabilityYears": 3,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 32,
+    "gddToHarvest": 0,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Armyworms",
+      "Sod Webworms",
+      "Aphids"
+    ],
+    "commonDiseases": [
+      "Rust",
+      "Gray Leaf Spot",
+      "Pythium Blight"
+    ],
+    "harvestWindowDays": 0,
+    "storageLifeDays": 0
+  },
+  {
+    "name": "Oats",
+    "variety": null,
+    "description": "A cool-season cereal grain cover crop that establishes quickly and produces abundant biomass. Winter-kills in most zones, creating a natural no-till mulch. Excellent nurse crop for slower-establishing legumes.",
+    "category": "cover_crop",
+    "family": "poaceae",
+    "zoneMin": "3",
+    "zoneMax": "9",
+    "sunRequirement": "full_sun",
+    "daysToHarvest": null,
+    "spacingInches": 1,
+    "indoorStartWeeksBeforeFrost": null,
+    "directSowWeeksBeforeFrost": 6,
+    "transplantWeeksAfterFrost": null,
+    "companions": [
+      "Field Peas",
+      "Crimson Clover"
+    ],
+    "incompatible": [],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "medium",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 36,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 0,
+    "expectedYieldUnit": null,
+    "seedViabilityYears": 3,
+    "minSoilTempF": 38,
+    "gddBaseTemp": 32,
+    "gddToHarvest": 0,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Armyworms",
+      "Aphids",
+      "Wireworms"
+    ],
+    "commonDiseases": [
+      "Crown Rust",
+      "Septoria Leaf Blotch",
+      "Barley Yellow Dwarf Virus"
+    ],
+    "harvestWindowDays": 0,
+    "storageLifeDays": 0
+  },
+  {
+    "name": "Sorghum-Sudan Grass",
+    "variety": null,
+    "description": "A tall, fast-growing warm-season grass that produces massive biomass in hot weather. Excellent for breaking up compacted soil with aggressive roots. Suppresses weeds and nematodes.",
+    "category": "cover_crop",
+    "family": "poaceae",
+    "zoneMin": "5",
+    "zoneMax": "11",
+    "sunRequirement": "full_sun",
+    "daysToHarvest": null,
+    "spacingInches": 2,
+    "indoorStartWeeksBeforeFrost": null,
+    "directSowWeeksBeforeFrost": -3,
+    "transplantWeeksAfterFrost": null,
+    "companions": [],
+    "incompatible": [],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "tender",
+    "growthHabit": "upright",
+    "matureHeightInches": 96,
+    "rootDepth": "deep",
+    "expectedYieldPerPlant": 0,
+    "expectedYieldUnit": null,
+    "seedViabilityYears": 4,
+    "minSoilTempF": 65,
+    "gddBaseTemp": 50,
+    "gddToHarvest": 0,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Armyworms",
+      "Chinch Bugs",
+      "Aphids"
+    ],
+    "commonDiseases": [
+      "Anthracnose",
+      "Rust",
+      "Leaf Blight"
+    ],
+    "harvestWindowDays": 0,
+    "storageLifeDays": 0
+  },
+  {
+    "name": "Phacelia",
+    "variety": null,
+    "description": "An outstanding pollinator-attracting cover crop with lavender-blue curled flower clusters. Not related to common crop families, making it ideal for rotation. Suppresses weeds and improves soil structure.",
+    "category": "cover_crop",
+    "family": "boraginaceae",
+    "zoneMin": "4",
+    "zoneMax": "10",
+    "sunRequirement": "full_sun",
+    "daysToHarvest": null,
+    "spacingInches": 1,
+    "indoorStartWeeksBeforeFrost": null,
+    "directSowWeeksBeforeFrost": 2,
+    "transplantWeeksAfterFrost": null,
+    "companions": [],
+    "incompatible": [],
+    "successionIntervalWeeks": null,
+    "waterNeeds": "low",
+    "frostTolerance": "semi_hardy",
+    "growthHabit": "upright",
+    "matureHeightInches": 36,
+    "rootDepth": "medium",
+    "expectedYieldPerPlant": 0,
+    "expectedYieldUnit": null,
+    "seedViabilityYears": 3,
+    "minSoilTempF": 40,
+    "gddBaseTemp": 40,
+    "gddToHarvest": 0,
+    "nitrogenFixing": 0,
+    "commonPests": [
+      "Aphids",
+      "Slugs",
+      "Flea Beetles"
+    ],
+    "commonDiseases": [
+      "Powdery Mildew",
+      "Root Rot",
+      "Damping Off"
+    ],
+    "harvestWindowDays": 0,
+    "storageLifeDays": 0
   }
 ]

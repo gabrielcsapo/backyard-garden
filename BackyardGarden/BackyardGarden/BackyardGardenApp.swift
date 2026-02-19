@@ -10,9 +10,20 @@ import SwiftData
 
 @main
 struct BackyardGardenApp: App {
+    @State private var serverDiscovery = ServerDiscovery()
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Settings.self,
+            Yard.self,
+            YardElement.self,
+            Plant.self,
+            Planting.self,
+            LogEntry.self,
+            SeedInventoryItem.self,
+            GardenTask.self,
+            PestDisease.self,
+            SoilProfile.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -26,6 +37,7 @@ struct BackyardGardenApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(serverDiscovery)
         }
         .modelContainer(sharedModelContainer)
     }

@@ -47,7 +47,7 @@ export async function addYardElement(formData: FormData) {
   const sunExposure = (formData.get("sunExposure") as string) || "full_sun";
   const rotation = Number(formData.get("rotation")) || 0;
 
-  await db.insert(yardElements).values({
+  const result = await db.insert(yardElements).values({
     yardId,
     shapeType,
     x,
@@ -57,7 +57,9 @@ export async function addYardElement(formData: FormData) {
     label,
     sunExposure,
     rotation,
-  });
+  }).returning({ id: yardElements.id });
+
+  return result[0].id;
 }
 
 export async function updateYardElement(formData: FormData) {
@@ -81,6 +83,12 @@ export async function updateYardElement(formData: FormData) {
   if (shapeType != null) updates.shapeType = shapeType as string;
   const rotation = formData.get("rotation");
   if (rotation != null) updates.rotation = Number(rotation);
+  const seasonExtension = formData.get("seasonExtension");
+  if (seasonExtension != null) updates.seasonExtension = seasonExtension as string;
+  const irrigationType = formData.get("irrigationType");
+  if (irrigationType != null) updates.irrigationType = irrigationType as string;
+  const mulched = formData.get("mulched");
+  if (mulched != null) updates.mulched = Number(mulched);
 
   await db.update(yardElements).set(updates).where(eq(yardElements.id, id));
 }

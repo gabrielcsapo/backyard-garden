@@ -4,9 +4,12 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently \"vite\" \"tsx watch app/api/index.ts\"",
+    "dev:web": "vite",
+    "dev:api": "tsx watch app/api/index.ts",
     "build": "vite build",
     "preview": "vite preview",
+    "start:api": "tsx app/api/index.ts",
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
     "lint": "oxlint app/",
@@ -14,8 +17,10 @@
     "format:check": "oxfmt --check app/"
   },
   "dependencies": {
+    "@hono/node-server": "^1.19.9",
     "better-sqlite3": "^12.6.2",
     "drizzle-orm": "^0.45.1",
+    "hono": "^4.11.9",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-router": "7.13.0"
@@ -28,6 +33,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "latest",
     "@vitejs/plugin-rsc": "latest",
+    "concurrently": "^9.2.1",
     "drizzle-kit": "^0.31.9",
     "oxfmt": "^0.32.0",
     "oxlint": "^1.47.0",

@@ -3,7 +3,8 @@ import { eq, desc } from "drizzle-orm";
 import { db } from "../db/index.ts";
 import { logEntries, plantings, plants, yardElements } from "../db/schema.ts";
 import { createLogEntry, deleteLogEntry } from "./log.actions.ts";
-import { LogTimeline, QuickLogForm } from "./log.client.tsx";
+import { exportLogs } from "./export.actions.ts";
+import { LogTimeline, QuickLogForm, ExportButton } from "./log.client.tsx";
 
 const Component = async () => {
   const entries = await db
@@ -15,6 +16,7 @@ const Component = async () => {
       stage: logEntries.stage,
       yieldAmount: logEntries.yieldAmount,
       yieldUnit: logEntries.yieldUnit,
+      photoPath: logEntries.photoPath,
       plantingId: logEntries.plantingId,
       yardElementId: logEntries.yardElementId,
       plantName: plants.name,
@@ -73,6 +75,7 @@ const Component = async () => {
             Track activities, observations, and harvests in your garden.
           </p>
         </div>
+        <ExportButton exportAction={exportLogs} label="Export CSV" />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">

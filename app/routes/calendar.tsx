@@ -3,7 +3,9 @@ import { eq, sql } from "drizzle-orm";
 import { db } from "../db/index.ts";
 import { settings, plantings, plants, yardElements } from "../db/schema.ts";
 import { markCalendarTaskDone } from "./calendar.actions.ts";
-import { GanttCalendar } from "./calendar.client.tsx";
+import { exportAllPlantings } from "./export.actions.ts";
+import { getMoonPhase } from "../lib/moon-phases.ts";
+import { GanttCalendar, MoonPhaseCard, ExportButton } from "./calendar.client.tsx";
 
 const Component = async () => {
   const userSettings = (await db.select().from(settings).limit(1))[0];
@@ -73,6 +75,10 @@ const Component = async () => {
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Your personalized planting schedule based on frost dates.
           </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <MoonPhaseCard moonPhase={getMoonPhase()} />
+          <ExportButton exportAction={exportAllPlantings} label="Export" />
         </div>
       </div>
 

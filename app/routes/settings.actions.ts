@@ -16,13 +16,16 @@ export async function saveSettings(formData: FormData) {
 
   const existing = await db.select().from(settings).limit(1);
 
+  const latitude = formData.get("latitude") ? Number(formData.get("latitude")) : null;
+  const longitude = formData.get("longitude") ? Number(formData.get("longitude")) : null;
+
   if (existing.length > 0) {
     await db
       .update(settings)
-      .set({ zipCode, zone, lastFrostDate, firstFrostDate })
+      .set({ zipCode, zone, lastFrostDate, firstFrostDate, latitude, longitude })
       .where(eq(settings.id, existing[0].id));
   } else {
-    await db.insert(settings).values({ zipCode, zone, lastFrostDate, firstFrostDate });
+    await db.insert(settings).values({ zipCode, zone, lastFrostDate, firstFrostDate, latitude, longitude });
   }
 
   return { success: true };

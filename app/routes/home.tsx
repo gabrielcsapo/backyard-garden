@@ -6,6 +6,9 @@ import { eq, inArray, gte, desc, sql } from "drizzle-orm";
 import { getPlantingWindows, formatDate } from "../lib/dates.ts";
 import { createLogEntry } from "./log.actions.ts";
 import { YardPreview, TaskCheckbox } from "./home.client.tsx";
+import { getWeatherForecast, getWeatherDescription } from "../lib/weather.ts";
+import { getWateringStatuses } from "../lib/watering.ts";
+import { getYieldSummaries } from "../lib/yield.ts";
 
 type ThisWeekTask = {
   id: string;
@@ -99,6 +102,21 @@ const Component = async () => {
     .leftJoin(yardElements, eq(logEntries.yardElementId, yardElements.id))
     .orderBy(desc(logEntries.date), desc(logEntries.id))
     .limit(5);
+
+  // Weather data
+  let weather = null;
+  if (userSettings?.latitude && userSettings?.longitude) {
+    weather = await getWeatherForecast(userSettings.latitude, userSettings.longitude);
+  }
+
+  // Watering statuses
+  const recentRainMm = weather?.todayPrecipMm ?? 0;
+  const wateringStatuses = await getWateringStatuses(recentRainMm);
+  const bedsNeedingWater = wateringStatuses.filter((s) => s.needsWatering);
+
+  // Yield summaries
+  const yieldSummaries = await getYieldSummaries();
+  const topYields = yieldSummaries.slice(0, 5);
 
   // This week's tasks — compute from active plantings + frost dates
   let thisWeekTasks: ThisWeekTask[] = [];
@@ -219,6 +237,26 @@ const Component = async () => {
         </div>
       ) : (
         <>
+          {/* Frost Alert Banner */}
+          {weather?.frostAlert && (
+            <div className="mb-6 flex items-center gap-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 p-4">
+              <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center shrink-0">
+                <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2v8l4 4" />
+                  <circle cx="12" cy="12" r="10" />
+                </svg>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-blue-900 dark:text-blue-200">Frost Alert</p>
+                <p className="text-xs text-blue-700 dark:text-blue-400 mt-0.5">
+                  Freezing temperatures expected: {weather.frostAlertDays.map((d) =>
+                    new Date(d).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })
+                  ).join(", ")}. Consider covering tender plants.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Quick Stats Bar */}
           <div className="flex flex-wrap items-center gap-3 mb-6">
             <div className="inline-flex items-center gap-1.5 bg-garden-50 dark:bg-garden-900/30 text-garden-700 dark:text-garden-400 rounded-full px-3 py-1.5 text-sm font-medium">
@@ -236,12 +274,22 @@ const Component = async () => {
               </svg>
               Zone {userSettings.zone}
             </div>
+            {weather && (
+              <div className="inline-flex items-center gap-1.5 bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400 rounded-full px-3 py-1.5 text-sm font-medium">
+                {weather.currentTempF}°F &middot; {getWeatherDescription(weather.daily[0]?.weatherCode ?? 0)}
+              </div>
+            )}
             <div className="inline-flex items-center gap-1.5 bg-earth-100 dark:bg-gray-700 text-earth-700 dark:text-gray-300 rounded-full px-3 py-1.5 text-sm font-medium">
               {activePlantingCount} active planting{activePlantingCount !== 1 ? "s" : ""}
             </div>
             {thisWeekTasks.length > 0 && (
               <div className="inline-flex items-center gap-1.5 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded-full px-3 py-1.5 text-sm font-medium">
                 {thisWeekTasks.length} task{thisWeekTasks.length !== 1 ? "s" : ""} this week
+              </div>
+            )}
+            {bedsNeedingWater.length > 0 && (
+              <div className="inline-flex items-center gap-1.5 bg-cyan-50 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400 rounded-full px-3 py-1.5 text-sm font-medium">
+                {bedsNeedingWater.length} bed{bedsNeedingWater.length !== 1 ? "s" : ""} need water
               </div>
             )}
             {userSettings.lastFrostDate && (
@@ -258,9 +306,78 @@ const Component = async () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left column — Tasks + Activity */}
             <div className="lg:col-span-2 space-y-6">
+              {/* Weather Forecast */}
+              {weather && (
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-5">
+                  <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3">7-Day Forecast</h2>
+                  <div className="grid grid-cols-7 gap-2">
+                    {weather.daily.map((day, i) => {
+                      const date = new Date(day.date);
+                      const isFrost = day.tempMinF <= 32;
+                      return (
+                        <div key={day.date} className={`text-center p-2 rounded-lg ${i === 0 ? "bg-garden-50 dark:bg-garden-900/20" : ""} ${isFrost ? "ring-1 ring-blue-300 dark:ring-blue-700" : ""}`}>
+                          <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase">
+                            {date.toLocaleDateString("en-US", { weekday: "short" })}
+                          </p>
+                          <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                            {date.toLocaleDateString("en-US", { month: "numeric", day: "numeric" })}
+                          </p>
+                          <div className="my-1.5">
+                            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{day.tempMaxF}°</p>
+                            <p className={`text-xs ${isFrost ? "text-blue-600 dark:text-blue-400 font-medium" : "text-gray-400 dark:text-gray-500"}`}>{day.tempMinF}°</p>
+                          </div>
+                          {day.precipitationProbability > 20 && (
+                            <p className="text-[10px] text-sky-600 dark:text-sky-400">
+                              {day.precipitationProbability}%
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Watering Needs */}
+              {bedsNeedingWater.length > 0 && (
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-5">
+                  <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3">Needs Watering</h2>
+                  <div className="space-y-2">
+                    {bedsNeedingWater.slice(0, 5).map((bed) => (
+                      <div key={bed.elementId} className="flex items-center gap-3 p-2.5 bg-cyan-50 dark:bg-cyan-900/20 rounded-lg">
+                        <div className="w-7 h-7 rounded-lg bg-cyan-100 dark:bg-cyan-900/40 flex items-center justify-center shrink-0">
+                          <svg className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                          </svg>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{bed.bedLabel ?? `Bed #${bed.elementId}`}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            {bed.daysSinceWatering !== null ? `${bed.daysSinceWatering}d since watered` : "Never logged"}
+                            {bed.plantNames.length > 0 && ` \u00b7 ${bed.plantNames.slice(0, 3).join(", ")}${bed.plantNames.length > 3 ? "..." : ""}`}
+                          </p>
+                        </div>
+                        <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
+                          bed.waterNeedLevel === "high" || bed.waterNeedLevel === "very_high"
+                            ? "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/50 dark:text-cyan-300"
+                            : "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400"
+                        }`}>
+                          {bed.waterNeedLevel.replace("_", " ")}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* This Week's Tasks */}
               <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-5">
-                <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">This Week</h2>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">This Week</h2>
+                  <Link to="/tasks" className="text-xs font-medium text-garden-600 dark:text-garden-400 hover:text-garden-700 dark:hover:text-garden-300 no-underline">
+                    All tasks
+                  </Link>
+                </div>
                 {thisWeekTasks.length > 0 ? (
                   <div className="space-y-2">
                     {thisWeekTasks.map((task) => (
@@ -382,8 +499,42 @@ const Component = async () => {
               </div>
             </div>
 
-            {/* Right column — Yard Preview + Nudges */}
+            {/* Right column — Yard Preview + Yield + Nudges */}
             <div className="space-y-6">
+              {/* Yield Progress */}
+              {topYields.length > 0 && (
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-5">
+                  <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3">Harvest Progress</h2>
+                  <div className="space-y-3">
+                    {topYields.map((y) => (
+                      <div key={y.plantingId}>
+                        <div className="flex items-center justify-between mb-1">
+                          <div className="flex items-center gap-1.5">
+                            <PlantIcon name={y.plantName} size={14} className="text-garden-600 dark:text-garden-400 shrink-0" />
+                            <span className="text-xs font-medium text-gray-700 dark:text-gray-300">{y.plantName}</span>
+                          </div>
+                          <span className="text-[10px] text-gray-500 dark:text-gray-400">
+                            {y.actualYield.toFixed(1)}/{y.expectedYield?.toFixed(1) ?? "?"} {y.yieldUnit}
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-1.5">
+                          <div
+                            className={`h-1.5 rounded-full transition-all ${
+                              y.progressPct >= 100
+                                ? "bg-garden-500"
+                                : y.progressPct >= 50
+                                  ? "bg-amber-500"
+                                  : "bg-gray-300 dark:bg-gray-600"
+                            }`}
+                            style={{ width: `${Math.min(100, y.progressPct)}%` }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Yard previews */}
               {yardSummaries.length > 0 ? (
                 <div className="space-y-4">
@@ -465,6 +616,24 @@ const Component = async () => {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-amber-900 dark:text-amber-200">Time to log!</p>
                     <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">No entries this week.</p>
+                  </div>
+                </Link>
+              )}
+
+              {/* Weather location prompt */}
+              {!weather && userSettings?.zone && (
+                <Link
+                  to="/settings"
+                  className="group flex items-center gap-3 bg-sky-50 dark:bg-sky-900/20 rounded-xl border border-sky-200 dark:border-sky-800 p-4 hover:bg-sky-100 dark:hover:bg-sky-900/30 transition-colors no-underline"
+                >
+                  <div className="w-8 h-8 rounded-full bg-sky-100 dark:bg-sky-900/40 flex items-center justify-center shrink-0">
+                    <svg className="w-4 h-4 text-sky-600 dark:text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-sky-900 dark:text-sky-200">Enable Weather</p>
+                    <p className="text-xs text-sky-700 dark:text-sky-400 mt-0.5">Add your location in settings for forecasts and frost alerts.</p>
                   </div>
                 </Link>
               )}

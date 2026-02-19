@@ -4,6 +4,52 @@ import React from "react";
 import { useToast } from "../components/toast.client";
 import { PlantIcon } from "../lib/plant-icons";
 
+export function ExportButton({
+  exportAction,
+  label,
+}: {
+  exportAction: () => Promise<{ csv: string; filename: string }>;
+  label: string;
+}) {
+  const [exporting, setExporting] = React.useState(false);
+  const { addToast } = useToast();
+
+  async function handleExport() {
+    setExporting(true);
+    try {
+      const { csv, filename } = await exportAction();
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+      addToast("Export downloaded!", "success");
+    } catch {
+      addToast("Export failed.", "error");
+    } finally {
+      setExporting(false);
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleExport}
+      disabled={exporting}
+      className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg border border-earth-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-earth-50 dark:hover:bg-gray-700 transition disabled:opacity-50 cursor-pointer"
+    >
+      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="7 10 12 15 17 10" />
+        <line x1="12" y1="15" x2="12" y2="3" />
+      </svg>
+      {exporting ? "..." : label}
+    </button>
+  );
+}
+
 type LogEntry = {
   id: number;
   date: string;
@@ -12,6 +58,7 @@ type LogEntry = {
   stage: string | null;
   yieldAmount: number | null;
   yieldUnit: string | null;
+  photoPath: string | null;
   plantingId: number | null;
   yardElementId: number | null;
   plantName: string | null;
@@ -156,6 +203,13 @@ export function LogTimeline({
                       )}
                     </div>
                     {entry.content && <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{entry.content}</p>}
+                    {entry.photoPath && (
+                      <img
+                        src={`/api/photos/${entry.photoPath}`}
+                        alt="Log photo"
+                        className="mt-2 rounded-lg max-h-48 object-cover border border-earth-200 dark:border-gray-600"
+                      />
+                    )}
                     {entry.type === "harvest" && entry.yieldAmount != null && (
                       <p className="text-sm font-medium text-orange-700 dark:text-orange-400 mt-1">
                         Harvested: {entry.yieldAmount} {entry.yieldUnit ?? "units"}

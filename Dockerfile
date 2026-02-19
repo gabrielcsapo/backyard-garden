@@ -13,6 +13,6 @@ COPY . .
 RUN pnpm install --frozen-lockfile
 RUN pnpm build
 
-EXPOSE 3000
+EXPOSE 3000 3001
 
-CMD ["pnpm", "preview"]
+CMD ["pnpm", "concurrently", "pnpm preview", "pnpm start:api"]

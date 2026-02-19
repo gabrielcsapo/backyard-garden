@@ -37,6 +37,31 @@ export const routes: unstable_RSCRouteConfigEntry[] = [
         lazy: () => import("./routes/log"),
       },
       {
+        id: "tasks",
+        path: "tasks",
+        lazy: () => import("./routes/tasks"),
+      },
+      {
+        id: "pests",
+        path: "pests",
+        lazy: () => import("./routes/pests"),
+      },
+      {
+        id: "seeds",
+        path: "seeds",
+        lazy: () => import("./routes/seeds"),
+      },
+      {
+        id: "soil",
+        path: "soil",
+        lazy: () => import("./routes/soil"),
+      },
+      {
+        id: "docs",
+        path: "docs",
+        lazy: () => import("./routes/docs"),
+      },
+      {
         id: "settings",
         path: "settings",
         lazy: () => import("./routes/settings"),

@@ -981,13 +981,12 @@ export function YardEditor({
     formData.set("label", config.label);
     formData.set("sunExposure", "full_sun");
 
-    await addYardElement(formData);
+    const newId = await addYardElement(formData);
 
-    const tempId = Date.now();
     setElementsWithHistory((prev) => [
       ...prev,
       {
-        id: tempId,
+        id: newId,
         yardId: yard.id,
         shapeType: activeTool,
         x: clampedX,
@@ -1000,7 +999,7 @@ export function YardEditor({
         metadata: null,
       },
     ]);
-    setSelectedId(tempId);
+    setSelectedId(newId);
     setActiveTool("select");
   }
 
