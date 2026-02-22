@@ -3,7 +3,7 @@ import { db } from "../db/index.ts";
 import { tasks, yardElements } from "../db/schema.ts";
 import { eq, sql } from "drizzle-orm";
 import { generateTasksForPlantings } from "../lib/task-generator.ts";
-import { createTask, completeTask, uncompleteTask, deleteTask } from "./tasks.actions.ts";
+import { createTask, completeTask, uncompleteTask, deleteTask, updateTask } from "./tasks.actions.ts";
 import { TaskList, AddTaskForm } from "./tasks.client.tsx";
 
 const Component = async () => {
@@ -53,6 +53,7 @@ const Component = async () => {
           completeAction={completeTask}
           uncompleteAction={uncompleteTask}
           deleteAction={deleteTask}
+          updateAction={updateTask}
         />
       </div>
     </main>

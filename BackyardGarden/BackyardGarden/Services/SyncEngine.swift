@@ -9,16 +9,65 @@ class SyncEngine {
     var lastSyncDate: String?
     var isSyncing: Bool = false
     var lastError: String?
+    var pendingChangesCount: Int = 0
 
     private let apiClient: APIClient
     private let modelContext: ModelContext
+    private var lastAutoSyncTime: Date?
 
     private static let lastSyncKey = "lastSyncDate"
+    private static let autoSyncMinInterval: TimeInterval = 30
 
     init(apiClient: APIClient, modelContext: ModelContext) {
         self.apiClient = apiClient
         self.modelContext = modelContext
         self.lastSyncDate = UserDefaults.standard.string(forKey: Self.lastSyncKey)
+        Task { @MainActor in
+            self.updatePendingCount()
+        }
+    }
+
+    /// Human-readable time since last sync
+    var lastSyncRelative: String? {
+        guard let lastSyncDate, !lastSyncDate.isEmpty else { return nil }
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        guard let date = formatter.date(from: lastSyncDate) ?? ISO8601DateFormatter().date(from: lastSyncDate) else {
+            return lastSyncDate
+        }
+        let seconds = Date().timeIntervalSince(date)
+        if seconds < 60 { return "just now" }
+        if seconds < 3600 { return "\(Int(seconds / 60)) min ago" }
+        if seconds < 86400 { return "\(Int(seconds / 3600))h ago" }
+        return "\(Int(seconds / 86400))d ago"
+    }
+
+    /// Auto-sync if enough time has passed since last auto-sync
+    func autoSyncIfNeeded() async {
+        if let lastAuto = lastAutoSyncTime, Date().timeIntervalSince(lastAuto) < Self.autoSyncMinInterval {
+            return
+        }
+        lastAutoSyncTime = Date()
+        do {
+            try await incrementalSync()
+        } catch {
+            print("[AutoSync] Failed: \(error.localizedDescription)")
+        }
+    }
+
+    @MainActor
+    func updatePendingCount() {
+        var count = 0
+        if let elements = try? modelContext.fetch(FetchDescriptor<YardElement>()) {
+            count += elements.filter { $0.serverId == nil && $0.yardServerId != nil }.count
+        }
+        if let plantings = try? modelContext.fetch(FetchDescriptor<Planting>()) {
+            count += plantings.filter { $0.serverId == nil && $0.yardElementServerId != nil && $0.plantServerId != nil }.count
+        }
+        if let logs = try? modelContext.fetch(FetchDescriptor<LogEntry>()) {
+            count += logs.filter { $0.serverId == nil }.count
+        }
+        pendingChangesCount = count
     }
 
     // MARK: - Full Sync (pull from server, replace local)

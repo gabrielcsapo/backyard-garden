@@ -1,7 +1,9 @@
 "use client";
 
 import React from "react";
+import { useSearchParams } from "react-router";
 import { PlantIcon } from "../lib/plant-icons";
+import { SlideOverPanel } from "../components/slide-over-panel.client";
 
 type Plant = {
   id: number;
@@ -9,16 +11,34 @@ type Plant = {
   variety: string | null;
   description: string | null;
   category: string | null;
+  family: string | null;
   zoneMin: string | null;
   zoneMax: string | null;
   sunRequirement: string | null;
   daysToHarvest: number | null;
   spacingInches: number | null;
+  waterNeeds: string | null;
+  frostTolerance: string | null;
+  growthHabit: string | null;
+  matureHeightInches: number | null;
+  rootDepth: string | null;
+  expectedYieldPerPlant: number | null;
+  expectedYieldUnit: string | null;
   indoorStartWeeksBeforeFrost: number | null;
   directSowWeeksBeforeFrost: number | null;
   transplantWeeksAfterFrost: number | null;
   companions: string[] | null;
   incompatible: string[] | null;
+  commonPests: string[] | null;
+  commonDiseases: string[] | null;
+  successionIntervalWeeks: number | null;
+};
+
+type ActivePlanting = {
+  plantId: number;
+  plantName: string | null;
+  bedLabel: string | null;
+  yardElementId: number;
 };
 
 const CATEGORY_STYLES: Record<string, string> = {
@@ -51,18 +71,35 @@ const SUN_CONFIG: Record<string, { icon: string; label: string }> = {
   full_shade: { icon: "\uD83C\uDF25\uFE0F", label: "Full Shade" },
 };
 
+type SortMode = "alpha" | "plant_soon" | "companions";
+type ViewMode = "grid" | "list";
+
 export function PlantSearch({
   plants,
   lastFrostDate,
+  activePlantings,
 }: {
   plants: Plant[];
   lastFrostDate: string | null;
+  activePlantings: ActivePlanting[];
 }) {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = React.useState("");
   const [categoryFilter, setCategoryFilter] = React.useState("");
   const [sunFilter, setSunFilter] = React.useState("");
-  const [page, setPage] = React.useState(1);
-  const perPage = 12;
+  const [sortMode, setSortMode] = React.useState<SortMode>("alpha");
+  const [viewMode, setViewMode] = React.useState<ViewMode>("grid");
+
+  const selectedId = searchParams.get("selected");
+  const selectedPlant = selectedId ? plants.find((p) => p.id === Number(selectedId)) : null;
+
+  const setSelectedPlant = (plant: Plant | null) => {
+    if (plant) {
+      setSearchParams({ selected: String(plant.id) }, { replace: true });
+    } else {
+      setSearchParams({}, { replace: true });
+    }
+  };
 
   const categories = React.useMemo(() => {
     const cats = new Set<string>();
@@ -80,8 +117,57 @@ export function PlantSearch({
     return Array.from(opts).sort();
   }, [plants]);
 
+  // Compute companion scores for "Best for Your Beds" sort
+  const companionScores = React.useMemo(() => {
+    const currentPlantNames = new Set(activePlantings.map((p) => p.plantName).filter(Boolean));
+    const scores = new Map<number, number>();
+    for (const plant of plants) {
+      let score = 0;
+      if (plant.companions) {
+        for (const c of plant.companions) {
+          if (currentPlantNames.has(c)) score += 2;
+        }
+      }
+      if (plant.incompatible) {
+        for (const c of plant.incompatible) {
+          if (currentPlantNames.has(c)) score -= 3;
+        }
+      }
+      scores.set(plant.id, score);
+    }
+    return scores;
+  }, [plants, activePlantings]);
+
+  // Compute "plant soon" distance (weeks until nearest planting window)
+  const plantSoonScores = React.useMemo(() => {
+    if (!lastFrostDate) return new Map<number, number>();
+    const frost = new Date(lastFrostDate);
+    const now = new Date();
+    const scores = new Map<number, number>();
+
+    for (const plant of plants) {
+      let nearestWeeks = Infinity;
+      const windows = [
+        plant.indoorStartWeeksBeforeFrost != null ? -plant.indoorStartWeeksBeforeFrost : null,
+        plant.directSowWeeksBeforeFrost != null ? -plant.directSowWeeksBeforeFrost : null,
+        plant.transplantWeeksAfterFrost != null ? plant.transplantWeeksAfterFrost : null,
+      ].filter((w): w is number => w != null);
+
+      for (const weeksFromFrost of windows) {
+        const windowDate = new Date(frost);
+        windowDate.setDate(windowDate.getDate() + weeksFromFrost * 7);
+        const diffWeeks = (windowDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24 * 7);
+        // Prefer upcoming windows (positive), deprioritize past windows
+        const distance = diffWeeks < -4 ? Infinity : Math.abs(diffWeeks);
+        nearestWeeks = Math.min(nearestWeeks, distance);
+      }
+      scores.set(plant.id, nearestWeeks);
+    }
+    return scores;
+  }, [plants, lastFrostDate]);
+
   const filtered = React.useMemo(() => {
-    return plants.filter((p) => {
+    let result = plants.filter((p) => {
       const matchesSearch =
         !search ||
         p.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -90,18 +176,28 @@ export function PlantSearch({
       const matchesSun = !sunFilter || p.sunRequirement === sunFilter;
       return matchesSearch && matchesCategory && matchesSun;
     });
-  }, [plants, search, categoryFilter, sunFilter]);
 
-  // Reset to page 1 when filters change
-  React.useEffect(() => {
-    setPage(1);
-  }, [search, categoryFilter, sunFilter]);
+    // Sort
+    if (sortMode === "plant_soon") {
+      result = [...result].sort((a, b) => (plantSoonScores.get(a.id) ?? Infinity) - (plantSoonScores.get(b.id) ?? Infinity));
+    } else if (sortMode === "companions") {
+      result = [...result].sort((a, b) => (companionScores.get(b.id) ?? 0) - (companionScores.get(a.id) ?? 0));
+    } else {
+      result = [...result].sort((a, b) => a.name.localeCompare(b.name));
+    }
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
-  const paginated = filtered.slice((page - 1) * perPage, page * perPage);
+    return result;
+  }, [plants, search, categoryFilter, sunFilter, sortMode, plantSoonScores, companionScores]);
+
+  // Current plant's plantings for detail panel
+  const selectedPlantPlantings = React.useMemo(() => {
+    if (!selectedPlant) return [];
+    return activePlantings.filter((p) => p.plantId === selectedPlant.id);
+  }, [selectedPlant, activePlantings]);
 
   return (
     <div>
+      {/* Filters */}
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-4 mb-6">
         <div className="flex flex-wrap gap-3">
           <div className="flex-1 min-w-[200px]">
@@ -138,18 +234,91 @@ export function PlantSearch({
             ))}
           </select>
         </div>
+
+        {/* Sort + View controls */}
+        <div className="flex items-center justify-between mt-3 pt-3 border-t border-earth-100 dark:border-gray-700">
+          <div className="flex items-center gap-1">
+            <span className="text-xs text-gray-400 mr-1">Sort:</span>
+            {(
+              [
+                ["alpha", "A-Z"],
+                ["plant_soon", "Plant Soon"],
+                ["companions", "Best Companions"],
+              ] as const
+            ).map(([mode, label]) => (
+              <button
+                key={mode}
+                type="button"
+                className={`px-2.5 py-1 text-xs rounded-md transition cursor-pointer ${
+                  sortMode === mode
+                    ? "bg-garden-50 text-garden-700 font-medium dark:bg-garden-900/30 dark:text-garden-400"
+                    : "text-gray-500 hover:text-gray-700 hover:bg-earth-50 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:bg-gray-700"
+                }`}
+                onClick={() => setSortMode(mode)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              className={`p-1.5 rounded-md transition cursor-pointer ${viewMode === "grid" ? "bg-earth-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200" : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"}`}
+              onClick={() => setViewMode("grid")}
+              title="Grid view"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
+                <rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className={`p-1.5 rounded-md transition cursor-pointer ${viewMode === "list" ? "bg-earth-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200" : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"}`}
+              onClick={() => setViewMode("list")}
+              title="List view"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" />
+                <line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" />
+                <line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
         <p className="text-xs text-gray-400 mt-2">
-          Showing {(page - 1) * perPage + 1}&ndash;{Math.min(page * perPage, filtered.length)} of{" "}
-          {filtered.length} plants
-          {filtered.length < plants.length && ` (filtered from ${plants.length})`}
+          {filtered.length} of {plants.length} plants
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {paginated.map((plant) => (
-          <PlantCard key={plant.id} plant={plant} lastFrostDate={lastFrostDate} />
-        ))}
-      </div>
+      {/* Plant Grid/List */}
+      {viewMode === "grid" ? (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((plant) => (
+            <PlantCard
+              key={plant.id}
+              plant={plant}
+              lastFrostDate={lastFrostDate}
+              onClick={() => setSelectedPlant(plant)}
+              isSelected={selectedPlant?.id === plant.id}
+              companionScore={companionScores.get(plant.id) ?? 0}
+              sortMode={sortMode}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col gap-1">
+          {filtered.map((plant) => (
+            <PlantListRow
+              key={plant.id}
+              plant={plant}
+              onClick={() => setSelectedPlant(plant)}
+              isSelected={selectedPlant?.id === plant.id}
+            />
+          ))}
+        </div>
+      )}
 
       {filtered.length === 0 && (
         <div className="text-center py-16">
@@ -157,42 +326,40 @@ export function PlantSearch({
         </div>
       )}
 
-      {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-1 mt-8">
-          <button
-            className="px-3 py-1.5 text-sm rounded-lg border border-earth-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-earth-50 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
-            disabled={page === 1}
-            onClick={() => setPage((p) => p - 1)}
-          >
-            Prev
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <button
-              key={p}
-              className={`px-3 py-1.5 text-sm rounded-lg border transition ${
-                p === page
-                  ? "border-garden-600 bg-garden-50 text-garden-700 font-medium dark:bg-garden-900/30 dark:text-garden-400 dark:border-garden-500"
-                  : "border-earth-200 text-gray-600 hover:bg-earth-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700"
-              }`}
-              onClick={() => setPage(p)}
-            >
-              {p}
-            </button>
-          ))}
-          <button
-            className="px-3 py-1.5 text-sm rounded-lg border border-earth-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-earth-50 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
-            disabled={page === totalPages}
-            onClick={() => setPage((p) => p + 1)}
-          >
-            Next
-          </button>
-        </div>
-      )}
+      {/* Detail Slide-Over */}
+      <SlideOverPanel
+        open={!!selectedPlant}
+        onClose={() => setSelectedPlant(null)}
+        title={selectedPlant?.name ?? ""}
+      >
+        {selectedPlant && (
+          <PlantDetail
+            plant={selectedPlant}
+            lastFrostDate={lastFrostDate}
+            plantings={selectedPlantPlantings}
+          />
+        )}
+      </SlideOverPanel>
     </div>
   );
 }
 
-function PlantCard({ plant, lastFrostDate }: { plant: Plant; lastFrostDate: string | null }) {
+// --- Plant Card (Grid View) ---
+function PlantCard({
+  plant,
+  lastFrostDate,
+  onClick,
+  isSelected,
+  companionScore,
+  sortMode,
+}: {
+  plant: Plant;
+  lastFrostDate: string | null;
+  onClick: () => void;
+  isSelected: boolean;
+  companionScore: number;
+  sortMode: SortMode;
+}) {
   const sun = plant.sunRequirement ? SUN_CONFIG[plant.sunRequirement] : null;
   const catStyle = plant.category
     ? (CATEGORY_STYLES[plant.category] ?? "bg-gray-50 text-gray-700 ring-gray-600/20")
@@ -200,7 +367,15 @@ function PlantCard({ plant, lastFrostDate }: { plant: Plant; lastFrostDate: stri
   const catLabel = plant.category ? (CATEGORY_LABELS[plant.category] ?? plant.category) : null;
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-5 flex flex-col gap-3 hover:shadow-md transition-shadow">
+    <button
+      type="button"
+      className={`text-left bg-white dark:bg-gray-800 rounded-xl border shadow-sm p-5 flex flex-col gap-3 transition-all cursor-pointer hover:shadow-md hover:border-garden-300 dark:hover:border-garden-600 ${
+        isSelected
+          ? "border-garden-500 ring-2 ring-garden-500/20 dark:border-garden-400"
+          : "border-earth-200 dark:border-gray-700"
+      }`}
+      onClick={onClick}
+    >
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2">
           <PlantIcon name={plant.name} size={28} className="text-garden-600 dark:text-garden-400 shrink-0" />
@@ -210,9 +385,7 @@ function PlantCard({ plant, lastFrostDate }: { plant: Plant; lastFrostDate: stri
           </div>
         </div>
         {catLabel && (
-          <span
-            className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset whitespace-nowrap ${catStyle}`}
-          >
+          <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset whitespace-nowrap ${catStyle}`}>
             {catLabel}
           </span>
         )}
@@ -223,35 +396,161 @@ function PlantCard({ plant, lastFrostDate }: { plant: Plant; lastFrostDate: stri
       )}
 
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
-        {sun && (
-          <span>
-            {sun.icon} {sun.label}
-          </span>
-        )}
+        {sun && <span>{sun.icon} {sun.label}</span>}
         {plant.daysToHarvest != null && <span>{plant.daysToHarvest}d to harvest</span>}
-        {plant.spacingInches != null && <span>{plant.spacingInches}" spacing</span>}
+        {plant.spacingInches != null && <span>{plant.spacingInches}&quot; spacing</span>}
       </div>
 
-      {plant.zoneMin && plant.zoneMax && (
-        <p className="text-xs text-gray-400">
-          Zones {plant.zoneMin} &ndash; {plant.zoneMax}
-        </p>
+      {sortMode === "companions" && companionScore !== 0 && (
+        <span className={`text-xs font-medium ${companionScore > 0 ? "text-green-600 dark:text-green-400" : "text-red-500 dark:text-red-400"}`}>
+          {companionScore > 0 ? `+${companionScore} companion match` : `${companionScore} conflict`}
+        </span>
       )}
 
       <PlantingCalendarBar plant={plant} lastFrostDate={lastFrostDate} />
+    </button>
+  );
+}
 
+// --- Plant List Row (List View) ---
+function PlantListRow({
+  plant,
+  onClick,
+  isSelected,
+}: {
+  plant: Plant;
+  onClick: () => void;
+  isSelected: boolean;
+}) {
+  const sun = plant.sunRequirement ? SUN_CONFIG[plant.sunRequirement] : null;
+  const catStyle = plant.category
+    ? (CATEGORY_STYLES[plant.category] ?? "bg-gray-50 text-gray-700 ring-gray-600/20")
+    : null;
+  const catLabel = plant.category ? (CATEGORY_LABELS[plant.category] ?? plant.category) : null;
+
+  return (
+    <button
+      type="button"
+      className={`text-left w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all cursor-pointer hover:bg-earth-50 dark:hover:bg-gray-800 ${
+        isSelected ? "bg-garden-50 dark:bg-garden-900/20" : ""
+      }`}
+      onClick={onClick}
+    >
+      <PlantIcon name={plant.name} size={24} className="text-garden-600 dark:text-garden-400 shrink-0" />
+      <div className="flex-1 min-w-0">
+        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">{plant.name}</span>
+        {plant.variety && <span className="text-xs text-gray-400 ml-2">{plant.variety}</span>}
+      </div>
+      {catLabel && (
+        <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-medium ring-1 ring-inset whitespace-nowrap ${catStyle}`}>
+          {catLabel}
+        </span>
+      )}
+      <div className="flex items-center gap-3 text-xs text-gray-400 shrink-0">
+        {sun && <span>{sun.icon}</span>}
+        {plant.daysToHarvest != null && <span>{plant.daysToHarvest}d</span>}
+      </div>
+      <svg className="w-4 h-4 text-gray-300 dark:text-gray-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
+    </button>
+  );
+}
+
+// --- Plant Detail (Slide-Over Content) ---
+function PlantDetail({
+  plant,
+  lastFrostDate,
+  plantings,
+}: {
+  plant: Plant;
+  lastFrostDate: string | null;
+  plantings: ActivePlanting[];
+}) {
+  const sun = plant.sunRequirement ? SUN_CONFIG[plant.sunRequirement] : null;
+  const catStyle = plant.category
+    ? (CATEGORY_STYLES[plant.category] ?? "bg-gray-50 text-gray-700 ring-gray-600/20")
+    : null;
+  const catLabel = plant.category ? (CATEGORY_LABELS[plant.category] ?? plant.category) : null;
+
+  return (
+    <div className="p-5 flex flex-col gap-5">
+      {/* Header */}
+      <div className="flex items-center gap-3">
+        <PlantIcon name={plant.name} size={40} className="text-garden-600 dark:text-garden-400 shrink-0" />
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{plant.name}</h2>
+          <div className="flex items-center gap-2 mt-0.5">
+            {plant.variety && <span className="text-sm text-gray-500 dark:text-gray-400">{plant.variety}</span>}
+            {catLabel && (
+              <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-medium ring-1 ring-inset ${catStyle}`}>
+                {catLabel}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {plant.description && (
+        <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{plant.description}</p>
+      )}
+
+      {/* Quick stats */}
+      <div className="grid grid-cols-2 gap-2">
+        {sun && <StatChip label="Sun" value={`${sun.icon} ${sun.label}`} />}
+        {plant.daysToHarvest != null && <StatChip label="Harvest" value={`${plant.daysToHarvest} days`} />}
+        {plant.spacingInches != null && <StatChip label="Spacing" value={`${plant.spacingInches}"`} />}
+        {plant.waterNeeds && <StatChip label="Water" value={plant.waterNeeds.replace("_", " ")} />}
+        {plant.frostTolerance && <StatChip label="Frost" value={plant.frostTolerance.replace("_", " ")} />}
+        {plant.family && <StatChip label="Family" value={plant.family} />}
+        {plant.growthHabit && <StatChip label="Growth" value={plant.growthHabit.replace("_", " ")} />}
+        {plant.rootDepth && <StatChip label="Root" value={plant.rootDepth.replace("_", " ")} />}
+        {plant.zoneMin && plant.zoneMax && <StatChip label="Zones" value={`${plant.zoneMin} - ${plant.zoneMax}`} />}
+        {plant.expectedYieldPerPlant != null && (
+          <StatChip label="Yield" value={`${plant.expectedYieldPerPlant} ${plant.expectedYieldUnit ?? ""}/plant`} />
+        )}
+        {plant.successionIntervalWeeks != null && (
+          <StatChip label="Succession" value={`Every ${plant.successionIntervalWeeks} wks`} />
+        )}
+      </div>
+
+      {/* Planting Calendar */}
+      <div>
+        <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+          Planting Calendar
+        </h3>
+        <PlantingCalendarBar plant={plant} lastFrostDate={lastFrostDate} />
+      </div>
+
+      {/* Currently planted */}
+      {plantings.length > 0 && (
+        <div>
+          <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+            Currently Planted ({plantings.length})
+          </h3>
+          <div className="flex flex-col gap-1">
+            {plantings.map((p, i) => (
+              <div key={i} className="flex items-center gap-2 text-sm px-3 py-2 bg-garden-50 dark:bg-garden-900/20 rounded-lg">
+                <svg className="w-3.5 h-3.5 text-garden-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="2" y="6" width="20" height="12" rx="2" />
+                </svg>
+                <span className="text-gray-700 dark:text-gray-300">{p.bedLabel ?? `Bed #${p.yardElementId}`}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Companions */}
       {plant.companions && plant.companions.length > 0 && (
         <div>
-          <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">
+          <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
             Companions
-          </p>
-          <div className="flex flex-wrap gap-1">
+          </h3>
+          <div className="flex flex-wrap gap-1.5">
             {plant.companions.map((c) => (
-              <span
-                key={c}
-                className="inline-flex items-center gap-1 text-[11px] bg-green-50 text-green-700 rounded-md px-1.5 py-0.5 dark:bg-green-900/30 dark:text-green-400"
-              >
-                <PlantIcon name={c} size={12} className="text-green-600 dark:text-green-400" />
+              <span key={c} className="inline-flex items-center gap-1.5 text-xs bg-green-50 text-green-700 rounded-lg px-2.5 py-1 dark:bg-green-900/30 dark:text-green-400">
+                <PlantIcon name={c} size={14} className="text-green-600 dark:text-green-400" />
                 {c}
               </span>
             ))}
@@ -259,16 +558,39 @@ function PlantCard({ plant, lastFrostDate }: { plant: Plant; lastFrostDate: stri
         </div>
       )}
 
+      {/* Incompatible */}
       {plant.incompatible && plant.incompatible.length > 0 && (
         <div>
-          <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">
-            Avoid near
-          </p>
-          <div className="flex flex-wrap gap-1">
+          <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+            Avoid Near
+          </h3>
+          <div className="flex flex-wrap gap-1.5">
             {plant.incompatible.map((c) => (
-              <span key={c} className="inline-flex items-center gap-1 text-[11px] bg-red-50 text-red-600 rounded-md px-1.5 py-0.5 dark:bg-red-900/30 dark:text-red-400">
-                <PlantIcon name={c} size={12} className="text-red-500 dark:text-red-400" />
+              <span key={c} className="inline-flex items-center gap-1.5 text-xs bg-red-50 text-red-600 rounded-lg px-2.5 py-1 dark:bg-red-900/30 dark:text-red-400">
+                <PlantIcon name={c} size={14} className="text-red-500 dark:text-red-400" />
                 {c}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Pest watch */}
+      {((plant.commonPests && plant.commonPests.length > 0) ||
+        (plant.commonDiseases && plant.commonDiseases.length > 0)) && (
+        <div>
+          <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+            Pest &amp; Disease Watch
+          </h3>
+          <div className="flex flex-wrap gap-1.5">
+            {plant.commonPests?.map((pest) => (
+              <span key={pest} className="text-xs bg-amber-50 text-amber-700 rounded-lg px-2.5 py-1 dark:bg-amber-900/30 dark:text-amber-400">
+                {pest}
+              </span>
+            ))}
+            {plant.commonDiseases?.map((disease) => (
+              <span key={disease} className="text-xs bg-orange-50 text-orange-700 rounded-lg px-2.5 py-1 dark:bg-orange-900/30 dark:text-orange-400">
+                {disease}
               </span>
             ))}
           </div>
@@ -278,6 +600,16 @@ function PlantCard({ plant, lastFrostDate }: { plant: Plant; lastFrostDate: stri
   );
 }
 
+function StatChip({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex flex-col gap-0.5 bg-earth-50 dark:bg-gray-800 rounded-lg px-3 py-2">
+      <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">{label}</span>
+      <span className="text-sm text-gray-700 dark:text-gray-200 capitalize">{value}</span>
+    </div>
+  );
+}
+
+// --- Planting Calendar Bar ---
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 function weeksToYearPercent(frostDate: Date, weeks: number): number {
@@ -305,12 +637,7 @@ function PlantingCalendarBar({
   }
 
   const frost = new Date(lastFrostDate);
-  const segments: {
-    label: string;
-    color: string;
-    left: number;
-    width: number;
-  }[] = [];
+  const segments: { label: string; color: string; left: number; width: number }[] = [];
 
   if (plant.indoorStartWeeksBeforeFrost != null) {
     const startPct = weeksToYearPercent(frost, -plant.indoorStartWeeksBeforeFrost);
@@ -318,9 +645,7 @@ function PlantingCalendarBar({
     const endPct = weeksToYearPercent(frost, endWeeks);
     const left = Math.max(0, Math.min(100, startPct));
     const right = Math.max(0, Math.min(100, endPct));
-    if (right > left) {
-      segments.push({ label: "Indoor", color: "bg-blue-400", left, width: right - left });
-    }
+    if (right > left) segments.push({ label: "Indoor", color: "bg-blue-400", left, width: right - left });
   }
 
   if (plant.directSowWeeksBeforeFrost != null) {
@@ -328,9 +653,7 @@ function PlantingCalendarBar({
     const endPct = weeksToYearPercent(frost, -plant.directSowWeeksBeforeFrost + 4);
     const left = Math.max(0, Math.min(100, startPct));
     const right = Math.max(0, Math.min(100, endPct));
-    if (right > left) {
-      segments.push({ label: "Direct Sow", color: "bg-emerald-500", left, width: right - left });
-    }
+    if (right > left) segments.push({ label: "Direct Sow", color: "bg-emerald-500", left, width: right - left });
   }
 
   if (plant.transplantWeeksAfterFrost != null) {
@@ -338,9 +661,7 @@ function PlantingCalendarBar({
     const endPct = weeksToYearPercent(frost, plant.transplantWeeksAfterFrost + 3);
     const left = Math.max(0, Math.min(100, startPct));
     const right = Math.max(0, Math.min(100, endPct));
-    if (right > left) {
-      segments.push({ label: "Transplant", color: "bg-orange-400", left, width: right - left });
-    }
+    if (right > left) segments.push({ label: "Transplant", color: "bg-orange-400", left, width: right - left });
   }
 
   if (plant.daysToHarvest != null) {
@@ -353,17 +674,16 @@ function PlantingCalendarBar({
       const endPct = weeksToYearPercent(frost, harvestWeeks + 4);
       const left = Math.max(0, Math.min(100, startPct));
       const right = Math.max(0, Math.min(100, endPct));
-      if (right > left) {
-        segments.push({ label: "Harvest", color: "bg-amber-500", left, width: right - left });
-      }
+      if (right > left) segments.push({ label: "Harvest", color: "bg-amber-500", left, width: right - left });
     }
   }
 
+  // Current month indicator
+  const now = new Date();
+  const currentMonthPct = ((now.getMonth() + now.getDate() / 30) / 12) * 100;
+
   return (
     <div>
-      <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">
-        Planting Calendar
-      </p>
       <div className="relative h-5 bg-gray-100 dark:bg-gray-700 rounded-md overflow-hidden">
         {segments.map((seg) => (
           <div
@@ -373,6 +693,12 @@ function PlantingCalendarBar({
             title={seg.label}
           />
         ))}
+        {/* Current month line */}
+        <div
+          className="absolute top-0 h-full w-0.5 bg-gray-900/40 dark:bg-white/40 z-10"
+          style={{ left: `${currentMonthPct}%` }}
+          title="Today"
+        />
         {MONTHS.map((_, i) => (
           <div
             key={i}
@@ -383,9 +709,7 @@ function PlantingCalendarBar({
       </div>
       <div className="flex justify-between mt-0.5">
         {MONTHS.map((m) => (
-          <span key={m} className="text-[9px] text-gray-400">
-            {m}
-          </span>
+          <span key={m} className="text-[9px] text-gray-400">{m}</span>
         ))}
       </div>
       {segments.length > 0 && (

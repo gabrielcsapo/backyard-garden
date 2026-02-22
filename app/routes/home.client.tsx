@@ -134,6 +134,7 @@ export function YardPreview({
                   {el.label}
                 </text>
               )}
+              <title>{el.label ?? el.shapeType}</title>
             </g>
           );
         })}

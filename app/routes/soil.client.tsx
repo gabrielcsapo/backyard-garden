@@ -51,8 +51,43 @@ export function SoilProfileList({
   const [showAdd, setShowAdd] = React.useState(false);
   const { addToast } = useToast();
 
+  // Group profiles by bed for sparklines
+  const bedTrends = React.useMemo(() => {
+    const byBed: Record<string, { label: string; phValues: number[]; dates: string[] }> = {};
+    for (const p of profiles) {
+      const key = p.bedLabel ?? `Bed #${p.yardElementId}`;
+      if (!byBed[key]) byBed[key] = { label: key, phValues: [], dates: [] };
+      if (p.ph != null && p.testDate) {
+        byBed[key].phValues.unshift(p.ph); // oldest first
+        byBed[key].dates.unshift(p.testDate);
+      }
+    }
+    return Object.values(byBed).filter((b) => b.phValues.length >= 2);
+  }, [profiles]);
+
   return (
     <div className="space-y-4">
+      {/* pH Trend Sparklines */}
+      {bedTrends.length > 0 && (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {bedTrends.map((bed) => (
+            <div key={bed.label} className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-3">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-medium text-gray-700 dark:text-gray-300">{bed.label}</span>
+                <span className={`text-xs font-bold ${phColor(bed.phValues[bed.phValues.length - 1])}`}>
+                  pH {bed.phValues[bed.phValues.length - 1].toFixed(1)}
+                </span>
+              </div>
+              <PhSparkline values={bed.phValues} />
+              <div className="flex items-center justify-between mt-1">
+                <span className="text-[9px] text-gray-400">{bed.dates[0]}</span>
+                <span className="text-[9px] text-gray-400">{bed.dates[bed.dates.length - 1]}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="flex items-center justify-between">
         <p className="text-xs text-gray-400">{profiles.length} test{profiles.length !== 1 ? "s" : ""} recorded</p>
         <button
@@ -202,7 +237,18 @@ export function SoilProfileList({
 
       {profiles.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-sm text-gray-400">No soil tests yet. Add your first test above.</p>
+          <svg className="w-16 h-16 mx-auto text-earth-300 dark:text-gray-600 mb-4" viewBox="0 0 64 64" fill="none">
+            <rect x="8" y="36" width="48" height="20" rx="4" stroke="currentColor" strokeWidth="2" />
+            <path d="M8 42h48" stroke="currentColor" strokeWidth="1" opacity="0.3" />
+            <path d="M8 48h48" stroke="currentColor" strokeWidth="1" opacity="0.3" />
+            <circle cx="20" cy="30" r="3" stroke="currentColor" strokeWidth="1.5" opacity="0.5" />
+            <circle cx="32" cy="26" r="4" stroke="currentColor" strokeWidth="1.5" opacity="0.5" />
+            <circle cx="44" cy="30" r="3" stroke="currentColor" strokeWidth="1.5" opacity="0.5" />
+            <path d="M32 22v-10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <path d="M28 16l4-4 4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">No soil tests yet</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500">Add your first soil test to track pH and nutrient levels over time.</p>
         </div>
       )}
     </div>
@@ -215,5 +261,62 @@ function SubmitBtn() {
     <button type="submit" disabled={status.pending} className="inline-flex items-center gap-2 rounded-lg bg-garden-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-garden-700 disabled:opacity-50 transition-colors cursor-pointer">
       {status.pending ? "Adding..." : "Add Test"}
     </button>
+  );
+}
+
+function PhSparkline({ values }: { values: number[] }) {
+  if (values.length < 2) return null;
+
+  const w = 120;
+  const h = 32;
+  const pad = 2;
+  const min = Math.min(...values) - 0.3;
+  const max = Math.max(...values) + 0.3;
+  const range = max - min || 1;
+
+  const points = values.map((v, i) => {
+    const x = pad + (i / (values.length - 1)) * (w - pad * 2);
+    const y = pad + ((max - v) / range) * (h - pad * 2);
+    return `${x},${y}`;
+  }).join(" ");
+
+  // Ideal pH band (6.0 - 7.0)
+  const idealTop = pad + ((max - 7.0) / range) * (h - pad * 2);
+  const idealBottom = pad + ((max - 6.0) / range) * (h - pad * 2);
+  const clampedTop = Math.max(pad, Math.min(h - pad, idealTop));
+  const clampedBottom = Math.max(pad, Math.min(h - pad, idealBottom));
+
+  return (
+    <svg width={w} height={h} className="w-full" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none">
+      {/* Ideal pH band */}
+      <rect
+        x={0} y={clampedTop}
+        width={w} height={Math.max(0, clampedBottom - clampedTop)}
+        fill="currentColor" className="text-green-100 dark:text-green-900/30"
+      />
+      {/* Line */}
+      <polyline
+        points={points}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="text-garden-500"
+      />
+      {/* Dots */}
+      {values.map((v, i) => {
+        const x = pad + (i / (values.length - 1)) * (w - pad * 2);
+        const y = pad + ((max - v) / range) * (h - pad * 2);
+        return (
+          <circle
+            key={i}
+            cx={x} cy={y} r="2.5"
+            fill="currentColor"
+            className={v >= 6.0 && v <= 7.0 ? "text-green-500" : v >= 5.5 && v <= 7.5 ? "text-amber-500" : "text-red-500"}
+          />
+        );
+      })}
+    </svg>
   );
 }

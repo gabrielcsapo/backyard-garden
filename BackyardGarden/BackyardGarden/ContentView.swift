@@ -9,31 +9,57 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(ServerDiscovery.self) private var serverDiscovery
+
     @State private var selectedTab = 0
+    @State private var syncEngine: SyncEngine?
 
     var body: some View {
         TabView(selection: $selectedTab) {
             Tab("Home", systemImage: "leaf.fill", value: 0) {
-                DashboardView()
+                DashboardView(syncEngine: syncEngine)
             }
 
             Tab("Yards", systemImage: "square.grid.2x2.fill", value: 1) {
                 YardListView()
             }
 
-            Tab("Calendar", systemImage: "calendar", value: 2) {
-                CalendarView()
+            Tab("Tasks", systemImage: "checklist", value: 2) {
+                TaskListView()
             }
 
             Tab("Log", systemImage: "note.text", value: 3) {
                 QuickLogView()
             }
 
-            Tab("Settings", systemImage: "gearshape.fill", value: 4) {
-                SettingsView()
+            Tab("More", systemImage: "ellipsis.circle", value: 4) {
+                MoreView(syncEngine: syncEngine)
             }
         }
         .tint(Color("GardenGreen"))
+        .task {
+            await initSyncEngine()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active {
+                Task {
+                    // Re-test connection when coming to foreground
+                    await serverDiscovery.testConnection()
+                    if serverDiscovery.isConnected {
+                        await syncEngine?.autoSyncIfNeeded()
+                    }
+                }
+            }
+        }
+    }
+
+    private func initSyncEngine() async {
+        await serverDiscovery.testConnection()
+        if let client = serverDiscovery.makeAPIClient() {
+            syncEngine = SyncEngine(apiClient: client, modelContext: modelContext)
+        }
     }
 }
 

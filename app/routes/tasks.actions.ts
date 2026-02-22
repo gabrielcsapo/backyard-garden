@@ -48,6 +48,31 @@ export async function uncompleteTask(formData: FormData) {
   return { success: true };
 }
 
+export async function updateTask(formData: FormData) {
+  const id = Number(formData.get("id"));
+  if (!id) return { success: false, error: "Task ID is required." };
+
+  const updates: Record<string, unknown> = {};
+  const title = formData.get("title") as string | null;
+  const description = formData.get("description") as string | null;
+  const dueDate = formData.get("dueDate") as string | null;
+  const recurrence = formData.get("recurrence") as string | null;
+  const taskType = formData.get("taskType") as string | null;
+
+  if (title !== null) updates.title = title;
+  if (description !== null) updates.description = description || null;
+  if (dueDate !== null) updates.dueDate = dueDate || null;
+  if (recurrence !== null) updates.recurrence = recurrence || null;
+  if (taskType !== null) updates.taskType = taskType || null;
+
+  if (Object.keys(updates).length === 0) {
+    return { success: false, error: "No fields to update." };
+  }
+
+  await db.update(tasks).set(updates).where(eq(tasks.id, id));
+  return { success: true };
+}
+
 export async function deleteTask(formData: FormData) {
   const id = Number(formData.get("id"));
   await db.delete(tasks).where(eq(tasks.id, id));

@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { PlantIcon } from "../lib/plant-icons";
 import { db } from "../db/index.ts";
-import { plants, plantings, settings, yards, yardElements, logEntries } from "../db/schema.ts";
+import { plants, plantings, settings, yards, yardElements, logEntries, seedInventory, soilProfiles } from "../db/schema.ts";
 import { eq, inArray, gte, desc, sql } from "drizzle-orm";
 import { getPlantingWindows, formatDate } from "../lib/dates.ts";
 import { createLogEntry } from "./log.actions.ts";
@@ -174,6 +174,50 @@ const Component = async () => {
           });
         }
       }
+    }
+  }
+
+  // Seed watch — seeds expiring in next 3 months
+  const today = new Date();
+  const threeMonthsOut = new Date();
+  threeMonthsOut.setMonth(threeMonthsOut.getMonth() + 3);
+  const threeMonthsStr = threeMonthsOut.toISOString().split("T")[0];
+  const expiringSeeds = await db
+    .select({
+      id: seedInventory.id,
+      plantName: plants.name,
+      variety: seedInventory.variety,
+      expirationDate: seedInventory.expirationDate,
+      quantityRemaining: seedInventory.quantityRemaining,
+      quantityUnit: seedInventory.quantityUnit,
+    })
+    .from(seedInventory)
+    .leftJoin(plants, eq(seedInventory.plantId, plants.id))
+    .where(sql`${seedInventory.expirationDate} IS NOT NULL AND ${seedInventory.expirationDate} <= ${threeMonthsStr}`)
+    .orderBy(sql`${seedInventory.expirationDate} ASC`)
+    .limit(5);
+
+  // Soil attention — beds with pH outside 6.0-7.0
+  const latestSoilByBed = await db
+    .select({
+      id: soilProfiles.id,
+      yardElementId: soilProfiles.yardElementId,
+      ph: soilProfiles.ph,
+      testDate: soilProfiles.testDate,
+      bedLabel: yardElements.label,
+    })
+    .from(soilProfiles)
+    .leftJoin(yardElements, eq(soilProfiles.yardElementId, yardElements.id))
+    .where(sql`${soilProfiles.ph} IS NOT NULL`)
+    .orderBy(desc(soilProfiles.testDate));
+
+  // Deduplicate to latest per bed
+  const seenBeds = new Set<number>();
+  const soilAlerts: typeof latestSoilByBed = [];
+  for (const s of latestSoilByBed) {
+    if (s.yardElementId && !seenBeds.has(s.yardElementId) && s.ph != null && (s.ph < 6.0 || s.ph > 7.0)) {
+      seenBeds.add(s.yardElementId);
+      soilAlerts.push(s);
     }
   }
 
@@ -528,6 +572,77 @@ const Component = async () => {
                             }`}
                             style={{ width: `${Math.min(100, y.progressPct)}%` }}
                           />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Seed Watch */}
+              {expiringSeeds.length > 0 && (
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">Seed Watch</h2>
+                    <Link to="/seeds" className="text-xs font-medium text-garden-600 dark:text-garden-400 hover:text-garden-700 dark:hover:text-garden-300 no-underline">
+                      View all
+                    </Link>
+                  </div>
+                  <div className="space-y-2">
+                    {expiringSeeds.map((seed) => {
+                      const isExpired = seed.expirationDate! < today.toISOString().split("T")[0];
+                      return (
+                        <div key={seed.id} className={`flex items-center gap-3 p-2.5 rounded-lg ${isExpired ? "bg-red-50 dark:bg-red-900/20" : "bg-amber-50 dark:bg-amber-900/20"}`}>
+                          <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${isExpired ? "bg-red-100 dark:bg-red-900/40" : "bg-amber-100 dark:bg-amber-900/40"}`}>
+                            <svg className={`w-3.5 h-3.5 ${isExpired ? "text-red-600 dark:text-red-400" : "text-amber-600 dark:text-amber-400"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <circle cx="12" cy="12" r="10" />
+                              <line x1="12" y1="8" x2="12" y2="12" />
+                              <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                              {seed.plantName ?? "Unknown"}{seed.variety ? ` (${seed.variety})` : ""}
+                            </p>
+                            <p className={`text-xs ${isExpired ? "text-red-600 dark:text-red-400" : "text-amber-600 dark:text-amber-400"}`}>
+                              {isExpired ? "Expired" : "Expires"}{" "}
+                              {new Date(seed.expirationDate!).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                            </p>
+                          </div>
+                          {seed.quantityRemaining != null && (
+                            <span className="text-[10px] font-medium text-gray-500 dark:text-gray-400">
+                              {seed.quantityRemaining} {seed.quantityUnit ?? "pkt"}
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Soil Attention */}
+              {soilAlerts.length > 0 && (
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">Soil Attention</h2>
+                    <Link to="/soil" className="text-xs font-medium text-garden-600 dark:text-garden-400 hover:text-garden-700 dark:hover:text-garden-300 no-underline">
+                      View all
+                    </Link>
+                  </div>
+                  <div className="space-y-2">
+                    {soilAlerts.slice(0, 4).map((s) => (
+                      <div key={s.id} className="flex items-center gap-3 p-2.5 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+                        <div className="w-7 h-7 rounded-lg bg-orange-100 dark:bg-orange-900/40 flex items-center justify-center shrink-0">
+                          <span className="text-xs font-bold text-orange-600 dark:text-orange-400">pH</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                            {s.bedLabel ?? `Bed #${s.yardElementId}`}
+                          </p>
+                          <p className="text-xs text-orange-600 dark:text-orange-400">
+                            pH {s.ph?.toFixed(1)} — {s.ph! < 6.0 ? "too acidic" : "too alkaline"} (ideal: 6.0–7.0)
+                          </p>
                         </div>
                       </div>
                     ))}

@@ -20,6 +20,7 @@ const Component = async () => {
       quantityUnit: seedInventory.quantityUnit,
       lotNumber: seedInventory.lotNumber,
       notes: seedInventory.notes,
+      seedViabilityYears: plants.seedViabilityYears,
     })
     .from(seedInventory)
     .leftJoin(plants, eq(seedInventory.plantId, plants.id))
@@ -32,7 +33,15 @@ const Component = async () => {
   const seedsWithStatus = allSeeds.map((s) => {
     const isExpiring =
       s.expirationDate != null && new Date(s.expirationDate) <= threeMonthsOut;
-    return { ...s, isExpiring };
+    // Calculate viability percentage based on purchase date + viability years
+    let viabilityPct: number | null = null;
+    if (s.purchaseDate && s.seedViabilityYears) {
+      const purchased = new Date(s.purchaseDate);
+      const totalMs = s.seedViabilityYears * 365.25 * 24 * 60 * 60 * 1000;
+      const elapsed = today.getTime() - purchased.getTime();
+      viabilityPct = Math.max(0, Math.min(100, Math.round(((totalMs - elapsed) / totalMs) * 100)));
+    }
+    return { ...s, isExpiring, viabilityPct };
   });
 
   const allPlants = await db

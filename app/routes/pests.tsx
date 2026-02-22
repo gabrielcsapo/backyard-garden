@@ -2,7 +2,8 @@ import { Link } from "react-router";
 import { db } from "../db/index.ts";
 import { pestDisease, plantings, plants } from "../db/schema.ts";
 import { sql, eq } from "drizzle-orm";
-import { PestList } from "./pests.client.tsx";
+import { createLogEntry } from "./log.actions.ts";
+import { PestDashboard } from "./pests.client.tsx";
 
 const Component = async () => {
   const allPests = await db
@@ -10,7 +11,7 @@ const Component = async () => {
     .from(pestDisease)
     .orderBy(sql`${pestDisease.type} ASC, ${pestDisease.name} ASC`);
 
-  // Get active plant names for symptom checker
+  // Get active plant names for filtering
   const activePlantNames = await db
     .select({ name: plants.name })
     .from(plantings)
@@ -20,13 +21,28 @@ const Component = async () => {
 
   // Seasonal alerts: pests active this month that affect plants we're growing
   const currentMonth = new Date().getMonth() + 1;
-  const seasonalAlerts = allPests.filter((p) => {
-    const months = p.activeMonths as number[] | null;
-    if (!months || !months.includes(currentMonth)) return false;
-    const affected = p.affectedPlants as string[] | null;
-    if (!affected) return false;
-    return affected.some((ap) => uniquePlantNames.includes(ap));
-  });
+  const seasonalAlertIds = allPests
+    .filter((p) => {
+      const months = p.activeMonths as number[] | null;
+      if (!months || !months.includes(currentMonth)) return false;
+      const affected = p.affectedPlants as string[] | null;
+      if (!affected) return false;
+      return affected.some((ap) => uniquePlantNames.includes(ap));
+    })
+    .map((p) => p.id);
+
+  // Collect all unique symptoms for symptom checker
+  const allSymptoms = new Set<string>();
+  for (const p of allPests) {
+    if (p.symptoms) {
+      // Split on commas or semicolons to get individual symptoms
+      p.symptoms.split(/[,;]/).forEach((s) => {
+        const trimmed = s.trim().toLowerCase();
+        if (trimmed.length > 2) allSymptoms.add(trimmed);
+      });
+    }
+  }
+  const symptomList = [...allSymptoms].sort();
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-8">
@@ -45,23 +61,14 @@ const Component = async () => {
         </p>
       </div>
 
-      {/* Seasonal Alerts */}
-      {seasonalAlerts.length > 0 && (
-        <div className="mb-6 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200 dark:border-red-800 p-4">
-          <h2 className="text-sm font-semibold text-red-900 dark:text-red-200 mb-2">
-            Active This Month ({seasonalAlerts.length})
-          </h2>
-          <div className="flex flex-wrap gap-2">
-            {seasonalAlerts.map((p) => (
-              <span key={p.id} className="text-xs bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 px-2 py-1 rounded-full">
-                {p.name}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <PestList pests={allPests} plantNames={uniquePlantNames} />
+      <PestDashboard
+        pests={allPests}
+        plantNames={uniquePlantNames}
+        seasonalAlertIds={seasonalAlertIds}
+        symptomList={symptomList}
+        currentMonth={currentMonth}
+        logAction={createLogEntry}
+      />
     </main>
   );
 };

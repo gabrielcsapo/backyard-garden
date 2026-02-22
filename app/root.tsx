@@ -4,6 +4,12 @@ import { DumpError, GlobalNavigationLoadingBar, Sidebar } from "./routes/root.cl
 import { ToastProvider } from "./components/toast.client";
 import { ConfirmDialogProvider } from "./components/confirm-dialog.client";
 import { ThemeProvider } from "./components/theme-provider.client";
+import { CommandPalette, type SearchEntry } from "./components/command-palette.client";
+import { QuickActionFab } from "./components/quick-action-fab.client";
+import { KeyboardShortcuts } from "./components/keyboard-shortcuts.client";
+import { db } from "./db/index.ts";
+import { plants, yards, yardElements, tasks } from "./db/schema.ts";
+import { isNull } from "drizzle-orm";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -27,6 +33,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <ThemeProvider>
           <GlobalNavigationLoadingBar />
           <Sidebar />
+          <KeyboardShortcuts />
           <div className="lg:ml-56">
             <ToastProvider>
               <ConfirmDialogProvider>{children}</ConfirmDialogProvider>
@@ -38,8 +45,53 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function Component() {
-  return <Outlet />;
+export default async function Component() {
+  // Build lightweight search index for the command palette
+  const [allPlants, allYards, allElements, allTasks] = await Promise.all([
+    db.select({ id: plants.id, name: plants.name, category: plants.category }).from(plants),
+    db.select({ id: yards.id, name: yards.name }).from(yards),
+    db.select({ id: yardElements.id, label: yardElements.label, yardId: yardElements.yardId, shapeType: yardElements.shapeType }).from(yardElements),
+    db.select({ id: tasks.id, title: tasks.title }).from(tasks).where(isNull(tasks.completedAt)),
+  ]);
+
+  const searchEntries: SearchEntry[] = [
+    ...allPlants.map((p) => ({
+      id: `plant-${p.id}`,
+      type: "plant" as const,
+      label: p.name,
+      sublabel: p.category ?? undefined,
+      href: `/plants?selected=${p.id}`,
+    })),
+    ...allYards.map((y) => ({
+      id: `yard-${y.id}`,
+      type: "yard" as const,
+      label: y.name,
+      href: `/yard/${y.id}`,
+    })),
+    ...allElements
+      .filter((e) => e.label)
+      .map((e) => ({
+        id: `bed-${e.id}`,
+        type: "bed" as const,
+        label: e.label!,
+        sublabel: e.shapeType,
+        href: `/yard/${e.yardId}?element=${e.id}`,
+      })),
+    ...allTasks.map((t) => ({
+      id: `task-${t.id}`,
+      type: "task" as const,
+      label: t.title,
+      href: "/tasks",
+    })),
+  ];
+
+  return (
+    <>
+      <CommandPalette entries={searchEntries} />
+      <QuickActionFab />
+      <Outlet />
+    </>
+  );
 }
 
 export function ErrorBoundary() {

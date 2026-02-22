@@ -7,7 +7,7 @@ struct SettingsView: View {
 
     @Query private var settings: [Settings]
 
-    @State private var syncEngine: SyncEngine?
+    var syncEngine: SyncEngine?
     @State private var isSyncing = false
     @State private var showSyncAlert = false
     @State private var syncAlertMessage = ""
@@ -42,11 +42,6 @@ struct SettingsView: View {
             } message: {
                 Text(syncAlertMessage)
             }
-            .task {
-                if let client = serverDiscovery.makeAPIClient() {
-                    syncEngine = SyncEngine(apiClient: client, modelContext: modelContext)
-                }
-            }
         }
     }
 
@@ -72,9 +67,6 @@ struct SettingsView: View {
                 Button("Test") {
                     Task {
                         await serverDiscovery.testConnection()
-                        if let client = serverDiscovery.makeAPIClient() {
-                            syncEngine = SyncEngine(apiClient: client, modelContext: modelContext)
-                        }
                     }
                 }
                 .font(.subheadline.weight(.medium))
@@ -117,12 +109,12 @@ struct SettingsView: View {
             }
             .disabled(isSyncing || !serverDiscovery.isConnected || syncEngine?.lastSyncDate == nil)
 
-            if let lastSync = syncEngine?.lastSyncDate {
+            if let relative = syncEngine?.lastSyncRelative {
                 HStack {
                     Text("Last sync")
                         .foregroundStyle(.secondary)
                     Spacer()
-                    Text(lastSync)
+                    Text(relative)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

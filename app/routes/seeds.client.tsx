@@ -63,6 +63,8 @@ type Seed = {
   lotNumber: string | null;
   notes: string | null;
   isExpiring: boolean;
+  viabilityPct: number | null;
+  seedViabilityYears: number | null;
 };
 
 type Plant = { id: number; name: string };
@@ -218,7 +220,15 @@ export function SeedInventoryList({
 
       {filtered.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-sm text-gray-400">No seeds in inventory. Add your first packet above.</p>
+          <svg className="w-16 h-16 mx-auto text-earth-300 dark:text-gray-600 mb-4" viewBox="0 0 64 64" fill="none">
+            <ellipse cx="32" cy="54" rx="20" ry="4" fill="currentColor" opacity="0.2" />
+            <path d="M32 12c-6 0-11 3-14 8s-4 12-1 18c2 4 6 8 11 10v6h8v-6c5-2 9-6 11-10 3-6 2-13-1-18s-8-8-14-8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M32 12c0 8-4 14-8 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
+            <path d="M32 12c0 8 4 14 8 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
+            <line x1="28" y1="54" x2="36" y2="54" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+          <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">No seeds yet</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500">Add your first seed packet to start tracking inventory and viability.</p>
         </div>
       )}
     </div>
@@ -240,13 +250,17 @@ function SeedCard({
         ? "bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800"
         : "bg-white dark:bg-gray-800 border border-earth-200 dark:border-gray-700"
     }`}>
-      <div className="w-8 h-8 rounded-lg bg-garden-50 dark:bg-garden-900/30 flex items-center justify-center shrink-0">
-        <svg className="w-4 h-4 text-garden-600 dark:text-garden-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M7 20h10" />
-          <path d="M10 20c5.5-2.5.8-6.4 3-10" />
-          <path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z" />
-        </svg>
-      </div>
+      {seed.viabilityPct != null ? (
+        <ViabilityRing pct={seed.viabilityPct} />
+      ) : (
+        <div className="w-10 h-10 rounded-lg bg-garden-50 dark:bg-garden-900/30 flex items-center justify-center shrink-0">
+          <svg className="w-4 h-4 text-garden-600 dark:text-garden-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M7 20h10" />
+            <path d="M10 20c5.5-2.5.8-6.4 3-10" />
+            <path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z" />
+          </svg>
+        </div>
+      )}
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
           {seed.plantName ?? "Unknown"}{seed.variety ? ` - ${seed.variety}` : ""}
@@ -293,5 +307,31 @@ function AddButton() {
     >
       {status.pending ? "Adding..." : "Add Seed"}
     </button>
+  );
+}
+
+function ViabilityRing({ pct }: { pct: number }) {
+  const r = 16;
+  const circumference = 2 * Math.PI * r;
+  const offset = circumference - (pct / 100) * circumference;
+  const color = pct > 60 ? "text-garden-500" : pct > 30 ? "text-amber-500" : "text-red-500";
+
+  return (
+    <div className="relative w-10 h-10 shrink-0" title={`${pct}% viable`}>
+      <svg className="w-10 h-10 -rotate-90" viewBox="0 0 40 40">
+        <circle cx="20" cy="20" r={r} fill="none" stroke="currentColor" strokeWidth="3" className="text-earth-100 dark:text-gray-700" />
+        <circle
+          cx="20" cy="20" r={r}
+          fill="none" stroke="currentColor" strokeWidth="3"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          className={color}
+        />
+      </svg>
+      <span className="absolute inset-0 flex items-center justify-center text-[9px] font-bold text-gray-700 dark:text-gray-300">
+        {pct}%
+      </span>
+    </div>
   );
 }

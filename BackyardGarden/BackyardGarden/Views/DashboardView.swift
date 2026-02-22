@@ -11,7 +11,7 @@ struct DashboardView: View {
     @Query private var tasks: [GardenTask]
     @Query(sort: \LogEntry.date, order: .reverse) private var logEntries: [LogEntry]
 
-    @State private var syncEngine: SyncEngine?
+    var syncEngine: SyncEngine?
     @State private var isSyncing = false
 
     private var userSettings: Settings? { settings.first }
@@ -31,6 +31,10 @@ struct DashboardView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 16) {
+                    // Sync banner
+                    SyncBannerView(syncEngine: syncEngine, isConnected: serverDiscovery.isConnected)
+                        .animation(.easeInOut(duration: 0.2), value: syncEngine?.isSyncing)
+
                     // Sync status card
                     syncStatusCard
 
@@ -54,6 +58,9 @@ struct DashboardView: View {
                 }
                 .padding()
             }
+            .refreshable {
+                await performSync()
+            }
             .navigationTitle("Backyard Garden")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -70,13 +77,6 @@ struct DashboardView: View {
                     .disabled(isSyncing || !serverDiscovery.isConnected)
                 }
             }
-            .task {
-                let client = serverDiscovery.makeAPIClient()
-                if let client {
-                    syncEngine = SyncEngine(apiClient: client, modelContext: modelContext)
-                }
-                await serverDiscovery.testConnection()
-            }
         }
     }
 
@@ -89,10 +89,14 @@ struct DashboardView: View {
                 .frame(width: 8, height: 8)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(serverDiscovery.isConnected ? "Connected" : "Disconnected")
+                Text(serverDiscovery.isConnected ? "Connected" : "Offline")
                     .font(.subheadline.weight(.medium))
-                if let lastSync = syncEngine?.lastSyncDate {
-                    Text("Last sync: \(lastSync)")
+                if let relative = syncEngine?.lastSyncRelative {
+                    Text("Synced \(relative)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                } else {
+                    Text("Never synced")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

@@ -2,9 +2,9 @@ import { Link } from "react-router";
 import { eq, desc } from "drizzle-orm";
 import { db } from "../db/index.ts";
 import { logEntries, plantings, plants, yardElements } from "../db/schema.ts";
-import { createLogEntry, deleteLogEntry } from "./log.actions.ts";
+import { createLogEntry, updateLogEntry, deleteLogEntry } from "./log.actions.ts";
 import { exportLogs } from "./export.actions.ts";
-import { LogTimeline, QuickLogForm, ExportButton } from "./log.client.tsx";
+import { InteractiveLog, ExportButton } from "./log.client.tsx";
 
 const Component = async () => {
   const entries = await db
@@ -42,22 +42,6 @@ const Component = async () => {
     .innerJoin(plants, eq(plantings.plantId, plants.id))
     .innerJoin(yardElements, eq(plantings.yardElementId, yardElements.id));
 
-  // Compute harvest totals for current year
-  const currentYear = new Date().getFullYear();
-  const harvestEntries = entries.filter(
-    (e) => e.type === "harvest" && e.yieldAmount != null && e.date.startsWith(String(currentYear)),
-  );
-  const harvestTotals: Record<string, { amount: number; unit: string }> = {};
-  for (const e of harvestEntries) {
-    const key = e.plantName ?? "Unknown";
-    const unit = e.yieldUnit ?? "units";
-    const tk = `${key}|${unit}`;
-    if (!harvestTotals[tk]) {
-      harvestTotals[tk] = { amount: 0, unit };
-    }
-    harvestTotals[tk].amount += e.yieldAmount!;
-  }
-
   return (
     <main className="mx-auto max-w-6xl px-6 py-8">
       <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
@@ -78,38 +62,13 @@ const Component = async () => {
         <ExportButton exportAction={exportLogs} label="Export CSV" />
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <LogTimeline entries={entries} deleteAction={deleteLogEntry} />
-        </div>
-        <div className="space-y-6">
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-5">
-            <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">Quick Log</h2>
-            <QuickLogForm plantings={allPlantings} createAction={createLogEntry} />
-          </div>
-
-          {Object.keys(harvestTotals).length > 0 && (
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-earth-200 dark:border-gray-700 shadow-sm p-5">
-              <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                {currentYear} Harvest Totals
-              </h2>
-              <div className="space-y-2">
-                {Object.entries(harvestTotals).map(([key, val]) => {
-                  const plantName = key.split("|")[0];
-                  return (
-                    <div key={key} className="flex items-center justify-between text-sm">
-                      <span className="text-gray-700 dark:text-gray-300">{plantName}</span>
-                      <span className="font-medium text-garden-700 dark:text-garden-400">
-                        {val.amount.toFixed(1)} {val.unit}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+      <InteractiveLog
+        entries={entries}
+        plantings={allPlantings}
+        createAction={createLogEntry}
+        updateAction={updateLogEntry}
+        deleteAction={deleteLogEntry}
+      />
     </main>
   );
 };
